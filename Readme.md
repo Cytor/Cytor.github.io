@@ -6,25 +6,22 @@
 
 推送帮助：
 
-1. 从0开始
+1. 添加仓库
 
 ```bash
-mkdir lankning
-cd lankning
-git init 
-touch README.md
-git add README.md
-git commit -m "first commit"
-git remote add origin https://gitee.com/lankning/lankning.git
-git push -u origin "master"
+git remote add gitee https://gitee.com/lankning/lankning.git
+git remote add gogs http://git.wenyuanhome.top/lankning/lankning.git
+git remote add github https://github.com/lankning/lankning.github.io.git
 ```
 
-2. 已有仓库
+2. 推送
 
 ```bash
-cd existing_git_repo
-git remote add origin https://gitee.com/lankning/lankning.git
-git push -u origin "master"
+git add .
+git commit -m "update"
+git push -u gitee master
+git push -u gogs master
+git push -u github master
 ```
 
 参考：
