@@ -1,0 +1,380 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="Hexo" />
+
+
+<meta name="description" content="刚刚上手的hexo默认的是lanscape主题，而网上流行的主要是next主题，前者太丑，后者太简单，于是我选来选去选择了icarus主题。本篇主要记录hexo的icarus主题配置过程中的一些..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Hexo的icarus主题配置记录 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Hexo的icarus主题配置记录">
+            
+            Hexo的icarus主题配置记录
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/Hexo/" rel="tag">Hexo</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/22</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1118</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>刚刚上手的hexo默认的是lanscape主题，而网上流行的主要是next主题，前者太丑，后者太简单，于是我选来选去选择了icarus主题。本篇主要记录hexo的icarus主题配置过程中的一些疑难问题以及解决办法。</p>
+<span id="more"></span>
+
+<p><strong>1、新建markdown文件的头部写法</strong></p>
+<p>我一开始生成了pages之后发现我没有categories，怎么办呢？在创建hexo新文章的时候，默认只会给出title, date, tags三个选项，我们需要把他们扩充成下面几项。其中thumbnail是预览页面展示的图片。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: hexo icarus主题配置的记录</span><br><span class="line">date: 2019-11-22 19:22:30</span><br><span class="line">categories: [hexo]</span><br><span class="line">tags: [hexo]</span><br><span class="line">thumbnail: https://blog.zhangruipeng.me/hexo-theme-icarus/images/logo.svg</span><br></pre></td></tr></table></figure>
+
+<p><strong>2、加入评论系统</strong></p>
+<p>我这里使用的是gitment。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/imsun/gitment">Gitment</a>是<a target="_blank" rel="noopener" href="https://github.com/imsun/">imsun</a>实现的一款基于 GitHub Issues 的评论系统。支持在前端直接引入，不需要任何后端代码。可以在页面进行登录、查看、评论、点赞等操作，同时有完整的 Markdown &#x2F; GFM 和代码高亮支持。尤为适合各种基于 GitHub Pages 的静态博客或项目页面。 虽然 Gitment 只能使用 GitHub 账号进行评论，但考虑到博客受众，这是可以接受的。</p>
+<p>操作步骤结合icarus作者的<a target="_blank" rel="noopener" href="https://blog.zhangruipeng.me/hexo-theme-icarus/categories/Plugins/Comment/">教程</a>以及imsun的<a target="_blank" rel="noopener" href="https://imsun.net/posts/gitment-introduction/">博客</a>。</p>
+<p>需要在主题下的config文件中修改原来的comment部分为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">comment:</span><br><span class="line">    type: gitment</span><br><span class="line">    owner: xxxxxxxx         # (required) GitHub user name</span><br><span class="line">    repo: xxxxxxxx          # (required) GitHub repository name</span><br><span class="line">    client_id: xxxxxxxx     # (required) OAuth application client id</span><br><span class="line">    client_secret: xxxxxxxx # (required) OAuth application client secret</span><br></pre></td></tr></table></figure>
+
+<p>发现激活不成功，经过搜索，将layout目录下的gitment.ejs这个文件中的两行代码改掉即可。</p>
+<p>原来为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://imsun.github.io/gitment/style/default.css&quot;&gt;</span><br><span class="line">&lt;script src=&quot;https://imsun.github.io/gitment/dist/gitment.browser.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://billts.site/extra_css/gitment.css&quot;&gt;</span><br><span class="line">&lt;script src=&quot;https://billts.site/js/gitment.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、左边个人信息栏更换图标</strong></p>
+<p>原主题给定的是Github, Facebook, Twitter, Dribbble, RSS这六个网页，不符合中国大陆网友的一般习惯（至少不符合我的使用习惯），于是我想把这六个改为Github, Gitee, Bilibili这三个。</p>
+<p>仔细查询之后发现theme的config里面使用的是<a target="_blank" rel="noopener" href="https://fontawesome.com/">Fontawesome</a>的图标，自己想要什么图标上去搜就好了，注意还要把原来的link替换成自己的。需要重点注意的是，Github之类的这些分类冒号后面不能写注释，一写就报错。修改如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">social_links:</span><br><span class="line">    Github:</span><br><span class="line">    	icon: fab fa-github</span><br><span class="line">    	url: &#x27;https://github.com/Cytor/&#x27;</span><br><span class="line">    Gitee:</span><br><span class="line">    	icon: fab fa-git-square</span><br><span class="line">    	url: &#x27;https://gitee.com/cytor&#x27;</span><br><span class="line">    Bilibili:</span><br><span class="line">    	icon: fas fa-tv-retro</span><br><span class="line">    	url: &#x27;https://space.bilibili.com/390519714&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参考资料</strong></p>
+<p>1.<a target="_blank" rel="noopener" href="https://blog.zhangruipeng.me/hexo-theme-icarus/">icarus作者博客</a></p>
+<p>2.<a target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-icarus">icarus作者Github</a></p>
+<p>3.<a target="_blank" rel="noopener" href="https://imsun.net/posts/gitment-introduction/">gitment作者博客</a></p>
+<p>4.<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaosongshine/article/details/100614850">解决hexo gitment 的object ProgressEvent问题</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/11/23/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-23-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--%E8%AE%AD%E7%BB%83%E9%9B%86%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7labelImg%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8/" class="pre-post btn btn-default" title='目标检测--训练集标注工具labelImg的配置和使用'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            目标检测--训练集标注工具labelImg的配置和使用</span>
+    </a>
+    
+    
+    <a href="/2019/11/21/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-21-%E4%BA%A7%E5%93%81%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E6%9C%9F%E6%9C%AB%E9%A2%98/" class="next-post btn btn-default" title='产品数据管理期末题'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            产品数据管理期末题</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <p>暂无目录</p>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

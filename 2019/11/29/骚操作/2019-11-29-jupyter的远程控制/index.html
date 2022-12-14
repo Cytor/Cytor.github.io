@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="手头有一台亚马逊的ec2微实例闲置，于是就想在这个小小的服务器上搭建一个Jupyter，让我能在任何地方进行远程访问。亲测可行！
+
+
+ 
+已知：
+
+
+jupyter notebook是基于网页打..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    jupyter的远程控制 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="jupyter的远程控制">
+            
+            jupyter的远程控制
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E9%AA%9A%E6%93%8D%E4%BD%9C/">骚操作</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/29</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1111</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>手头有一台亚马逊的ec2微实例闲置，于是就想在这个小小的服务器上搭建一个Jupyter，让我能在任何地方进行远程访问。亲测可行！</p>
+<span id="more"></span>
+
+<iframe src="//player.bilibili.com/player.html?aid=78032442&cid=133506208&page=1" scrolling="no" border="0" frameborder="no" width="640" height="430"  allowfullscreen="true"> </iframe>
+已知：
+
+<ul>
+<li>jupyter notebook是基于网页打开的</li>
+<li>默认的端口是8888</li>
+</ul>
+<h3 id="想法："><a href="#想法：" class="headerlink" title="想法："></a>想法：</h3><p>用内网穿透将8888端口映射出去</p>
+<h3 id="结果："><a href="#结果：" class="headerlink" title="结果："></a>结果：</h3><p>失败，jupyter会拒绝我们的访问</p>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><ul>
+<li>生成配置文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>生成密码</li>
+</ul>
+<p>打开python，创建一个密码。这个密码就是以后我们访问的时候需要输入验证的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> notebook.auth <span class="keyword">import</span> passwd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>passwd()</span><br><span class="line">Enter password: </span><br><span class="line">Verify password: </span><br><span class="line"><span class="string">&#x27;sha1:ce...密码串&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>把这里的输入密码之后生成的字符串给记下来</p>
+<ul>
+<li>修改配置文件</li>
+</ul>
+<p>linux下可以使用vim直接修改，命令是 <code>$vim ~/.jupyter/jupyter_notebook_config.py</code> ；windows下，在目录<code>C:\Users\Administer\.jupyter</code>下找到<code>config.py</code>文件，用记事本打开。</p>
+<p>把原来的内容清空后，输入以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">c.NotebookApp.ip=&#x27;127.0.0.1&#x27;</span><br><span class="line">c.NotebookApp.password = u&#x27;sha1:ce...刚才复制的那个密码串&#x27;</span><br><span class="line">c.NotebookApp.open_browser = False</span><br><span class="line">c.NotebookApp.allow_remote_access = True</span><br><span class="line">c.NotebookApp.port =8888 #指定端口</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>终端输入<code>jupyter notebook</code>，启动jupyter notebook</li>
+<li>开启8888端口映射，即可远程访问！</li>
+</ul>
+<p>我暂时使用的是<a target="_blank" rel="noopener" href="http://www.ngrok.cc/">sunny-ngrok内网穿透</a>，可以用一个免费的隧道进行端口映射。当然你也可以选择<a target="_blank" rel="noopener" href="https://hsk.oray.com/">花生壳</a>，<a target="_blank" rel="noopener" href="http://nat123.com/">nat123</a>等工具。</p>
+<p><img src="https://s2.ax1x.com/2019/11/29/QkvtqU.png" alt="login"></p>
+<p><strong>参考资料：</strong></p>
+<p>1、<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9a0177a197ae">简书：玩转jupyter + 远程访问</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wuyandekuse/articles/9699915.html">jupyter notebook 初步使用配置调整</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/12/02/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-12-02-%E8%AE%B0C#%E7%AA%97%E4%BD%93%E5%86%99%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="pre-post btn btn-default" title='记C#窗体写作中遇到的一些问题'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            记C#窗体写作中遇到的一些问题</span>
+    </a>
+    
+    
+    <a href="/2019/11/26/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-26-TensorFlow_2.x%E5%8F%AF%E8%A7%86%E5%8C%96--%E7%B1%BB%E6%BF%80%E6%B4%BB%E5%9B%BE/" class="next-post btn btn-default" title='TensorFlow 2.x可视化--类激活图'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            TensorFlow 2.x可视化--类激活图</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%83%B3%E6%B3%95%EF%BC%9A"><span class="toc-text">想法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%EF%BC%9A"><span class="toc-text">结果：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-text">解决方案：</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

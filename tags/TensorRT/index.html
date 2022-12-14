@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="猪老大同学的学习历程" />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Tag: TensorRT |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content ">
+                    <ol class="breadcrumb">
+    
+    <li>
+        TensorRT
+    </li>
+    
+    
+</ol>
+
+<article class="post">
+    
+    <div class="post-media">
+        <a href="/2022/07/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT-Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85/">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/files/2022-05-30-TensorRT-Windows%E4%B8%8B%E5%AE%89%E8%A3%85/tensorrt.png" alt="TensorRT--Ubuntu下安装">
+        </a>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2022/07/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT-Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85/">
+                    TensorRT--Ubuntu下安装</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2022年07月19日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            很多时候我们还是用的Linux环境作为开发环境，需要在Linux上安装TensorRT。这篇文章总结了在Ubuntu上安装TensorRT的步骤。…
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-media">
+        <a href="/2022/05/31/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E4%BD%BF%E7%94%A8/">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/files/2022-05-30-TensorRT-Windows%E4%B8%8B%E5%AE%89%E8%A3%85/tensorrt.png" alt="TensorRT--Windows下使用">
+        </a>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2022/05/31/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E4%BD%BF%E7%94%A8/">
+                    TensorRT--Windows下使用</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2022年05月31日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+             上篇文章记录了如何在Win10下配置TensorRT，这篇将记录如何将一个最简单的超分辨率SRCNN的TensorFlow模型.tf转化为TensorRT的engin文件，最后使用TensorRT推导。…
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-media">
+        <a href="/2022/05/30/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E5%AE%89%E8%A3%85/">
+            <img class="img-ajax" src="/img/loading.gif" data-src="/files/2022-05-30-TensorRT-Windows%E4%B8%8B%E5%AE%89%E8%A3%85/tensorrt.png" alt="TensorRT--Windows下安装">
+        </a>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2022/05/30/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E5%AE%89%E8%A3%85/">
+                    TensorRT--Windows下安装</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2022年05月30日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            使用NVIDIA产品进行量化后推理必须使用TensorRT才能加速，否则会默认使用CPU处理，比TensorFlow-GPU推理还慢。这篇文章记录如何在Windows上配置TensorFlow+TensorRT。…
+            
+        </p>
+    </div>
+</article>
+
+
+
+                </main>
+                
+                    
+<aside class="col-md-4 sidebar">
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Search
+    </h3>
+    <div id="search-form">
+        <div id="result-mask" class="hide"></div>
+        <div class="search-area">
+            
+            <input id="search-key" type="search" autocomplete="off" placeholder="Search What？">
+            <button type="button" class="search-form-submit" id="search-local">
+                localSearch</button>
+            
+            
+        </div>
+        <div id="result-wrap" class="hide">
+            <div id="search-result"></div>
+        </div>
+        <div class="hide">
+            <template id="search-tpl">
+                <div class="item">
+                    <a href="/{path}" title="{title}">
+                        <div class="title">{title}</div>
+                        <div class="content">{content}</div>
+                    </a>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Notification
+    </h3>
+    <div class="notification">
+        <p>
+    Super Resolution:<br/>
+    - <a href="https://github.com/lankning/Super-Resolution" title="论文复现" target="_blank">论文复现</a> <br/>
+    - <a href="https://lankning.github.io/Super-Resolution" title="论文笔记" target="_blank">论文笔记</a> <br/>
+</p>
+    </div>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Social
+    </h3>
+    <div class="content social">
+        
+        <a href="//github.com/lankning" rel="external nofollow" title="Github" target="_blank">
+            <i class="git fa fa-git"></i>
+        </a>
+        
+        <a href="mailto:lankning@163.com" rel="external nofollow" title="邮箱" target="_blank">
+            <i class="envelope-o fa fa-envelope-o"></i>
+        </a>
+        
+        <a href="/" rel="external nofollow" title="联系QQ" target="_blank">
+            <i class="qq fa fa-qq"></i>
+        </a>
+        
+        <a href="/" rel="external nofollow" title="微信" target="_blank">
+            <i class="weixin fa fa-weixin"></i>
+        </a>
+        
+        <a href="/" rel="external nofollow" title="QQ群" target="_blank">
+            <i class="users fa fa-users"></i>
+        </a>
+        
+        <a href="/atom.xml" rel="external nofollow" title="RSS" target="_blank">
+            <i class="feed fa fa-feed"></i>
+        </a>
+        
+    </div>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Categories
+    </h3>
+    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fa" aria-hidden="true">学习笔记</i></a><span class="category-list-count">56</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B0%8F%E6%8A%80%E5%B7%A7/"><i class="fa" aria-hidden="true">小技巧</i></a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%AA%9A%E6%93%8D%E4%BD%9C/"><i class="fa" aria-hidden="true">骚操作</i></a><span class="category-list-count">11</span></li></ul>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Archives
+    </h3>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/"><i class="fa" aria-hidden="true">2022年12月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/"><i class="fa" aria-hidden="true">2022年11月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/"><i class="fa" aria-hidden="true">2022年08月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/"><i class="fa" aria-hidden="true">2022年07月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/"><i class="fa" aria-hidden="true">2022年05月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/"><i class="fa" aria-hidden="true">2022年04月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/"><i class="fa" aria-hidden="true">2021年10月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/"><i class="fa" aria-hidden="true">2021年09月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/"><i class="fa" aria-hidden="true">2021年08月</i></a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/"><i class="fa" aria-hidden="true">2021年07月</i></a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/"><i class="fa" aria-hidden="true">2021年04月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/"><i class="fa" aria-hidden="true">2020年10月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/"><i class="fa" aria-hidden="true">2020年09月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/"><i class="fa" aria-hidden="true">2020年08月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/"><i class="fa" aria-hidden="true">2020年07月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/"><i class="fa" aria-hidden="true">2020年06月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/"><i class="fa" aria-hidden="true">2020年05月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/"><i class="fa" aria-hidden="true">2020年04月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/"><i class="fa" aria-hidden="true">2020年03月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/"><i class="fa" aria-hidden="true">2020年02月</i></a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/"><i class="fa" aria-hidden="true">2020年01月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/"><i class="fa" aria-hidden="true">2019年12月</i></a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/"><i class="fa" aria-hidden="true">2019年11月</i></a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/"><i class="fa" aria-hidden="true">2019年10月</i></a><span class="archive-list-count">9</span></li></ul>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Tag Cloud
+    </h3>
+    <div class="content tag-cloud">
+        
+        <a href="/tags/Coding/" style="font-size: 10px;">Coding</a> <a href="/tags/Hexo/" style="font-size: 17.5px;">Hexo</a> <a href="/tags/ML/" style="font-size: 20px;">ML</a> <a href="/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/TensorRT/" style="font-size: 12.5px;">TensorRT</a> <a href="/tags/%E5%AD%A6%E7%A7%91%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">学科笔记</a> <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" style="font-size: 15px;">嵌入式</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 17.5px;">考研</a>
+        
+    </div>
+</div>
+
+    
+    
+<div class="widget">
+    <h3 class="title">
+        Friends
+    </h3>
+    <div class="content friends-link">
+        
+        <a href="https://wenyuanhome.top" class="fa" target="_blank">
+            恋爱主站</a>
+        
+        <a href="http://git.wenyuanhome.top" class="fa" target="_blank">
+            代码仓库</a>
+        
+        <a href="https://trans.wenyuanhome.top" class="fa" target="_blank">
+            文件转换</a>
+        
+        <a href="https://hexo.io/zh-cn/" class="fa" target="_blank">
+            Hexo官网</a>
+        
+    </div>
+</div>
+
+    
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/search.js?rev=@@hash.js"></script>
+
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

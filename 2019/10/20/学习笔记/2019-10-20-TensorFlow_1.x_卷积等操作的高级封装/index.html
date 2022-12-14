@@ -1,0 +1,363 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="前一段时间写了一些程序，自己搭建卷积神经网络的时候需要用到不少tensorflow的自带低级封装还有一些常用的读取操作等，虽然已经有了keras等高级封装可以直接调用，但还是想自己写一写。
+te..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    TensorFlow 1.x 卷积等操作的高级封装 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="TensorFlow 1.x 卷积等操作的高级封装">
+            
+            TensorFlow 1.x 卷积等操作的高级封装
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/10/20</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1151</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>前一段时间写了一些程序，自己搭建卷积神经网络的时候需要用到不少tensorflow的自带低级封装还有一些常用的读取操作等，虽然已经有了keras等高级封装可以直接调用，但还是想自己写一写。</p>
+<p>tensorflow版本：1.14</p>
+<span id="more"></span>
+
+<h2 id="1-卷积函数"><a href="#1-卷积函数" class="headerlink" title="1. 卷积函数"></a>1. 卷积函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span>(<span class="params">shape</span>):</span>  </span><br><span class="line">    initial = tf.truncated_normal(shape, mean=<span class="number">0</span>, stddev=<span class="number">0.01</span>)<span class="comment">#正态初始化  </span></span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span>(<span class="params">shape</span>):</span>  </span><br><span class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)  </span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span>(<span class="params">x, W</span>):</span><span class="comment">#步长为1   </span></span><br><span class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv</span>(<span class="params">x,next_depth</span>):</span>   </span><br><span class="line">    depth = x.get_shape()[-<span class="number">1</span>].value </span><br><span class="line">    w = weight_variable([<span class="number">3</span>, <span class="number">3</span>, depth, next_depth])   </span><br><span class="line">    b = bias_variable([next_depth])   </span><br><span class="line">    r = tf.nn.relu(tf.nn.bias_add(conv2d(x, w), b))  </span><br><span class="line">    <span class="keyword">return</span> r</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-池化函数"><a href="#2-池化函数" class="headerlink" title="2. 池化函数"></a>2. 池化函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_pool</span>(<span class="params">x</span>):</span>   </span><br><span class="line">    <span class="keyword">return</span> tf.nn.max_pool(x, ksize=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-读取图片顺便加标签"><a href="#3-读取图片顺便加标签" class="headerlink" title="3. 读取图片顺便加标签"></a>3. 读取图片顺便加标签</h2><ul>
+<li><p>文件夹结构（假设目录下面有17个文件夹，每个文件夹里面有若干对应种类的图片）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./</span><br><span class="line"></span><br><span class="line">–./dogs</span><br><span class="line"></span><br><span class="line">–./cats</span><br><span class="line"></span><br><span class="line">–./tigers</span><br><span class="line"></span><br><span class="line">…</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>读取的图片压缩为32<em>32</em>3的尺寸，便于神经网络的快速迭代</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 调用skimage的函数</span></span><br><span class="line"><span class="keyword">from</span> skimage.io <span class="keyword">import</span> imread</span><br><span class="line"><span class="keyword">from</span> skimage.transform <span class="keyword">import</span> resize</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_images</span>(<span class="params">path</span>):</span>   </span><br><span class="line">    contents = os.listdir(path)   </span><br><span class="line">    classes = [each <span class="keyword">for</span> each <span class="keyword">in</span> contents <span class="keyword">if</span> os.path.isdir(os.path.join(path,each))]   </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;目录下有%s&#x27;</span> % classes)  </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 用labels来存储图片的类别    </span></span><br><span class="line">    labels = []  </span><br><span class="line">    <span class="comment"># images数组用来存储图片数据   </span></span><br><span class="line">    images = []   </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 对每个不同种类读取图片到list并且+标签   </span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> classes:   </span><br><span class="line">        class_path = os.path.join(path,each)  </span><br><span class="line">        files = os.listdir(class_path)    </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Starting &#123;&#125; images&quot;</span>.<span class="built_in">format</span>(each),<span class="string">&#x27;数量为&#x27;</span>,<span class="built_in">len</span>(files))     </span><br><span class="line">        <span class="keyword">for</span> ii, file <span class="keyword">in</span> <span class="built_in">enumerate</span>(files, <span class="number">1</span>):     </span><br><span class="line">            <span class="comment"># 载入图片并放入batch数组中        </span></span><br><span class="line">            img = imread(os.path.join(class_path, file))      </span><br><span class="line">            img = img / <span class="number">255.0</span>         </span><br><span class="line">            <span class="comment"># print(img.shape)      </span></span><br><span class="line">            img = resize(img, (<span class="number">32</span>, <span class="number">32</span>))     </span><br><span class="line">            <span class="comment"># print(img.shape)      </span></span><br><span class="line">            images.append(img.reshape((<span class="number">32</span>,<span class="number">32</span>,<span class="number">3</span>)))      </span><br><span class="line">            labels.append(each)                      </span><br><span class="line">	</span><br><span class="line">    images = np.array(images)  </span><br><span class="line">    <span class="comment">#将labels的list形式转换为one_hot_label   </span></span><br><span class="line">    <span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelBinarizer </span><br><span class="line">    lb = LabelBinarizer()   </span><br><span class="line">    lb.fit(labels)  </span><br><span class="line">    labels_vecs = lb.transform(labels)   </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;总共读取了%d张图片&#x27;</span>%images.shape[<span class="number">0</span>])  </span><br><span class="line">    <span class="comment"># print(labels,labels_vecs)  </span></span><br><span class="line">    <span class="keyword">return</span> images,labels_vecs <span class="comment"># 返回图片以及对应的标签</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-神经网络模型的建立"><a href="#4-神经网络模型的建立" class="headerlink" title="4. 神经网络模型的建立"></a>4. 神经网络模型的建立</h2><p>下面的示例结构为：3层卷积+2层全连接</p>
+<p>图片的输入x_images的shape是32<em>32</em>3</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create</span>(<span class="params">x_images,keep_prob</span>):</span><span class="comment">#x_images的shape是32,32,3 </span></span><br><span class="line">    h = <span class="number">32</span>  </span><br><span class="line">    w = <span class="number">32</span>  </span><br><span class="line">    d = <span class="number">3</span>   </span><br><span class="line">    <span class="comment">#first layer   </span></span><br><span class="line">    conv1 = conv(x_images,<span class="number">16</span>) </span><br><span class="line">    pool1 = max_pool(conv1)</span><br><span class="line">    h = <span class="built_in">int</span>(np.ceil(h/<span class="number">2</span>)) </span><br><span class="line">    w = <span class="built_in">int</span>(np.ceil(w/<span class="number">2</span>))  </span><br><span class="line">    d = <span class="number">16</span>    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">#second layer   </span></span><br><span class="line">    conv2 = conv(pool1,<span class="number">32</span>)   </span><br><span class="line">    pool2 = max_pool(conv2) </span><br><span class="line">    h = <span class="built_in">int</span>(np.ceil(h/<span class="number">2</span>))  </span><br><span class="line">    w = <span class="built_in">int</span>(np.ceil(w/<span class="number">2</span>)) </span><br><span class="line">    d = d*<span class="number">2</span>       </span><br><span class="line">    </span><br><span class="line">    <span class="comment">#third layer  </span></span><br><span class="line">    conv3 = conv(pool2,<span class="number">64</span>) </span><br><span class="line">    pool3 = max_pool(conv3)  </span><br><span class="line">    h = <span class="built_in">int</span>(np.ceil(h/<span class="number">2</span>))  </span><br><span class="line">    w = <span class="built_in">int</span>(np.ceil(w/<span class="number">2</span>))   </span><br><span class="line">    d = d*<span class="number">2</span>   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">#first fully layer </span></span><br><span class="line">    w_fc1 = weight_variable([h*w*d,<span class="number">1024</span>])</span><br><span class="line">    b_fc1 = bias_variable([<span class="number">1024</span>]) </span><br><span class="line">    h_conv_flat = tf.reshape(pool3,[-<span class="number">1</span>,h*w*d])  </span><br><span class="line">    h_fc1 = tf.nn.relu(tf.nn.bias_add(tf.matmul(h_conv_flat, w_fc1), b_fc1))   </span><br><span class="line">    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#second fully layer   </span></span><br><span class="line">    w_fc2 = weight_variable([<span class="number">1024</span>,<span class="number">1024</span>])   </span><br><span class="line">    b_fc2 = bias_variable([<span class="number">1024</span>])  </span><br><span class="line">    h_fc2 = tf.nn.relu(tf.nn.bias_add(tf.matmul(h_fc1_drop, w_fc2), b_fc2)) </span><br><span class="line">    h_fc2_drop = tf.nn.dropout(h_fc2, keep_prob)      </span><br><span class="line">    </span><br><span class="line">    <span class="comment">#third full layer  </span></span><br><span class="line">    w_fc3 = weight_variable([<span class="number">1024</span>,<span class="number">17</span>])  </span><br><span class="line">    b_fc3 = bias_variable([<span class="number">17</span>])   </span><br><span class="line">    h_fc3 = tf.add(tf.matmul(h_fc2_drop, w_fc3), b_fc3,name=<span class="string">&#x27;h_fc3&#x27;</span>)   </span><br><span class="line">    out = tf.nn.softmax(h_fc3,name=<span class="string">&#x27;out&#x27;</span>)     </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;模型建立好了！&#x27;</span>)  </span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/10/20/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-10-20-%E5%A6%82%E4%BD%95%E5%9C%A8%E7%94%B5%E8%84%91%E4%B8%8A%E5%AE%89%E8%A3%85TensorFlow/" class="pre-post btn btn-default" title='如何在电脑上安装TensorFlow'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            如何在电脑上安装TensorFlow</span>
+    </a>
+    
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8D%B7%E7%A7%AF%E5%87%BD%E6%95%B0"><span class="toc-text">1. 卷积函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B1%A0%E5%8C%96%E5%87%BD%E6%95%B0"><span class="toc-text">2. 池化函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AF%BB%E5%8F%96%E5%9B%BE%E7%89%87%E9%A1%BA%E4%BE%BF%E5%8A%A0%E6%A0%87%E7%AD%BE"><span class="toc-text">3. 读取图片顺便加标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BB%BA%E7%AB%8B"><span class="toc-text">4. 神经网络模型的建立</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

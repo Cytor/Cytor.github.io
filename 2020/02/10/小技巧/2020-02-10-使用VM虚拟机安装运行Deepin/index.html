@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="兜兜转转，又回到了纯Win10的系统下。然而确实是好久没见到deepin了，因此甚是想念。遂尝试了VM虚拟机。分享我的经验，以下。
+
+
+1、安装VM WorkStation不必多言，直接上安装教..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    使用VM虚拟机安装运行Deepin |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="使用VM虚拟机安装运行Deepin">
+            
+            使用VM虚拟机安装运行Deepin
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%B0%8F%E6%8A%80%E5%B7%A7/">小技巧</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/02/10</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1038</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>兜兜转转，又回到了纯Win10的系统下。然而确实是好久没见到deepin了，因此甚是想念。遂尝试了VM虚拟机。分享我的经验，以下。</p>
+<span id="more"></span>
+
+<h2 id="1、安装VM-WorkStation"><a href="#1、安装VM-WorkStation" class="headerlink" title="1、安装VM WorkStation"></a>1、安装VM WorkStation</h2><p>不必多言，直接上安装教程：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Rdj5AA7aVOzFDMnXeousWg">https://mp.weixin.qq.com/s/Rdj5AA7aVOzFDMnXeousWg</a></p>
+<h2 id="2、下载deepin的ISO包"><a href="#2、下载deepin的ISO包" class="headerlink" title="2、下载deepin的ISO包"></a>2、下载deepin的ISO包</h2><p>搜索deepin，找到<strong>“最新版本”</strong>。</p>
+<p><img src="https://s2.ax1x.com/2020/02/10/15AGAs.png"></p>
+<p>选择<strong>“ISO仓库”</strong></p>
+<p><img src="https://s2.ax1x.com/2020/02/10/15AWjO.png"></p>
+<p>进入之后，选择一个离自己近一点的仓库，一般速度能够达到10+（Mb&#x2F;s）。</p>
+<h2 id="3、安装deepin"><a href="#3、安装deepin" class="headerlink" title="3、安装deepin"></a>3、安装deepin</h2><p>打开VM Workstation，点击<strong>“创建新的虚拟机”</strong>，然后按照提示进行操作即可。</p>
+<p><img src="https://s2.ax1x.com/2020/02/10/15VySx.png"></p>
+<h2 id="4、享受linux的美"><a href="#4、享受linux的美" class="headerlink" title="4、享受linux的美"></a>4、享受linux的美</h2><p><img src="https://s2.ax1x.com/2020/02/10/15mSyV.png"></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/02/19/%E9%AA%9A%E6%93%8D%E4%BD%9C/2020-02-19-%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E5%AE%89%E8%A3%85Linux/" class="pre-post btn btn-default" title='安卓手机安装Linux'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            安卓手机安装Linux</span>
+    </a>
+    
+    
+    <a href="/2020/01/16/%E5%B0%8F%E6%8A%80%E5%B7%A7/2020-01-16-%E7%94%B5%E8%84%91%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/" class="next-post btn btn-default" title='电脑驱动安装'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            电脑驱动安装</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%89%E8%A3%85VM-WorkStation"><span class="toc-text">1、安装VM WorkStation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E4%B8%8B%E8%BD%BDdeepin%E7%9A%84ISO%E5%8C%85"><span class="toc-text">2、下载deepin的ISO包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%AE%89%E8%A3%85deepin"><span class="toc-text">3、安装deepin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%BA%AB%E5%8F%97linux%E7%9A%84%E7%BE%8E"><span class="toc-text">4、享受linux的美</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="嵌入式" />
+
+
+<meta name="description" content="经过几个晚上的初步学习，我渐渐结合起来一年前学习的微机原理的一些知识。虽然不一定能搞懂，但是现在确实是通过看原理图、看引脚，逐渐掌握了一点东西。本篇记录在点亮单片机数码管中遇到的问题。
+
+
+1、..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    单片机--点亮数码管 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="单片机--点亮数码管">
+            
+            单片机--点亮数码管
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag">嵌入式</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/04</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1015</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>经过几个晚上的初步学习，我渐渐结合起来一年前学习的微机原理的一些知识。虽然不一定能搞懂，但是现在确实是通过看原理图、看引脚，逐渐掌握了一点东西。本篇记录在点亮单片机数码管中遇到的问题。</p>
+<span id="more"></span>
+
+<h2 id="1、动态数码管"><a href="#1、动态数码管" class="headerlink" title="1、动态数码管"></a>1、动态数码管</h2><ul>
+<li><p><strong>原理：</strong>动态显示的特点是将所有数码管的段选线并联在一起，由<strong>位选线</strong>控制是哪一位数码管有效。选亮数码管采用动态扫描显示。所谓动态扫描显示即轮流向各位数码管送出字形码和相应的位选，利用发光管的余辉和人眼视觉暂留作用，使人的感觉好像各位数码管同时都在显示。动态显示的亮度比静态显示要差一些，所以在选择限流电阻时应略小于静态显示电路中的。</p>
+</li>
+<li><p>位选就是数码管位置（亮灭）的选择；段选就是数码管笔段（亮灭）的选择。</p>
+</li>
+<li><p><strong>共阳和共阴：</strong></p>
+<p>简单来讲，共阴数码管就是把com端接地，其他要点亮的某段就接高电平；共阳数码管，就把com接高电平，其他需要点亮的某段就接地。</p>
+</li>
+<li><p><strong>LED代码表</strong></p>
+<p>这个表很有用，编程的时候需要对照着它来摘取段选码。需要注意的是，段选码是十六进制的，因此编程时需要写成<code>0x3F</code>类似的格式。</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3IrYz6.png"></p>
+</li>
+<li><p><strong>引脚图：</strong></p>
+<p>当我们需要从头开始开发的时候，我们需要一个引脚图，如下所示。</p>
+<p><strong>段选信号：</strong>单片机的P00-P07这8个IO口控制的是数码管的段选信号，因此所有数码管的段选都是一样的。</p>
+<p><strong>位选信号：</strong>上面COM口连接的是非常重要的位选信号，为了节约IO口，单片机会通过38译码器来转换，通过查阅74HC138译码器得知对应的IO口为P22&#x2F;P23&#x2F;P24。</p>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2020/03/04/3IDcb4.png"></p>
+<h2 id="2、程序实现"><a href="#2、程序实现" class="headerlink" title="2、程序实现"></a>2、程序实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> u8;</span><br><span class="line">u8 code smgduan[<span class="number">16</span>]=&#123;<span class="number">0x3f</span>,<span class="number">0x06</span>,<span class="number">0x5b</span>,<span class="number">0x4f</span>,<span class="number">0x66</span>,<span class="number">0x6d</span>,<span class="number">0x7d</span>,<span class="number">0x07</span>,</span><br><span class="line">                     <span class="number">0x7f</span>,<span class="number">0x6f</span>,<span class="number">0x77</span>,<span class="number">0x7c</span>,<span class="number">0x39</span>,<span class="number">0x5e</span>,<span class="number">0x79</span>,<span class="number">0x71</span>&#125;;<span class="comment">//共阴</span></span><br></pre></td></tr></table></figure>
+
+<p>code的作用：code的作用是告诉单片机，定义的数据要放在ROM（程序存储区）里面，写入后就不能再更改。因为C语言中没办法详细描述存入的是ROM还是RAM（寄存器），所以在软件中添加了这一个语句起到代替汇编指令的作用，对应的还有data是存入RAM的意思。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">digdisplay</span><span class="params">()</span><span class="comment">//全部点亮，一次</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	u8 i;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">switch</span>(i)<span class="comment">//位选操作 </span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">0</span>: LSA=<span class="number">0</span>;LSB=<span class="number">0</span>;LSC=<span class="number">0</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">1</span>: LSA=<span class="number">1</span>;LSB=<span class="number">0</span>;LSC=<span class="number">0</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">2</span>: LSA=<span class="number">0</span>;LSB=<span class="number">1</span>;LSC=<span class="number">0</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">3</span>: LSA=<span class="number">1</span>;LSB=<span class="number">1</span>;LSC=<span class="number">0</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">4</span>: LSA=<span class="number">0</span>;LSB=<span class="number">0</span>;LSC=<span class="number">1</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">5</span>: LSA=<span class="number">1</span>;LSB=<span class="number">0</span>;LSC=<span class="number">1</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">6</span>: LSA=<span class="number">0</span>;LSB=<span class="number">1</span>;LSC=<span class="number">1</span>;<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="number">7</span>: LSA=<span class="number">1</span>;LSB=<span class="number">1</span>;LSC=<span class="number">1</span>;<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		P0=smgduan[i];<span class="comment">//段选操作 </span></span><br><span class="line">		delay(<span class="number">100</span>);<span class="comment">//太小会来不及清零，混合或相同；太大会不连续；</span></span><br><span class="line">		P0=<span class="number">0x00</span>;<span class="comment">//归零，消影</span></span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要注意delay的大小，如果delay太大会造成类似于流水灯的效果。</p>
+<p><code>P0=0x00</code>这句经过实测没有影响。</p>
+<p>参考资料：</p>
+<p>1、数码管的段选和位选是什么意思? <a target="_blank" rel="noopener" href="https://www.uyuyao.com/zuoye/5576154">https://www.uyuyao.com/zuoye/5576154</a> </p>
+<p>2、数码管共阳和共阴是什么意思？<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/39882534">https://www.zhihu.com/question/39882534</a></p>
+<p>3、C语言中的“code”是什么意思啊？<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/106734427.html">https://zhidao.baidu.com/question/106734427.html</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/03/15/%E9%AA%9A%E6%93%8D%E4%BD%9C/2020-03-15-%E4%BD%BF%E7%94%A8Python%E4%BC%98%E9%9B%85%E5%9C%B0%E5%B0%86PDF%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%9B%BE%E7%89%87/" class="pre-post btn btn-default" title='使用Python优雅地将PDF转化为图片'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            使用Python优雅地将PDF转化为图片</span>
+    </a>
+    
+    
+    <a href="/2020/03/01/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2020-03-01-%E5%88%9D%E8%AF%86%E5%8D%95%E7%89%87%E6%9C%BA--%E7%82%B9%E4%BA%AEled/" class="next-post btn btn-default" title='初识单片机--点亮led'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            初识单片机--点亮led</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%8A%A8%E6%80%81%E6%95%B0%E7%A0%81%E7%AE%A1"><span class="toc-text">1、动态数码管</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E7%A8%8B%E5%BA%8F%E5%AE%9E%E7%8E%B0"><span class="toc-text">2、程序实现</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

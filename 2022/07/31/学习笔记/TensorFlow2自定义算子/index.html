@@ -1,0 +1,391 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="TensorFlow" />
+
+
+<meta name="description" content="仓库地址：https://github.com/tensorflow/custom-op
+将仓库拉到本地，假设自定义算子名字是inno，复制zero_out文件夹重命名为tensorflow_i..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    TensorFlow2自定义算子 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="TensorFlow2自定义算子">
+            
+            TensorFlow2自定义算子
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/TensorFlow/" rel="tag">TensorFlow</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/07/31</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/tensorflow/custom-op">https://github.com/tensorflow/custom-op</a></p>
+<p>将仓库拉到本地，假设自定义算子名字是inno，复制zero_out文件夹重命名为tensorflow_inno，功能是（1）保留input的第一个数字；（2）input其他位置上的元素都变为原来2倍。</p>
+<span id="more"></span>
+
+<p>经过文件名修改，自定义算子tensorflow_inno的目录树如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── BUILD</span><br><span class="line">├── cc</span><br><span class="line">│   ├── kernels（实现）</span><br><span class="line">│   │   └── inno_kernels.cc</span><br><span class="line">│   └── ops（注册）</span><br><span class="line">│       └── inno_ops.cc</span><br><span class="line">├── __init__.py</span><br><span class="line">└── python</span><br><span class="line">    ├── __init__.py（空）</span><br><span class="line">    └── ops</span><br><span class="line">        ├── __init__.py（空）</span><br><span class="line">        ├── inno_ops.py（调用.so动态链接库）</span><br><span class="line">        ├── _inno_ops.so（编译后产生）</span><br><span class="line">        └── inno_ops_test.py（调用inno_ops.py测试）</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-C实现（cc-x2F-目录下）"><a href="#1-C实现（cc-x2F-目录下）" class="headerlink" title="1. C实现（cc&#x2F;目录下）"></a>1. C实现（cc&#x2F;目录下）</h1><p>目录中，cc&#x2F;下的所有程序都调用tensorflow的c接口，cc&#x2F;ops注册了inno算子，cc&#x2F;kernels实现了inno算子。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── cc</span><br><span class="line">│  ├── kernels（实现）</span><br><span class="line">│  │  └── inno_kernels.cc</span><br><span class="line">│  └── ops（注册）</span><br><span class="line">│    └── inno_ops.cc</span><br></pre></td></tr></table></figure>
+
+<p>先在ops目录下的inno_ops.cc中<strong>注册算子</strong>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;tensorflow/core/framework/op.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;tensorflow/core/framework/shape_inference.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> tensorflow;</span><br><span class="line"></span><br><span class="line">REGISTER_OP(<span class="string">&quot;Inno&quot;</span>)</span><br><span class="line">    .Input(<span class="string">&quot;inp: int32&quot;</span>)</span><br><span class="line">    .Output(<span class="string">&quot;out: int32&quot;</span>)</span><br><span class="line">    .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) &#123;</span><br><span class="line">      c-&gt;set_output(<span class="number">0</span>, c-&gt;input(<span class="number">0</span>));</span><br><span class="line">      <span class="keyword">return</span> Status::OK();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里定义了算子的名称是Inno，输入名称inp，输出名称out，输出的shape（存疑：等于输入的shape？）。</p>
+<p>在kernels下的inno_kernels.cc中<strong>实现算子</strong>（注意命名需要采用CamelCase，驼峰拼写法）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;tensorflow/core/framework/op_kernel.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> tensorflow;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InnoOp</span> :</span> <span class="keyword">public</span> OpKernel &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">InnoOp</span><span class="params">(OpKernelConstruction* context)</span> : <span class="title">OpKernel</span><span class="params">(context)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Compute</span><span class="params">(OpKernelContext* context)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Grab the input tensor</span></span><br><span class="line">    <span class="keyword">const</span> Tensor&amp; input_tensor = context-&gt;input(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">auto</span> input = input_tensor.flat&lt;int32&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create an output tensor</span></span><br><span class="line">    Tensor* output_tensor = <span class="literal">NULL</span>;</span><br><span class="line">    OP_REQUIRES_OK(context, context-&gt;allocate_output(<span class="number">0</span>, input_tensor.shape(),</span><br><span class="line">                                                     &amp;output_tensor));</span><br><span class="line">    <span class="keyword">auto</span> output_flat = output_tensor-&gt;flat&lt;int32&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set all but the first element of the output tensor to double input.</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> N = input.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">      output_flat(i) = (input(i) &lt;&lt; <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Preserve the first input value if possible.</span></span><br><span class="line">    <span class="keyword">if</span> (N &gt; <span class="number">0</span>) output_flat(<span class="number">0</span>) = input(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，已经定义好了tensorflow的算子。</p>
+<h1 id="2-Python-Package（python-x2F-目录下）"><a href="#2-Python-Package（python-x2F-目录下）" class="headerlink" title="2. Python Package（python&#x2F;目录下）"></a>2. Python Package（python&#x2F;目录下）</h1><p>后面我们会编译Python包（.whl），安装后目录和这里一样，因此可以推断这里是在书写Python Package的脚本。其编译过程是：c脚本-&gt;.so动态链接库-&gt;Python调用-&gt;.whl包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">└── python</span><br><span class="line">    ├── __init__.py（空）</span><br><span class="line">    └── ops</span><br><span class="line">        ├── __init__.py（空）</span><br><span class="line">        ├── inno_ops.py（调用.so动态链接库）</span><br><span class="line">        ├── _inno_ops.so（编译后产生）</span><br><span class="line">        └── inno_ops_test.py（调用inno_ops.py测试）</span><br></pre></td></tr></table></figure>
+
+<p>inno_ops.py里面调用了.so动态链接库，定义了一个接口inno_out。Python安装完成后，可以直接调用inno_out。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> absolute_import</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tensorflow.python.framework <span class="keyword">import</span> load_library</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.platform <span class="keyword">import</span> resource_loader</span><br><span class="line"></span><br><span class="line">inno_ops = load_library.load_op_library(</span><br><span class="line">    resource_loader.get_path_to_datafile(<span class="string">&#x27;_inno_ops.so&#x27;</span>))</span><br><span class="line">inno_out = inno_ops.Inno</span><br></pre></td></tr></table></figure>
+
+<p>inno_ops_test.py调用了inno_ops.py测试inno_out算子，使用以下语句判断输入和输出是否相等：self.assertAllClose(inno_out([[1, 2], [3, 4]]), np.array([[1, 4], [6, 8]]))。代码如下：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> absolute_import</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tensorflow.python.platform <span class="keyword">import</span> test</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  <span class="keyword">from</span> tensorflow_inno.python.ops.inno_ops <span class="keyword">import</span> inno_out</span><br><span class="line"><span class="keyword">except</span> ImportError:</span><br><span class="line">  <span class="keyword">from</span> inno_ops <span class="keyword">import</span> inno_out</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InnoTest</span>(<span class="params">test.TestCase</span>):</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">testinno</span>(<span class="params">self</span>):</span></span><br><span class="line">    <span class="keyword">with</span> self.test_session():</span><br><span class="line">      self.assertAllClose(</span><br><span class="line">          inno_out([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]]), np.array([[<span class="number">1</span>, <span class="number">4</span>], [<span class="number">6</span>, <span class="number">8</span>]]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">  test.main()</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-其他文件"><a href="#3-其他文件" class="headerlink" title="3. 其他文件"></a>3. 其他文件</h1><ol>
+<li>tensorflow_inno目录下，有一个BUILD文件。注意将其中文件名改为自己的。</li>
+<li>tensorflow_inno上级目录（自定义算子的根目录），Makefile文件中的路径需要修改为自定义的路径。</li>
+<li>MANIFEST.in文件里面有两行文字，需要改为自定义名字<br>recursive-include tensorflow_zero_out *.so<br>recursive-include tensorflow_time_two *.so</li>
+<li>setup.py文件中定义了包的名称、版本号，可以保持默认。</li>
+</ol>
+<h1 id="4-编译、安装"><a href="#4-编译、安装" class="headerlink" title="4. 编译、安装"></a>4. 编译、安装</h1><p>在custom-op文件夹（tensorflow-inno上级目录）中，编译算子得到.so文件和.whl文件。执行下面三行命令即可安装完成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(zhouyi) inno-suanfa@ubuntu:~/zhuwk/custom-op$ make inno_pip_pkg</span><br><span class="line">(zhouyi) inno-suanfa@ubuntu:~/zhuwk/custom-op$ cd artifacts/</span><br><span class="line">(zhouyi) inno-suanfa@ubuntu:~/zhuwk/custom-op/artifacts$ pip install tensorflow_custom_ops-<span class="number">0.0</span><span class="number">.1</span>-cp38-cp38-linux_x86_64.whl </span><br></pre></td></tr></table></figure>
+
+<p>进入Python测试算子功能，发现功能正常。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(zhouyi) inno-suanfa@ubuntu:~/zhuwk/custom-op/artifacts$ python</span><br><span class="line">Python <span class="number">3.8</span><span class="number">.13</span> (default, Mar <span class="number">28</span> <span class="number">2022</span>, <span class="number">11</span>:<span class="number">38</span>:<span class="number">47</span>) </span><br><span class="line">[GCC <span class="number">7.5</span><span class="number">.0</span>] :: Anaconda, Inc. on linux</span><br><span class="line"><span class="type">Type</span> <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> <span class="keyword">or</span> <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> tensorflow_inno <span class="keyword">as</span> tfno</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tfno.inno_out(inp=tf.constant([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]]),name=<span class="string">&quot;inno_op&quot;</span>)</span><br><span class="line">&lt;tf.Tensor: shape=(<span class="number">2</span>, <span class="number">3</span>), dtype=int32, numpy=</span><br><span class="line">array([[ <span class="number">1</span>,  <span class="number">4</span>,  <span class="number">6</span>],</span><br><span class="line">       [ <span class="number">8</span>, <span class="number">10</span>, <span class="number">12</span>]], dtype=int32)&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-保存为单算子pb模型"><a href="#5-保存为单算子pb模型" class="headerlink" title="5. 保存为单算子pb模型"></a>5. 保存为单算子pb模型</h1><p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> tensorflow_inno <span class="keyword">as</span> tfno</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">newop</span>(<span class="params">tf.keras.models.Model</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(newop, self).__init__()</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">call</span>(<span class="params">self, x</span>):</span></span><br><span class="line">        x = tfno.inno_out(inp=x, name=<span class="string">&quot;inno_op&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">opmodel = newop()</span><br><span class="line">opmodel.predict(tf.constant([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]]))</span><br><span class="line"><span class="built_in">print</span>(opmodel.summary())</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">full_model = tf.function(<span class="keyword">lambda</span> x: opmodel(x))</span><br><span class="line">full_model = full_model.get_concrete_function(</span><br><span class="line">    tf.TensorSpec((<span class="number">2</span>,<span class="number">2</span>), np.int32))</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.framework.convert_to_constants <span class="keyword">import</span> convert_variables_to_constants_v2</span><br><span class="line"><span class="comment"># Get frozen ConcreteFunction</span></span><br><span class="line">frozen_func = convert_variables_to_constants_v2(full_model)</span><br><span class="line">frozen_func.graph.as_graph_def()</span><br><span class="line"><span class="comment"># Save frozen graph from frozen ConcreteFunction to hard drive</span></span><br><span class="line">tf.io.write_graph(graph_or_graph_def=frozen_func.graph,</span><br><span class="line">                  logdir=<span class="string">&quot;./&quot;</span>,</span><br><span class="line">                  name=<span class="string">&quot;inno_op.pb&quot;</span>,</span><br><span class="line">                  as_text=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Model: &quot;newop&quot;</span><br><span class="line">_________________________________________________________________</span><br><span class="line">Layer (type)                 Output Shape              Param #   </span><br><span class="line">=================================================================</span><br><span class="line">Total params: 0</span><br><span class="line">Trainable params: 0</span><br><span class="line">Non-trainable params: 0</span><br><span class="line">_________________________________________________________________</span><br><span class="line">None</span><br><span class="line">&#x27;./inno_op.pb&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>使用netron可视化，节点属性如下</p>
+<p><img src="/files/20220731-TensorFlow2%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AE%97%E5%AD%90/net_netron.png" alt="net_by_netron"></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/08/09/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWenet/" class="pre-post btn btn-default" title='论文阅读：wenet'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            论文阅读：wenet</span>
+    </a>
+    
+    
+    <a href="/2022/07/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT-Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85/" class="next-post btn btn-default" title='TensorRT--Ubuntu下安装'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            TensorRT--Ubuntu下安装</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-C%E5%AE%9E%E7%8E%B0%EF%BC%88cc-x2F-%E7%9B%AE%E5%BD%95%E4%B8%8B%EF%BC%89"><span class="toc-text">1. C实现（cc&#x2F;目录下）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Python-Package%EF%BC%88python-x2F-%E7%9B%AE%E5%BD%95%E4%B8%8B%EF%BC%89"><span class="toc-text">2. Python Package（python&#x2F;目录下）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6"><span class="toc-text">3. 其他文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E7%BC%96%E8%AF%91%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-text">4. 编译、安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E4%BF%9D%E5%AD%98%E4%B8%BA%E5%8D%95%E7%AE%97%E5%AD%90pb%E6%A8%A1%E5%9E%8B"><span class="toc-text">5. 保存为单算子pb模型</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

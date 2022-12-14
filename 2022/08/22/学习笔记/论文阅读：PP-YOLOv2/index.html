@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="PP-YOLOv2是在PP-YOLOv1基础上进一步提高效率得到的，最后结果是性能进一步提高而推理时间几乎没有变化。PP-YOLOv2（Resnet50）的mAP从45.9%提升到49.5%（C..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：PP-YOLOv2 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：PP-YOLOv2">
+            
+            论文阅读：PP-YOLOv2
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/08/22</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>PP-YOLOv2是在PP-YOLOv1基础上进一步提高效率得到的，最后结果是性能进一步提高而推理时间几乎没有变化。PP-YOLOv2（Resnet50）的mAP从45.9%提升到49.5%（COCO2017测试集上），基于Resnet101的mAP达到了50.3%,在640*640输入下帧率为68.9FPS，经过TensorRT FP16精度的加速，最后帧率提升到106.5FPS。</p>
+<h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h1><p>PP-YOLOv2和YOLOv5l和YOLOv4-CSP具有几乎相同的参数，但性能好一些。PP-YOLOv2的baseline是PP-YOLO，而PP-YOLO又是YOLO-v3的增强版本。<br>Github仓库：<a target="_blank" rel="noopener" href="https://github.com/PaddlePaddle/PaddleDetection">https://github.com/PaddlePaddle/PaddleDetection</a><br>Gitee镜像：<a target="_blank" rel="noopener" href="https://gitee.com/paddlepaddle/PaddleDetection">https://gitee.com/paddlepaddle/PaddleDetection</a><br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/1.png" alt="image.png"></p>
+<h1 id="2-回看PP-YOLO"><a href="#2-回看PP-YOLO" class="headerlink" title="2. 回看PP-YOLO"></a>2. 回看PP-YOLO</h1><h2 id="2-1-预处理"><a href="#2-1-预处理" class="headerlink" title="2.1 预处理"></a>2.1 预处理</h2><ul>
+<li>模型权重初始化使用Beta(α,β)分布</li>
+<li>图片使用随机颜色崩坏、随机扩充、随机裁剪、随机翻转等tricks</li>
+<li>将图片RGB归一化</li>
+</ul>
+<h2 id="2-2-基线模型"><a href="#2-2-基线模型" class="headerlink" title="2.2 基线模型"></a>2.2 基线模型</h2><p>在YOLO-v3上使用了10个提高性能但不损失效率的tricks，包括Deformable Conv，SSLD，CoordConv，DropBlock，SPP等。</p>
+<h2 id="2-3-训练策略"><a href="#2-3-训练策略" class="headerlink" title="2.3 训练策略"></a>2.3 训练策略</h2><p>使用了SGD优化，使用了小batch（96张图片分8个GPU），学习率逐步升高….</p>
+<h1 id="3-PP-YOLOv2的改进"><a href="#3-PP-YOLOv2的改进" class="headerlink" title="3. PP-YOLOv2的改进"></a>3. PP-YOLOv2的改进</h1><h2 id="3-1-路径聚合网络（Path-Aggregation-Network）"><a href="#3-1-路径聚合网络（Path-Aggregation-Network）" class="headerlink" title="3.1 路径聚合网络（Path Aggregation Network）"></a>3.1 路径聚合网络（Path Aggregation Network）</h2><p>在目标检测领域，探测不同尺度的目标是一个重要的挑战。在PP-YOLO里面使用了FPN（Feature Pyramid Network，特征金字塔网络）来组建自底向上的路径；此处，PP-YOLOv2采用了PAN的设计使用自顶向下的信息。<br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/2.png" alt="image.png"></p>
+<h2 id="3-2-激活函数：Mish"><a href="#3-2-激活函数：Mish" class="headerlink" title="3.2 激活函数：Mish"></a>3.2 激活函数：Mish</h2><p>Mish公式如下：<br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/formula.svg"><br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/3.png" alt="image.png"></p>
+<h2 id="3-3-更大的输入尺寸"><a href="#3-3-更大的输入尺寸" class="headerlink" title="3.3 更大的输入尺寸"></a>3.3 更大的输入尺寸</h2><p>增大输入尺寸会扩大目标的区域，因此小尺度目标的信息会比以前更容易保存（我不理解！）</p>
+<blockquote>
+<p>Increasing the input size enlarges the area of objects. Thus, information of the objects on a small scale will be preserved easier than before. </p>
+</blockquote>
+<h2 id="3-4-IoU感知分支"><a href="#3-4-IoU感知分支" class="headerlink" title="3.4 IoU感知分支"></a>3.4 IoU感知分支</h2><p>定义了IoU损失如下。感觉类似交叉熵，不过把输入p换成了σ(p)<br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/formula2.svg"></p>
+<h1 id="4-实验"><a href="#4-实验" class="headerlink" title="4. 实验"></a>4. 实验</h1><h2 id="4-2-消融实验"><a href="#4-2-消融实验" class="headerlink" title="4.2 消融实验"></a>4.2 消融实验</h2><p>他们还做了消融实验，A是基线模型，每一个创新点加上去mAP都有一些提升。<br><img src="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/4.png" alt="image.png"></p>
+<h1 id="5-没用的尝试"><a href="#5-没用的尝试" class="headerlink" title="5. 没用的尝试"></a>5. 没用的尝试</h1><p>以下tricks尝试过，但没有带来性能提升：</p>
+<ol>
+<li>余弦学习率衰减</li>
+<li>骨干参数冻结</li>
+<li>SiLU激活函数</li>
+</ol>
+<p><a href="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/pp-yolov2.pdf">pp yolov2.pdf</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/11/08/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9A%E8%A7%86%E9%A2%91%E6%8F%92%E5%B8%A7%E7%AE%97%E6%B3%95FILM/" class="pre-post btn btn-default" title='论文阅读：视频插帧算法-FILM'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            论文阅读：视频插帧算法-FILM</span>
+    </a>
+    
+    
+    <a href="/2022/08/09/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AWenet/" class="next-post btn btn-default" title='论文阅读：wenet'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            论文阅读：wenet</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="toc-text">1. 介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%9B%9E%E7%9C%8BPP-YOLO"><span class="toc-text">2. 回看PP-YOLO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-text">2.1 预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%9F%BA%E7%BA%BF%E6%A8%A1%E5%9E%8B"><span class="toc-text">2.2 基线模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="toc-text">2.3 训练策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-PP-YOLOv2%E7%9A%84%E6%94%B9%E8%BF%9B"><span class="toc-text">3. PP-YOLOv2的改进</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E8%B7%AF%E5%BE%84%E8%81%9A%E5%90%88%E7%BD%91%E7%BB%9C%EF%BC%88Path-Aggregation-Network%EF%BC%89"><span class="toc-text">3.1 路径聚合网络（Path Aggregation Network）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%EF%BC%9AMish"><span class="toc-text">3.2 激活函数：Mish</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E6%9B%B4%E5%A4%A7%E7%9A%84%E8%BE%93%E5%85%A5%E5%B0%BA%E5%AF%B8"><span class="toc-text">3.3 更大的输入尺寸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-IoU%E6%84%9F%E7%9F%A5%E5%88%86%E6%94%AF"><span class="toc-text">3.4 IoU感知分支</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AE%9E%E9%AA%8C"><span class="toc-text">4. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-text">4.2 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%B2%A1%E7%94%A8%E7%9A%84%E5%B0%9D%E8%AF%95"><span class="toc-text">5. 没用的尝试</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

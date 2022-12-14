@@ -1,0 +1,451 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="学科笔记" />
+
+
+<meta name="description" content="本次实验将要通过根轨迹来分析系统性能。
+本篇文章记录自动控制原理的后三个实验，包括“基于MATLAB控制系统的根轨迹及其性能分析”，“基于MATLAB控制系统的Nyquist图及其稳定性分析”和..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    自控原理实验（下） |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="自控原理实验（下）">
+            
+            自控原理实验（下）
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/%E5%AD%A6%E7%A7%91%E7%AC%94%E8%AE%B0/" rel="tag">学科笔记</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/15</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1125</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>本次实验将要通过根轨迹来分析系统性能。</p>
+<p>本篇文章记录自动控制原理的后三个实验，包括“基于MATLAB控制系统的根轨迹及其性能分析”，“基于MATLAB控制系统的Nyquist图及其稳定性分析”和“基于MATLAB控制系统的Bode图及其频域分析”。</p>
+<span id="more"></span>
+
+<h1 id="4-基于MATLAB控制系统的根轨迹及其性能分析"><a href="#4-基于MATLAB控制系统的根轨迹及其性能分析" class="headerlink" title="$4. 基于MATLAB控制系统的根轨迹及其性能分析"></a>$4. 基于MATLAB控制系统的根轨迹及其性能分析</h1><h2 id="1、实验目的"><a href="#1、实验目的" class="headerlink" title="1、实验目的"></a>1、实验目的</h2><p>（1）熟练掌握使用MATLAB绘制系统零极点图和根轨迹图的方法；</p>
+<p>（2）学会分析控制系统根轨迹的一般规律。</p>
+<p>（3）利用根轨迹图进行系统性能分析。</p>
+<h2 id="2、开环闭环传递函数"><a href="#2、开环闭环传递函数" class="headerlink" title="2、开环闭环传递函数"></a>2、开环闭环传递函数</h2><p><img src="https://gss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/4610b912c8fcc3ceccc151709c45d688d43f206b.jpg" alt="某个系统"></p>
+<p>G(s)称为前向通道传递函数，是输出Xo(s)与偏差E(s)之比；</p>
+<p>H(s)称为反馈回路传递函数，是反馈信号B(s)与输出Xo(s)之比；</p>
+<p>而G(s)*H(s)是被人为定义为系统的<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E5%BC%80%E7%8E%AF%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">开环传递函数</a>Gk(s)，也是反馈信号与偏差之比；</p>
+<p><a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E9%97%AD%E7%8E%AF%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">闭环传递函数</a>的定义则为输出与输入之比。</p>
+<h2 id="3、根轨迹"><a href="#3、根轨迹" class="headerlink" title="3、根轨迹"></a>3、根轨迹</h2><h3 id="3-1-概念"><a href="#3-1-概念" class="headerlink" title="3.1 概念"></a>3.1 概念</h3><p>根轨迹是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BC%80%E7%8E%AF%E7%B3%BB%E7%BB%9F">开环系统</a>某一参数从零变到无穷时，<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%97%AD%E7%8E%AF%E7%B3%BB%E7%BB%9F/5993157">闭环系统</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%89%B9%E5%BE%81%E6%96%B9%E7%A8%8B">特征方程</a>式的根在s平面上变化的轨迹。根轨迹是分析和设计线性定常控制系统的图解方法，使用十分简便，特别在进行多回路系统的分析时，应用根轨迹法比用其他方法更为方便，因此在工程实践中获得了广泛应用。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2375498434,3431537734&fm=26&gp=0.jpg" alt="根轨迹图"></p>
+<h2 id="3-2-根轨迹与系统稳定性"><a href="#3-2-根轨迹与系统稳定性" class="headerlink" title="3.2 根轨迹与系统稳定性"></a>3.2 根轨迹与系统稳定性</h2><p>1.如果根轨迹全部位于s平面左侧，就表示无论<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A2%9E%E7%9B%8A">增益</a>怎么改变，特征根全部具有负实部，则系统就是稳定的。</p>
+<p>2.如果根轨迹在虚轴上，表示临界稳定，也就是不断<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%8C%AF%E8%8D%A1">振荡</a>。</p>
+<p>3.如果根轨迹根轨迹全部都在s右半平面，则表示无论选择什么参数，系统都是不稳定的。</p>
+<p>也就是说增益在一定范围内变化时，系统可以保持稳定，但是当增益的变化超过这一<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%98%88%E5%80%BC/7442398">阈值</a>时，系统就会变得不稳定，而这一阈值就是出现在根轨迹与虚轴的交点上，在这一点系统临界稳定。最终可由增益的取值范围判断系统的稳定性。</p>
+<h3 id="3-3-绘制法则"><a href="#3-3-绘制法则" class="headerlink" title="3.3 绘制法则"></a>3.3 绘制法则</h3><p>根轨迹的绘制具有以下绘制法则：</p>
+<p><strong>法则1.起点和终点</strong></p>
+<p>根轨迹的起点和终点。根轨迹起于开环极点（包括无限极点），终于开环零点（包括无限零点）。</p>
+<p><strong>法则2.分支数、对称性和连续性</strong></p>
+<p>根轨迹的分支数、对称性和连续性。根轨迹的分支数与开环有限零点数m和有限极点数n中的大者相等，它们是连续的并且对称于实轴。</p>
+<p><strong>法则3.渐近线</strong></p>
+<p>根轨迹的渐近线。当开环n&gt;m时，有n-m条根轨迹分支沿着与实轴交角为$\varphi_a$、交点为$\sigma_a$的一组渐近线趋向无穷远处，且有$\varphi_a&#x3D;\frac{(2k+1)\pi}{n&#x3D;m}(k&#x3D;0,1,2,…,n-m-1)$和$\sigma_a&#x3D;\frac{\sum_{i&#x3D;1}^{n}p_i-\sum_{j&#x3D;1}^{m}}{n-m}$</p>
+<p><strong>法则4.在实轴上的分布</strong></p>
+<p>根轨迹在实轴上的分布。实轴上的某一区域，若其右边开环实数零、极点个数之和为奇数，则该区域必是根轨迹。</p>
+<p><strong>法则5.分离点与分离角</strong></p>
+<p>根轨迹的分离点与分离角。两条或两条以上根轨迹分支在s平面上相遇又立即分开的点，称为根轨迹的分离点，分离点的坐标d是下列方程的解：<br>$$<br>\sum_{j&#x3D;1}^m\frac{1}{d-z_j}&#x3D;\sum_{i&#x3D;1}^m\frac{1}{d-p_i}<br>$$</p>
+<p>式中，$z_j$为各开环零点的数值；$p_i$为各开环极点的数值；分离角为$(2k+1)\pi&#x2F;l$</p>
+<p><strong>法则6.起始角与终止角</strong></p>
+<p>根轨迹的起始角与终止角。根轨迹离开开环复数极点处的切线与正实轴的夹角，称为起始角；根轨迹进入开环复数零点处的切线与正实轴的夹角，称为终止角。这些角度都可以由特定关系式求出。</p>
+<p><strong>法则7.与虚轴的交点</strong></p>
+<p>根轨迹与虚轴的交点。若根轨迹与虚轴相交，则交点上的$K’$值和$\omega$值可用劳斯判据确定，也可令闭环特征方程中的$s&#x3D;j\omega$，然后分别令其实部和虚部为零而求得。</p>
+<p><strong>法则8.根之和</strong></p>
+<p>根之和。<br>$$<br>\sum_{i&#x3D;1}^ns_i&#x3D;\sum_{i&#x3D;1}^np_i<br>$$</p>
+<h3 id="3-4-实验例子"><a href="#3-4-实验例子" class="headerlink" title="3.4 实验例子"></a>3.4 实验例子</h3><ol>
+<li>已知系统的开环传递函数为$G_k(s)&#x3D;\frac{s^2+5s+5}{s(s+1)(s^2+2s+2)}$，绘制系统的零极点图</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">num=[1 5 5];den=[1 3 4 2 0];pzmap(num,den);grid;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/11/15/Ma2W8A.png" alt="零极点图"></p>
+<p>2）已知系统的开环传递函数为$G_k(s)&#x3D;\frac{k}{s(s+1)(s+2)}$，绘制控制图系统的根轨迹图，并分析根轨迹的一般规律</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">num=[1];den=[1 3 2 0];rlocus(num,den);grid</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/11/15/Ma2X2n.png" alt="根轨迹图"></p>
+<p><strong>根轨迹的一般规律：</strong>[黑人问号.jpg]</p>
+<p>3）在实验内容（2）中控制系统的根轨迹上分区段取点，构造闭环系统传递函数，分别绘制其对应的阶跃响应曲线，并比较分析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k=1;z=[];p=[0 -1 -2];[num,den]=zp2tf(z,p,k);rlocus(num,den);grid[k,r]=rlocfind(num,den)[num,den]=zp2tf(z,r,k);step(num,den)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>s轴右侧 -&gt; 不稳定状态</li>
+<li>s轴左侧的曲线弯头部分，产生一对共轭复根 -&gt; 欠阻尼状态</li>
+<li>曲线零点处，产生两个相同的特征根 -&gt; 临界稳定状态</li>
+<li>左边线段处，特征根均为负实数 -&gt; 过阻尼状态</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/11/15/MaoU6H.png" alt="根轨迹取点对应状态图"></p>
+<p>参考资料：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%A0%B9%E8%BD%A8%E8%BF%B9/8322211?fr=aladdin">百度百科：根轨迹</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/567897173.html">开环传递函数与闭环传递函数区别？</a></p>
+<h1 id="5-基于MATLAB控制系统的Nyquist图及其稳定性分析"><a href="#5-基于MATLAB控制系统的Nyquist图及其稳定性分析" class="headerlink" title="$5. 基于MATLAB控制系统的Nyquist图及其稳定性分析"></a>$5. 基于MATLAB控制系统的Nyquist图及其稳定性分析</h1><h2 id="1、实验目的-1"><a href="#1、实验目的-1" class="headerlink" title="1、实验目的"></a>1、实验目的</h2><p>（1）熟练掌握使用MATLAB绘制系统Nyquist图的方法；</p>
+<p>（2）能够分析控制系统Nyquist图的基本规律；</p>
+<p>（3）加深理解控制系统奈奎斯特稳定性判据的实际应用；</p>
+<p>（4）学会用奈氏图设计控制系统。</p>
+<h2 id="2、概念解释"><a href="#2、概念解释" class="headerlink" title="2、概念解释"></a>2、概念解释</h2><h3 id="2-1-幅相频率特性曲线"><a href="#2-1-幅相频率特性曲线" class="headerlink" title="2.1 幅相频率特性曲线"></a>2.1 幅相频率特性曲线</h3><p>以角频率$\omega$为参变量，当从$\omega$从$0\to\infty$变化时，<strong>频率特性构成的向量</strong>在复平面上描绘出的曲线称为幅相频率特性曲线，又称为极坐标图，或<strong>Nyquist曲线</strong>，简称<strong>奈氏图</strong>。</p>
+<p>一般表达形式，其中$A(\omega)$和$\varphi(\omega)$分别代表了系统的幅频特性和相频特性：<br>G(jω)&#x3D;A(ω)ejφ(ω)&#x3D;A(ω)cos(φ(ω))+j∗A(ω)sin(φ(ω))G(jω)&#x3D;A(ω)ejφ(ω)&#x3D;A(ω)cos(φ(ω))+j∗A(ω)sin(φ(ω))</p>
+<h3 id="2-2-奈奎斯特稳定性判据（又称奈氏判据）"><a href="#2-2-奈奎斯特稳定性判据（又称奈氏判据）" class="headerlink" title="2.2 奈奎斯特稳定性判据（又称奈氏判据）"></a>2.2 奈奎斯特稳定性判据（又称奈氏判据）</h3><p>奈奎斯特稳定性判据是利用系统开环频率特性来判断闭环系统稳定性的一个判据，便于研究当系统结构参数改变时对系统稳定性的影响。其内容是：反馈控制系统稳定的充分必要条件是当$\omega$从$-\infty\to+\infty$时，开环系统的奈氏曲线$G_k(j\omega)$不穿过（-1，j0）点且逆时针包围临界点（-1，j0）的<strong>圈数N</strong>等于开环传递函数的<strong>正实部极点数P</strong>。具体地说：</p>
+<p>①对于开环稳定的系统，闭环系统稳定的充分必要条件为开环系统的奈氏曲线$G_k(j\omega)$不包围（-1，j0）点。反之闭环系统不稳定。</p>
+<p>②对于开环不稳定系统，有P个开环极点位于右半s平面，则闭环系统稳定的充分必要条件为当$\omega$从$-\infty\to+\infty$时，开环系统的奈氏曲线$G_k(j\omega)$逆时针包围（-1，j0）点P次。</p>
+<p><strong>重要公式：</strong></p>
+<ul>
+<li>*<em>N &#x3D; Z - P *</em></li>
+<li>当闭环系统稳定时，Z&#x3D;0，上式可变为<strong>N &#x3D; - P</strong></li>
+</ul>
+<h2 id="3、实验内容"><a href="#3、实验内容" class="headerlink" title="3、实验内容"></a>3、实验内容</h2><p>1）已知系统的开环传递函数为$G_k(s)&#x3D;\frac{10}{s^2+2s+10}$，绘制其Nyquist图</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">num=10;den=[1 2 10];nyquist(num,den)grid</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/11/15/Mdib8g.png" alt="系统Nyquist图"></p>
+<p>2）已知系统的开环传递函数为$G_k(s)&#x3D;\frac{0.5}{s^3+2s^2+s+0.5}$，绘制其Nyquist图，并判定系统的稳定性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% 第一步，绘制系统的Nyquist图，相应的程序为：num=0.5;den=[1 2 1 0.5];nyquist(num,den)grid% 第二步，确定开环极点在右半s平面的个数p,相应的程序为p=[1 2 1 0.5];roots(p)</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：s右半平面有3个开环极点，所以P&#x3D;3。看图可知，N&#x3D;0。</p>
+<p>所以Z&#x3D;N+P&#x3D;0+3&#x3D;3，闭环系统不稳定。</p>
+<p><img src="https://s2.ax1x.com/2019/11/15/MdFp5T.png" alt="系统Nyquist图"></p>
+<p>参考内容：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%85%AC%E5%BC%8F">欧拉公式</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A5%88%E5%A5%8E%E6%96%AF%E7%89%B9%E7%A8%B3%E5%AE%9A%E5%88%A4%E6%8D%AE/4302656?fr=aladdin">百度百科：奈奎斯特稳定判据</a></p>
+<h1 id="6-基于MATLAB控制系统的Bode图及其频域分析"><a href="#6-基于MATLAB控制系统的Bode图及其频域分析" class="headerlink" title="$6. 基于MATLAB控制系统的Bode图及其频域分析"></a>$6. 基于MATLAB控制系统的Bode图及其频域分析</h1><h2 id="1、实验目的-2"><a href="#1、实验目的-2" class="headerlink" title="1、实验目的"></a>1、实验目的</h2><p>（1）熟练掌握运用MATLAB命令绘制控制系统Bode图的方法；</p>
+<p>（2）了解系统Bode图的一般规律及其频域指标的获取方法；</p>
+<p>（3）熟练掌握运用Bode图分析控制系统稳定性的方法。</p>
+<h2 id="2、相关概念"><a href="#2、相关概念" class="headerlink" title="2、相关概念"></a>2、相关概念</h2><h3 id="2-1-对数频率特性曲线"><a href="#2-1-对数频率特性曲线" class="headerlink" title="2.1 对数频率特性曲线"></a>2.1 对数频率特性曲线</h3><p>又称频率特性的对数坐标图或伯德（Bode）图，由<strong>对数幅频特性曲线</strong>（纵坐标为$10lg|G_k(j\omega)|$，单位是分贝，dB）和<strong>对数相频特性曲线</strong>（纵坐标为度，°）组成，两者的横坐标都是角频率$\omega$，采用$lg(\omega)$分度。</p>
+<p>用对数频率特性曲线表示系统频率特性的<strong>优点</strong>是：</p>
+<p>①幅频特性的乘除运算转变为加减运算；</p>
+<p>②对系统作近似分析时，只需画出对数幅频特性曲线的渐近线，大大简化了图形的绘制；</p>
+<p>③可以用实验方法将测得的系统（或环节）频率响应的数据画在半对数坐标纸上，根据所做出的曲线，估计被测系统的传递函数。</p>
+<h3 id="2-2-对数稳定判据"><a href="#2-2-对数稳定判据" class="headerlink" title="2.2 对数稳定判据"></a>2.2 对数稳定判据</h3><p>对数频率特性曲线是奈氏判据移植到对数频率坐标的结果。若$G_k(j\omega)$包围（-1，j0）点，即$G_k(j\omega)$在点（-1，j0）左边有交点，在Bode图中表现为$L(\omega)&gt;0$分贝所在的频段范围内，$\varphi(\omega)$与-180°线有交点。</p>
+<p>对数频率稳定性的判据为：闭环系统稳定的充分必要条件是当$\omega$从零变化到$+\infty$时，在开环系统对数幅频特性曲线$L(\omega)&gt;0$分贝的频段内，相频特性$\varphi(\omega)$穿越$(2k+1)\pi(k&#x3D;0,\pm1,\pm2,…)$的次数N为$\frac{P}{2}$，其中$N&#x3D;N_+-N_-$，$N_+$为正穿越次数，$N_-$为负穿越次数，P为开环传递函数的正实部极点数。</p>
+<h3 id="2-3-稳定裕度"><a href="#2-3-稳定裕度" class="headerlink" title="2.3 稳定裕度"></a>2.3 稳定裕度</h3><p>1）相角裕度$\gamma$</p>
+<p>2）幅值裕度$h_g$</p>
+<p>3）关于相角裕度和增益裕度的几点说明：控制系统的相角裕度和幅值裕度是系统幅相特性曲线对（-1，j0）点靠近程度的度量。因此，这两个裕度可以用来作为设计准则。只用幅值裕度或相角裕度都不足以说明系统的相对稳定性，必须同时给出这两个量。</p>
+<p>对于最小相位系统，只有当相角裕度和幅值裕度都是正值时系统才是稳定的。负的裕度表示系统不稳定。为了得到满意的性能，相角裕度应当在30°-60°之间，幅值裕度应大于6dB。</p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/11/16/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-16-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0/" class="pre-post btn btn-default" title='自控原理复习'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            自控原理复习</span>
+    </a>
+    
+    
+    <a href="/2019/11/09/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89/" class="next-post btn btn-default" title='自控原理实验（上）'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            自控原理实验（上）</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%9F%BA%E4%BA%8EMATLAB%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A0%B9%E8%BD%A8%E8%BF%B9%E5%8F%8A%E5%85%B6%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="toc-text">$4. 基于MATLAB控制系统的根轨迹及其性能分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="toc-text">1、实验目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%BC%80%E7%8E%AF%E9%97%AD%E7%8E%AF%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0"><span class="toc-text">2、开环闭环传递函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%A0%B9%E8%BD%A8%E8%BF%B9"><span class="toc-text">3、根轨迹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%A6%82%E5%BF%B5"><span class="toc-text">3.1 概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E6%A0%B9%E8%BD%A8%E8%BF%B9%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="toc-text">3.2 根轨迹与系统稳定性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E7%BB%98%E5%88%B6%E6%B3%95%E5%88%99"><span class="toc-text">3.3 绘制法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%AE%9E%E9%AA%8C%E4%BE%8B%E5%AD%90"><span class="toc-text">3.4 实验例子</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%9F%BA%E4%BA%8EMATLAB%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84Nyquist%E5%9B%BE%E5%8F%8A%E5%85%B6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-text">$5. 基于MATLAB控制系统的Nyquist图及其稳定性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84-1"><span class="toc-text">1、实验目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E6%A6%82%E5%BF%B5%E8%A7%A3%E9%87%8A"><span class="toc-text">2、概念解释</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%B9%85%E7%9B%B8%E9%A2%91%E7%8E%87%E7%89%B9%E6%80%A7%E6%9B%B2%E7%BA%BF"><span class="toc-text">2.1 幅相频率特性曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%A5%88%E5%A5%8E%E6%96%AF%E7%89%B9%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%A4%E6%8D%AE%EF%BC%88%E5%8F%88%E7%A7%B0%E5%A5%88%E6%B0%8F%E5%88%A4%E6%8D%AE%EF%BC%89"><span class="toc-text">2.2 奈奎斯特稳定性判据（又称奈氏判据）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="toc-text">3、实验内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E5%9F%BA%E4%BA%8EMATLAB%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84Bode%E5%9B%BE%E5%8F%8A%E5%85%B6%E9%A2%91%E5%9F%9F%E5%88%86%E6%9E%90"><span class="toc-text">$6. 基于MATLAB控制系统的Bode图及其频域分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84-2"><span class="toc-text">1、实验目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-text">2、相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%AF%B9%E6%95%B0%E9%A2%91%E7%8E%87%E7%89%B9%E6%80%A7%E6%9B%B2%E7%BA%BF"><span class="toc-text">2.1 对数频率特性曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%AF%B9%E6%95%B0%E7%A8%B3%E5%AE%9A%E5%88%A4%E6%8D%AE"><span class="toc-text">2.2 对数稳定判据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%A8%B3%E5%AE%9A%E8%A3%95%E5%BA%A6"><span class="toc-text">2.3 稳定裕度</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

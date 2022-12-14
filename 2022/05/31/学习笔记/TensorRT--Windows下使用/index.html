@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="TensorRT" />
+
+
+<meta name="description" content=" 上篇文章记录了如何在Win10下配置TensorRT，这篇将记录如何将一个最简单的超分辨率SRCNN的TensorFlow模型.tf转化为TensorRT的engin文件，最后使用Tensor..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    TensorRT--Windows下使用 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="TensorRT--Windows下使用">
+            
+            TensorRT--Windows下使用
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/TensorRT/" rel="tag">TensorRT</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/05/31</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p> 上篇文章记录了如何在Win10下配置TensorRT，这篇将记录如何将一个最简单的超分辨率SRCNN的TensorFlow模型<code>.tf</code>转化为TensorRT的<code>engin</code>文件，最后使用TensorRT推导。</p>
+<span id="more"></span>
+
+<h1 id="模型格式转换：-tf-gt-onnx"><a href="#模型格式转换：-tf-gt-onnx" class="headerlink" title="模型格式转换：.tf-&gt;.onnx"></a>模型格式转换：<code>.tf-&gt;.onnx</code></h1><ol>
+<li>安装<code>tf2onnx</code>和<code>onnxruntime</code></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install onnxruntime</span><br><span class="line">pip install git+https://github.com/onnx/tensorflow-onnx</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>转换命令</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m tf2onnx.convert --saved-model ./checkpoints/yolov4.tf --output model.onnx --opset 11 --verbose</span><br></pre></td></tr></table></figure>
+
+<p>成功生成onnx模型：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line">(base) C:\Users\11197\Desktop\vitsr\models&gt;python -m tf2onnx.convert --saved-model vitsr_4x.tf --output model.onnx --opset 11 --verbose</span><br><span class="line">2022-05-31 11:44:25.907286: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cudart64_110.dll</span><br><span class="line">C:\Users\11197\Miniconda3\lib\runpy.py:127: RuntimeWarning: &#x27;tf2onnx.convert&#x27; found in sys.modules after import of package &#x27;tf2onnx&#x27;, but prior to execution of &#x27;tf2onnx.convert&#x27;; this may result in unpredictable behaviour</span><br><span class="line">  warn(RuntimeWarning(msg))</span><br><span class="line">2022-05-31 11:44:27,590 - WARNING - tf2onnx: ***IMPORTANT*** Installed protobuf is not cpp accelerated. Conversion will be extremely slow. See https://github.com/onnx/tensorflow-onnx/issues/1557</span><br><span class="line">2022-05-31 11:44:27.592219: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library nvcuda.dll</span><br><span class="line">2022-05-31 11:44:27.605153: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1733] Found device 0 with properties:</span><br><span class="line">pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 3070 Laptop GPU computeCapability: 8.6</span><br><span class="line">coreClock: 1.56GHz coreCount: 40 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s</span><br><span class="line">2022-05-31 11:44:27.605279: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cudart64_110.dll</span><br><span class="line">2022-05-31 11:44:27.612433: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cublas64_11.dll</span><br><span class="line">2022-05-31 11:44:27.612553: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cublasLt64_11.dll</span><br><span class="line">2022-05-31 11:44:27.615466: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cufft64_10.dll</span><br><span class="line">2022-05-31 11:44:27.616751: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library curand64_10.dll</span><br><span class="line">2022-05-31 11:44:27.619042: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cusolver64_11.dll</span><br><span class="line">2022-05-31 11:44:27.621767: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cusparse64_11.dll</span><br><span class="line">2022-05-31 11:44:27.622415: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library cudnn64_8.dll</span><br><span class="line">2022-05-31 11:44:27.622605: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1871] Adding visible gpu devices: 0</span><br><span class="line">2022-05-31 11:44:27.623070: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2</span><br><span class="line">To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.</span><br><span class="line">2022-05-31 11:44:27.623904: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1733] Found device 0 with properties:</span><br><span class="line">pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 3070 Laptop GPU computeCapability: 8.6</span><br><span class="line">coreClock: 1.56GHz coreCount: 40 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s</span><br><span class="line">2022-05-31 11:44:27.624021: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1871] Adding visible gpu devices: 0</span><br><span class="line">2022-05-31 11:44:27.951984: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1258] Device interconnect StreamExecutor with strength 1 edge matrix:</span><br><span class="line">2022-05-31 11:44:27.952142: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1264]      0</span><br><span class="line">2022-05-31 11:44:27.952264: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1277] 0:   N</span><br><span class="line">2022-05-31 11:44:27.952483: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1418] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 5484 MB memory) -&gt; physical GPU (device: 0, name: NVIDIA GeForce RTX 3070 Laptop GPU, pci bus id: 0000:01:00.0, compute capability: 8.6)</span><br><span class="line">2022-05-31 11:44:27,953 - WARNING - tf2onnx.tf_loader: &#x27;--tag&#x27; not specified for saved_model. Using --tag serve</span><br><span class="line">2022-05-31 11:44:36,348 - INFO - tf2onnx.tf_loader: Signatures found in model: [serving_default].</span><br><span class="line">2022-05-31 11:44:36,348 - WARNING - tf2onnx.tf_loader: &#x27;--signature_def&#x27; not specified, using first signature: serving_default</span><br><span class="line">2022-05-31 11:44:36,348 - INFO - tf2onnx.tf_loader: Output names: [&#x27;output_1&#x27;]</span><br><span class="line">2022-05-31 11:44:36.633737: I tensorflow/core/grappler/devices.cc:69] Number of eligible GPUs (core count &gt;= 8, compute capability &gt;= 0.0): 1</span><br><span class="line">2022-05-31 11:44:36.633977: I tensorflow/core/grappler/clusters/single_machine.cc:357] Starting new session</span><br><span class="line">2022-05-31 11:44:36.635395: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1733] Found device 0 with properties:</span><br><span class="line">pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 3070 Laptop GPU computeCapability: 8.6</span><br><span class="line">coreClock: 1.56GHz coreCount: 40 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s</span><br><span class="line">2022-05-31 11:44:36.635531: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1871] Adding visible gpu devices: 0</span><br><span class="line">2022-05-31 11:44:36.635679: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1258] Device interconnect StreamExecutor with strength 1 edge matrix:</span><br><span class="line">2022-05-31 11:44:36.635805: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1264]      0</span><br><span class="line">2022-05-31 11:44:36.635919: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1277] 0:   N</span><br><span class="line">2022-05-31 11:44:36.636120: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1418] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 5484 MB memory) -&gt; physical GPU (device: 0, name: NVIDIA GeForce RTX 3070 Laptop GPU, pci bus id: 0000:01:00.0, compute capability: 8.6)</span><br><span class="line">2022-05-31 11:44:36.699775: I tensorflow/core/grappler/optimizers/meta_optimizer.cc:1144] Optimization results for grappler item: graph_to_optimize</span><br><span class="line">  function_optimizer: Graph size after: 702 nodes (567), 1002 edges (867), time = 11.066ms.</span><br><span class="line">  function_optimizer: function_optimizer did nothing. time = 0.291ms.</span><br><span class="line"></span><br><span class="line">2022-05-31 11:44:37.342929: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1733] Found device 0 with properties:</span><br><span class="line">pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 3070 Laptop GPU computeCapability: 8.6</span><br><span class="line">coreClock: 1.56GHz coreCount: 40 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s</span><br><span class="line">2022-05-31 11:44:37.343116: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1871] Adding visible gpu devices: 0</span><br><span class="line">2022-05-31 11:44:37.343250: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1258] Device interconnect StreamExecutor with strength 1 edge matrix:</span><br><span class="line">2022-05-31 11:44:37.343378: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1264]      0</span><br><span class="line">2022-05-31 11:44:37.343482: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1277] 0:   N</span><br><span class="line">2022-05-31 11:44:37.343648: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1418] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 5484 MB memory) -&gt; physical GPU (device: 0, name: NVIDIA GeForce RTX 3070 Laptop GPU, pci bus id: 0000:01:00.0, compute capability: 8.6)</span><br><span class="line">WARNING:tensorflow:From C:\Users\11197\Miniconda3\lib\site-packages\tf2onnx\tf_loader.py:711: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.</span><br><span class="line">Instructions for updating:</span><br><span class="line">Use `tf.compat.v1.graph_util.extract_sub_graph`</span><br><span class="line">2022-05-31 11:44:37,499 - WARNING - tensorflow: From C:\Users\11197\Miniconda3\lib\site-packages\tf2onnx\tf_loader.py:711: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.</span><br><span class="line">Instructions for updating:</span><br><span class="line">Use `tf.compat.v1.graph_util.extract_sub_graph`</span><br><span class="line">2022-05-31 11:44:37.851693: I tensorflow/core/grappler/devices.cc:69] Number of eligible GPUs (core count &gt;= 8, compute capability &gt;= 0.0): 1</span><br><span class="line">2022-05-31 11:44:37.851885: I tensorflow/core/grappler/clusters/single_machine.cc:357] Starting new session</span><br><span class="line">2022-05-31 11:44:37.852918: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1733] Found device 0 with properties:</span><br><span class="line">pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 3070 Laptop GPU computeCapability: 8.6</span><br><span class="line">coreClock: 1.56GHz coreCount: 40 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s</span><br><span class="line">2022-05-31 11:44:37.853025: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1871] Adding visible gpu devices: 0</span><br><span class="line">2022-05-31 11:44:37.853114: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1258] Device interconnect StreamExecutor with strength 1 edge matrix:</span><br><span class="line">2022-05-31 11:44:37.853190: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1264]      0</span><br><span class="line">2022-05-31 11:44:37.853276: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1277] 0:   N</span><br><span class="line">2022-05-31 11:44:37.853433: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1418] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 5484 MB memory) -&gt; physical GPU (device: 0, name: NVIDIA GeForce RTX 3070 Laptop GPU, pci bus id: 0000:01:00.0, compute capability: 8.6)</span><br><span class="line">2022-05-31 11:44:37.999328: I tensorflow/core/grappler/optimizers/meta_optimizer.cc:1144] Optimization results for grappler item: graph_to_optimize</span><br><span class="line">  constant_folding: Graph size after: 348 nodes (-354), 538 edges (-464), time = 22.997ms.</span><br><span class="line">  function_optimizer: function_optimizer did nothing. time = 0.407ms.</span><br><span class="line">  constant_folding: Graph size after: 348 nodes (0), 538 edges (0), time = 4.128ms.</span><br><span class="line">  function_optimizer: function_optimizer did nothing. time = 0.246ms.</span><br><span class="line"></span><br><span class="line">2022-05-31 11:44:39,646 - INFO - tf2onnx: inputs: [&#x27;input_1:0&#x27;]</span><br><span class="line">2022-05-31 11:44:39,646 - INFO - tf2onnx: outputs: [&#x27;Identity:0&#x27;]</span><br><span class="line">2022-05-31 11:44:39,894 - INFO - tf2onnx.tfonnx: Using tensorflow=2.5.0, onnx=1.11.0, tf2onnx=1.10.0/16eb4b</span><br><span class="line">2022-05-31 11:44:39,895 - INFO - tf2onnx.tfonnx: Using opset &lt;onnx, 11&gt;</span><br><span class="line">2022-05-31 11:44:48,170 - INFO - tf2onnx.tf_utils: Computed 0 values for constant folding</span><br><span class="line">2022-05-31 11:44:54,755 - VERBOSE - tf2onnx.tfonnx: Mapping TF node to ONNX node(s)</span><br><span class="line">2022-05-31 11:44:54,810 - VERBOSE - tf2onnx.tfonnx: Summay Stats:</span><br><span class="line">        tensorflow ops: Counter(&#123;&#x27;Const&#x27;: 199, &#x27;Mul&#x27;: 26, &#x27;AddV2&#x27;: 25, &#x27;Conv3D&#x27;: 22, &#x27;BiasAdd&#x27;: 22, &#x27;Relu&#x27;: 22, &#x27;ConcatV2&#x27;: 7, &#x27;Squeeze&#x27;: 6, &#x27;Identity&#x27;: 5, &#x27;StridedSlice&#x27;: 4, &#x27;DepthToSpace&#x27;: 3, &#x27;Split&#x27;: 2, &#x27;Softmax&#x27;: 2, &#x27;Placeholder&#x27;: 1, &#x27;NoOp&#x27;: 1, &#x27;ResizeBilinear&#x27;: 1, &#x27;Pad&#x27;: 1&#125;)</span><br><span class="line">        tensorflow attr: Counter(&#123;&#x27;dtype&#x27;: 200, &#x27;value&#x27;: 199, &#x27;data_format&#x27;: 47, &#x27;dilations&#x27;: 22, &#x27;padding&#x27;: 22, &#x27;strides&#x27;: 22, &#x27;N&#x27;: 7, &#x27;Tidx&#x27;: 7, &#x27;squeeze_dims&#x27;: 6, &#x27;begin_mask&#x27;: 4, &#x27;ellipsis_mask&#x27;: 4, &#x27;end_mask&#x27;: 4, &#x27;new_axis_mask&#x27;: 4, &#x27;shrink_axis_mask&#x27;: 4, &#x27;block_size&#x27;: 3, &#x27;num_split&#x27;: 2, &#x27;shape&#x27;: 1, &#x27;align_corners&#x27;: 1, &#x27;half_pixel_centers&#x27;: 1&#125;)</span><br><span class="line">        onnx mapped: Counter(&#123;&#x27;Const&#x27;: 111, &#x27;Mul&#x27;: 26, &#x27;AddV2&#x27;: 25, &#x27;Conv3D&#x27;: 22, &#x27;BiasAdd&#x27;: 22, &#x27;Relu&#x27;: 22, &#x27;ConcatV2&#x27;: 7, &#x27;Squeeze&#x27;: 6, &#x27;Identity&#x27;: 4, &#x27;StridedSlice&#x27;: 4, &#x27;DepthToSpace&#x27;: 3, &#x27;Split&#x27;: 2, &#x27;Softmax&#x27;: 2, &#x27;Placeholder&#x27;: 1, &#x27;ResizeBilinear&#x27;: 1, &#x27;Pad&#x27;: 1&#125;)</span><br><span class="line">        onnx unmapped: Counter()</span><br><span class="line">2022-05-31 11:44:54,811 - INFO - tf2onnx.optimizer: Optimizing ONNX model</span><br><span class="line">2022-05-31 11:44:54,811 - VERBOSE - tf2onnx.optimizer: Apply optimize_transpose</span><br><span class="line">2022-05-31 11:44:54,969 - VERBOSE - tf2onnx.optimizer.TransposeOptimizer: Add -22 (47-&gt;25), Const +23 (128-&gt;151), Identity -3 (5-&gt;2), Reshape +45 (0-&gt;45), Transpose -44 (52-&gt;8)</span><br><span class="line">2022-05-31 11:44:54,970 - VERBOSE - tf2onnx.optimizer: Apply remove_redundant_upsample</span><br><span class="line">2022-05-31 11:44:54,991 - VERBOSE - tf2onnx.optimizer.UpsampleOptimizer: no change</span><br><span class="line">2022-05-31 11:44:54,992 - VERBOSE - tf2onnx.optimizer: Apply fold_constants</span><br><span class="line">2022-05-31 11:44:55,022 - VERBOSE - tf2onnx.optimizer.ConstFoldOptimizer: Cast -1 (1-&gt;0), Const -43 (151-&gt;108), Reshape -43 (45-&gt;2), Transpose -1 (8-&gt;7)</span><br><span class="line">2022-05-31 11:44:55,023 - VERBOSE - tf2onnx.optimizer: Apply const_dequantize_optimizer</span><br><span class="line">2022-05-31 11:44:55,039 - VERBOSE - tf2onnx.optimizer.ConstDequantizeOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,039 - VERBOSE - tf2onnx.optimizer: Apply loop_optimizer</span><br><span class="line">2022-05-31 11:44:55,056 - VERBOSE - tf2onnx.optimizer.LoopOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,056 - VERBOSE - tf2onnx.optimizer: Apply merge_duplication</span><br><span class="line">2022-05-31 11:44:55,075 - VERBOSE - tf2onnx.optimizer.MergeDuplicatedNodesOptimizer: Const -3 (108-&gt;105)</span><br><span class="line">2022-05-31 11:44:55,076 - VERBOSE - tf2onnx.optimizer: Apply reshape_optimizer</span><br><span class="line">2022-05-31 11:44:55,092 - VERBOSE - tf2onnx.optimizer.ReshapeOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,093 - VERBOSE - tf2onnx.optimizer: Apply global_pool_optimizer</span><br><span class="line">2022-05-31 11:44:55,109 - VERBOSE - tf2onnx.optimizer.GlobalPoolOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,109 - VERBOSE - tf2onnx.optimizer: Apply q_dq_optimizer</span><br><span class="line">2022-05-31 11:44:55,127 - VERBOSE - tf2onnx.optimizer.QDQOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,127 - VERBOSE - tf2onnx.optimizer: Apply remove_identity</span><br><span class="line">2022-05-31 11:44:55,143 - VERBOSE - tf2onnx.optimizer.IdentityOptimizer: Identity -2 (2-&gt;0)</span><br><span class="line">2022-05-31 11:44:55,143 - VERBOSE - tf2onnx.optimizer: Apply remove_back_to_back</span><br><span class="line">2022-05-31 11:44:55,159 - VERBOSE - tf2onnx.optimizer.BackToBackOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,159 - VERBOSE - tf2onnx.optimizer: Apply einsum_optimizer</span><br><span class="line">2022-05-31 11:44:55,176 - VERBOSE - tf2onnx.optimizer.EinsumOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,176 - VERBOSE - tf2onnx.optimizer: Apply optimize_transpose</span><br><span class="line">2022-05-31 11:44:55,196 - VERBOSE - tf2onnx.optimizer.TransposeOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,197 - VERBOSE - tf2onnx.optimizer: Apply remove_redundant_upsample</span><br><span class="line">2022-05-31 11:44:55,213 - VERBOSE - tf2onnx.optimizer.UpsampleOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,214 - VERBOSE - tf2onnx.optimizer: Apply fold_constants</span><br><span class="line">2022-05-31 11:44:55,756 - VERBOSE - tf2onnx.optimizer.ConstFoldOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,757 - VERBOSE - tf2onnx.optimizer: Apply const_dequantize_optimizer</span><br><span class="line">2022-05-31 11:44:55,773 - VERBOSE - tf2onnx.optimizer.ConstDequantizeOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,773 - VERBOSE - tf2onnx.optimizer: Apply loop_optimizer</span><br><span class="line">2022-05-31 11:44:55,789 - VERBOSE - tf2onnx.optimizer.LoopOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,790 - VERBOSE - tf2onnx.optimizer: Apply merge_duplication</span><br><span class="line">2022-05-31 11:44:55,807 - VERBOSE - tf2onnx.optimizer.MergeDuplicatedNodesOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,807 - VERBOSE - tf2onnx.optimizer: Apply reshape_optimizer</span><br><span class="line">2022-05-31 11:44:55,824 - VERBOSE - tf2onnx.optimizer.ReshapeOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,824 - VERBOSE - tf2onnx.optimizer: Apply global_pool_optimizer</span><br><span class="line">2022-05-31 11:44:55,841 - VERBOSE - tf2onnx.optimizer.GlobalPoolOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,842 - VERBOSE - tf2onnx.optimizer: Apply q_dq_optimizer</span><br><span class="line">2022-05-31 11:44:55,858 - VERBOSE - tf2onnx.optimizer.QDQOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,858 - VERBOSE - tf2onnx.optimizer: Apply remove_identity</span><br><span class="line">2022-05-31 11:44:55,875 - VERBOSE - tf2onnx.optimizer.IdentityOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,875 - VERBOSE - tf2onnx.optimizer: Apply remove_back_to_back</span><br><span class="line">2022-05-31 11:44:55,892 - VERBOSE - tf2onnx.optimizer.BackToBackOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,892 - VERBOSE - tf2onnx.optimizer: Apply einsum_optimizer</span><br><span class="line">2022-05-31 11:44:55,909 - VERBOSE - tf2onnx.optimizer.EinsumOptimizer: no change</span><br><span class="line">2022-05-31 11:44:55,911 - INFO - tf2onnx.optimizer: After optimization: Add -22 (47-&gt;25), Cast -1 (1-&gt;0), Const -23 (128-&gt;105), Identity -5 (5-&gt;0), Reshape +2 (0-&gt;2), Transpose -45 (52-&gt;7)</span><br><span class="line">2022-05-31 11:44:55,935 - INFO - tf2onnx:</span><br><span class="line">2022-05-31 11:44:55,935 - INFO - tf2onnx: Successfully converted TensorFlow model vitsr_4x.tf to ONNX</span><br><span class="line">2022-05-31 11:44:55,935 - INFO - tf2onnx: Model inputs: [&#x27;input_1&#x27;]</span><br><span class="line">2022-05-31 11:44:55,935 - INFO - tf2onnx: Model outputs: [&#x27;output_1&#x27;]</span><br><span class="line">2022-05-31 11:44:55,935 - INFO - tf2onnx: ONNX model is saved at model.onnx</span><br></pre></td></tr></table></figure>
+
+<h1 id="生成engin文件"><a href="#生成engin文件" class="headerlink" title="生成engin文件"></a>生成engin文件</h1><p>在开发者手册里面第4章介绍了Python API，给了一些基本用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorrt <span class="keyword">as</span> trt</span><br><span class="line"></span><br><span class="line">logger = trt.Logger(trt.Logger.WARNING)</span><br><span class="line">builder = trt.Builder(logger)</span><br><span class="line">network = builder.create_network(<span class="number">1</span> &lt;&lt; <span class="built_in">int</span>(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))</span><br><span class="line">parser = trt.OnnxParser(network, logger)</span><br><span class="line">success = parser.parse_from_file(<span class="string">&quot;models/model.onnx&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> idx <span class="keyword">in</span> <span class="built_in">range</span>(parser.num_errors):</span><br><span class="line">    <span class="built_in">print</span>(parser.get_error(idx))</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> success:</span><br><span class="line">    <span class="keyword">pass</span> <span class="comment"># Error handling code here</span></span><br><span class="line">config = builder.create_builder_config()</span><br><span class="line">config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, <span class="number">1</span> &lt;&lt; <span class="number">20</span>) <span class="comment"># 1 MiB</span></span><br><span class="line">serialized_engine = builder.build_serialized_network(network, config)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;sample.engine&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(serialized_engine)</span><br></pre></td></tr></table></figure>
+
+<p>使用该程序报错如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(base) C:\Users\11197\Desktop\vitsr&gt;python quantization.py</span><br><span class="line">[05/31/2022-12:11:18] [TRT] [W] onnx2trt_utils.cpp:365: Your ONNX model has been generated with INT64 weights, while TensorRT does not natively support INT64. Attempting to cast down to INT32.</span><br><span class="line">[05/31/2022-12:11:18] [TRT] [E] 4: [network.cpp::nvinfer1::Network::validate::3011] Error Code 4: Internal Error (Network has dynamic or shape inputs, but no optimization profile has been defined.)</span><br><span class="line">[05/31/2022-12:11:18] [TRT] [E] 2: [builder.cpp::nvinfer1::builder::Builder::buildSerializedNetwork::619] Error Code 2: Internal Error (Assertion engine != nullptr failed. )</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:\Users\11197\Desktop\vitsr\quantization.py&quot;, line 21, in &lt;module&gt;</span><br><span class="line">    f.write(serialized_engine)</span><br><span class="line">TypeError: a bytes-like object is required, not &#x27;NoneType&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>按照报错，根据开发者手册<code>8.2 Optimization Profiles</code>添加了一些配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">profile = builder.create_optimization_profile()</span><br><span class="line">profile.set_shape(<span class="string">&quot;input_1&quot;</span>, (<span class="number">1</span>, <span class="number">75</span>, <span class="number">75</span>, <span class="number">3</span>), (<span class="number">1</span>, <span class="number">75</span>, <span class="number">75</span>, <span class="number">3</span>), (<span class="number">1</span>, <span class="number">75</span>, <span class="number">75</span>, <span class="number">3</span>))</span><br><span class="line">profile.set_shape(<span class="string">&quot;output_1&quot;</span>, (<span class="number">1</span>, <span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), (<span class="number">1</span>, <span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), (<span class="number">1</span>, <span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>))</span><br><span class="line">config.add_optimization_profile(profile)</span><br></pre></td></tr></table></figure>
+
+<p>最后生成成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) C:\Users\11197\Desktop\srcnn&gt;python serialize.py</span><br><span class="line">[06/01/2022-11:54:18] [TRT] [W] onnx2trt_utils.cpp:365: Your ONNX model has been generated with INT64 weights, while TensorRT does not natively support INT64. Attempting to cast down to INT32.</span><br><span class="line">[06/01/2022-11:54:19] [TRT] [W] TensorRT was linked against cuBLAS/cuBLAS LT 11.8.0 but loaded cuBLAS/cuBLAS LT 11.5.1</span><br><span class="line">[06/01/2022-11:54:19] [TRT] [W] TensorRT was linked against cuDNN 8.3.2 but loaded cuDNN 8.2.1</span><br></pre></td></tr></table></figure>
+
+<h1 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h1><p>这里我不太会写，在一篇知乎文章上修改：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/347172593">https://zhuanlan.zhihu.com/p/347172593</a></p>
+<p>要注意的是，<code>.engin</code>文件的输入输出如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">input_1 16875 &lt;class &#x27;numpy.float32&#x27;&gt;</span><br><span class="line">output_1 270000 &lt;class &#x27;numpy.float32&#x27;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>字段分别是：name，size，dtype。输入时需要把图片flatten，输出时需要把图片reshape。</p>
+<p>核心代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pycuda.autoinit</span><br><span class="line"><span class="keyword">import</span> pycuda.driver <span class="keyword">as</span> cuda</span><br><span class="line"><span class="keyword">import</span> tensorrt <span class="keyword">as</span> trt</span><br><span class="line"></span><br><span class="line">cfx = cuda.Device(<span class="number">0</span>).make_context()</span><br><span class="line">stream = cuda.Stream()</span><br><span class="line">TRT_LOGGER = trt.Logger(trt.Logger.INFO)</span><br><span class="line">runtime = trt.Runtime(TRT_LOGGER)</span><br><span class="line"></span><br><span class="line">engine_file_path = <span class="string">&quot;sample.engine&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(engine_file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">     engine = runtime.deserialize_cuda_engine(f.read())</span><br><span class="line">context = engine.create_execution_context()</span><br><span class="line"></span><br><span class="line">host_inputs = []</span><br><span class="line">cuda_inputs = []</span><br><span class="line">host_outputs = []</span><br><span class="line">cuda_outputs = []</span><br><span class="line">bindings = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> binding <span class="keyword">in</span> engine:</span><br><span class="line">    size = trt.volume(engine.get_binding_shape(binding)) * engine.max_batch_size</span><br><span class="line">    dtype = trt.nptype(engine.get_binding_dtype(binding))</span><br><span class="line">    <span class="built_in">print</span>(binding, size, dtype)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 分配主机和设备buffers</span></span><br><span class="line">    host_mem = cuda.pagelocked_empty(size, dtype)    <span class="comment"># 主机</span></span><br><span class="line">    cuda_mem = cuda.mem_alloc(host_mem.nbytes)       <span class="comment"># 设备</span></span><br><span class="line">    <span class="comment"># 将设备buffer绑定到设备.</span></span><br><span class="line">    bindings.append(<span class="built_in">int</span>(cuda_mem))</span><br><span class="line">    <span class="comment"># 绑定到输入输出</span></span><br><span class="line">    <span class="keyword">if</span> engine.binding_is_input(binding):</span><br><span class="line">         host_inputs.append(host_mem)           <span class="comment"># CPU</span></span><br><span class="line">         cuda_inputs.append(cuda_mem)           <span class="comment"># GPU</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">         host_outputs.append(host_mem)</span><br><span class="line">         cuda_outputs.append(cuda_mem)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">701</span>,<span class="number">761</span>):</span><br><span class="line">    image = np.array(Image.<span class="built_in">open</span>(<span class="string">&quot;./data/40_10_test/LR/Frame0%d.png&quot;</span> % i))[np.newaxis,...]</span><br><span class="line"></span><br><span class="line">    t1 = time.time()</span><br><span class="line">    <span class="comment"># 拷贝输入图像到主机buffer</span></span><br><span class="line">    np.copyto(host_inputs[<span class="number">0</span>], image.flatten())</span><br><span class="line">    <span class="comment"># 将输入数据转到GPU.</span></span><br><span class="line">    cuda.memcpy_htod_async(cuda_inputs[<span class="number">0</span>], host_inputs[<span class="number">0</span>], stream)</span><br><span class="line">    <span class="comment"># 推理.</span></span><br><span class="line">    context.execute_async(bindings=bindings, stream_handle=stream.handle)</span><br><span class="line">    <span class="comment"># 将推理结果传到CPU.</span></span><br><span class="line">    cuda.memcpy_dtoh_async(host_outputs[<span class="number">0</span>], cuda_outputs[<span class="number">0</span>], stream)</span><br><span class="line">    <span class="comment"># 同步 stream</span></span><br><span class="line">    stream.synchronize()</span><br><span class="line">    <span class="comment"># 拿到推理结果 batch_size = 1</span></span><br><span class="line">    output = host_outputs[<span class="number">0</span>].reshape(<span class="number">300</span>,<span class="number">300</span>,<span class="number">3</span>)</span><br><span class="line">    t2 = time.time()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Inference time: %.2f ms&quot;</span>%(<span class="number">1000</span>*t2-<span class="number">1000</span>*t1))</span><br><span class="line"></span><br><span class="line">cfx.pop()</span><br></pre></td></tr></table></figure>
+
+<p>命令行输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(base) C:\Users\11197\Desktop\srcnn&gt;python inference.py</span><br><span class="line">[06/01/2022-11:59:25] [TRT] [I] [MemUsageChange] Init CUDA: CPU +395, GPU +0, now: CPU 6761, GPU 1332 (MiB)</span><br><span class="line">[06/01/2022-11:59:25] [TRT] [I] Loaded engine size: 0 MiB</span><br><span class="line">[06/01/2022-11:59:25] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in engine deserialization: CPU +0, GPU +1, now: CPU 0, GPU 1 (MiB)</span><br><span class="line">[06/01/2022-11:59:25] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +34, now: CPU 0, GPU 35 (MiB)</span><br><span class="line">input_1 16875 &lt;class &#x27;numpy.float32&#x27;&gt;</span><br><span class="line">output_1 270000 &lt;class &#x27;numpy.float32&#x27;&gt;</span><br><span class="line">Inference time: 1.00 ms</span><br><span class="line">Inference time: 1.00 ms</span><br><span class="line">Inference time: 1.00 ms</span><br><span class="line">Inference time: 1.00 ms</span><br><span class="line">Inference time: 1.03 ms</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>原来使用TensorFlow-GPU推理速度是50ms，现在竟然只要1ms，速度提升了50倍！！！</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li>将 TensorFlow 模型转换为 ONNX：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/ai/windows-ml/tutorials/tensorflow-convert-model">https://docs.microsoft.com/zh-cn/windows/ai/windows-ml/tutorials/tensorflow-convert-model</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/NVIDIA/TensorRT/issues/301">https://github.com/NVIDIA/TensorRT/issues/301</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/347172593">https://zhuanlan.zhihu.com/p/347172593</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/07/05/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/" class="pre-post btn btn-default" title='OpenCV连通域操作'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            OpenCV连通域操作</span>
+    </a>
+    
+    
+    <a href="/2022/05/30/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E5%AE%89%E8%A3%85/" class="next-post btn btn-default" title='TensorRT--Windows下安装'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            TensorRT--Windows下安装</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%9A-tf-gt-onnx"><span class="toc-text">模型格式转换：.tf-&gt;.onnx</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%9F%E6%88%90engin%E6%96%87%E4%BB%B6"><span class="toc-text">生成engin文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E7%90%86"><span class="toc-text">推理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

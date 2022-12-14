@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="BP(back propagation)神经网络是1986年由Rumelhart和McClelland为首的科学家提出的概念，是一种按照误差逆向传播算法训练的多层前馈神经网络，是目前应用中最基本..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    TensorFlow 1.x 实战--训练BP神经网络 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="TensorFlow 1.x 实战--训练BP神经网络">
+            
+            TensorFlow 1.x 实战--训练BP神经网络
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/10/26</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1145</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>BP(back propagation)神经网络是1986年由Rumelhart和McClelland为首的科学家提出的概念，是一种按照误差逆向传播算法训练的多层前馈神经网络，是目前应用中最基本的神经网络。</p>
+<span id="more"></span>
+
+<p>运行环境：tensorflow1.14.0</p>
+<h1 id="新建程序文件"><a href="#新建程序文件" class="headerlink" title="新建程序文件"></a>新建程序文件</h1><h2 id="打开ide"><a href="#打开ide" class="headerlink" title="打开ide"></a>打开ide</h2><p>我这里使用的是jupyter notebook，优点是容易调试，简单清爽。</p>
+<p>在终端输入jupyter notebook即可在浏览器里面打开，windows是在cmd里面输入。</p>
+<h2 id="载入必要的库"><a href="#载入必要的库" class="headerlink" title="载入必要的库"></a>载入必要的库</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一步：引入库</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">from</span> skimage.io <span class="keyword">import</span> imread</span><br><span class="line"><span class="keyword">from</span> skimage.transform <span class="keyword">import</span> resize</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+
+<h2 id="载入封装好的函数"><a href="#载入封装好的函数" class="headerlink" title="载入封装好的函数"></a>载入封装好的函数</h2><ul>
+<li>封装生成参数函数，全连接层函数等</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第二步：封装卷积函数等</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span>(<span class="params">shape</span>):</span>    </span><br><span class="line">    initial = tf.truncated_normal(shape, mean=<span class="number">0</span>, stddev=<span class="number">0.01</span>)</span><br><span class="line">    <span class="comment">#正态初始化    </span></span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span>(<span class="params">shape</span>):</span>    </span><br><span class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)    </span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fulc</span>(<span class="params">x,next_depth</span>):</span>    </span><br><span class="line">    depth = x.get_shape()[-<span class="number">1</span>].value    </span><br><span class="line">    w = weight_variable([depth, next_depth])    </span><br><span class="line">    b = bias_variable([next_depth])    </span><br><span class="line">    r = tf.nn.relu(tf.nn.bias_add(tf.matmul(x, w), b))    </span><br><span class="line">    <span class="keyword">return</span> r</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>封装读取图片函数（顺便给标签）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第三步：封装读取图片并自动给标签函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_images</span>(<span class="params">path</span>):</span>    </span><br><span class="line">    contents = os.listdir(path)    </span><br><span class="line">    classes = [each <span class="keyword">for</span> each <span class="keyword">in</span> contents <span class="keyword">if</span> os.path.isdir(os.path.join(path,each))]    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;目录下有%s&#x27;</span> % classes)        </span><br><span class="line">    <span class="comment"># 用labels来存储图片的类别    </span></span><br><span class="line">    labels = []    </span><br><span class="line">    <span class="comment"># images数组用来存储图片数据   </span></span><br><span class="line">    images = []    </span><br><span class="line">    <span class="comment"># 对每个不同种类读取图片到list并且+标签    </span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> classes:        </span><br><span class="line">        class_path = os.path.join(path,each)        </span><br><span class="line">        files = os.listdir(class_path)        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Starting &#123;&#125; images&quot;</span>.<span class="built_in">format</span>(each),<span class="string">&#x27;数量为&#x27;</span>,<span class="built_in">len</span>(files))        </span><br><span class="line">        <span class="keyword">for</span> ii, file <span class="keyword">in</span> <span class="built_in">enumerate</span>(files, <span class="number">1</span>):            </span><br><span class="line">            <span class="comment"># 载入图片并放入batch数组中            </span></span><br><span class="line">            img = imread(os.path.join(class_path, file))            </span><br><span class="line">            img = img / <span class="number">255.0</span>         </span><br><span class="line">            img = resize(img, (<span class="number">32</span>, <span class="number">32</span>))           </span><br><span class="line">            images.append(img.reshape((<span class="number">32</span>,<span class="number">32</span>,<span class="number">3</span>)))            </span><br><span class="line">            labels.append(each)   </span><br><span class="line">	images = np.array(images)   </span><br><span class="line">	<span class="comment">#将labels的list形式转换为one_hot_label   </span></span><br><span class="line">	<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelBinarizer  </span><br><span class="line">    lb = LabelBinarizer()   </span><br><span class="line">    lb.fit(labels)   </span><br><span class="line">    labels_vecs = lb.transform(labels)   </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;总共读取了%d张图片&#x27;</span>%images.shape[<span class="number">0</span>])  </span><br><span class="line">    <span class="comment"># print(labels,labels_vecs)  </span></span><br><span class="line">    <span class="keyword">return</span> images,labels_vecs <span class="comment"># 返回图片以及对应的标签</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>随机抽取图片并打乱顺序</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">next_batch</span>(<span class="params">train_data, train_target, batch_size</span>):</span> <span class="comment">#抽取数据   </span></span><br><span class="line">    index = [ i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(train_data))]      </span><br><span class="line">    np.random.shuffle(index);   </span><br><span class="line">    batch_data = np.zeros((batch_size,train_data.shape[<span class="number">1</span>],train_data.shape[<span class="number">2</span>],train_data.shape[<span class="number">3</span>]));  </span><br><span class="line">    batch_target = np.zeros((batch_size,train_target.shape[<span class="number">1</span>]));   </span><br><span class="line">    rand = random.randint(<span class="number">1</span>,<span class="number">4</span>)*<span class="number">2</span>   </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,batch_size):      </span><br><span class="line">        batch_data[i,:,:,:] = train_data[index[i],:,:,:]       </span><br><span class="line">        <span class="comment">#rotate(train_data[index[i]],rand,height,width)        </span></span><br><span class="line">        batch_target[i,:] = train_target[index[i],:]  </span><br><span class="line">    state = np.random.get_state()    </span><br><span class="line">    np.random.shuffle(batch_data)  </span><br><span class="line">    np.random.set_state(state)   </span><br><span class="line">    np.random.shuffle(batch_target)  </span><br><span class="line">    <span class="keyword">return</span> batch_data, batch_target</span><br></pre></td></tr></table></figure>
+
+<h1 id="封装神经网络结构"><a href="#封装神经网络结构" class="headerlink" title="封装神经网络结构"></a>封装神经网络结构</h1><p>把上面的封装好的函数拿来用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第四步：封装神经网络的创建函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create</span>(<span class="params">x_images,keep_prob</span>):</span><span class="comment">#x_images的shape是h,w,d    </span></span><br><span class="line">    h,w,d=x_images.get_shape().value    </span><br><span class="line">    <span class="comment">#first fully layer   </span></span><br><span class="line">    h_conv_flat = tf.reshape(x_images,[-<span class="number">1</span>,h*w*d])  </span><br><span class="line">    h_fc1 = fulc(h_conv_flat,<span class="number">1024</span>)   </span><br><span class="line">    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob) </span><br><span class="line">    <span class="comment">#second fully layer   </span></span><br><span class="line">    h_fc2 = fulc(h_fc1_drop,<span class="number">1024</span>)  </span><br><span class="line">    h_fc2_drop = tf.nn.dropout(h_fc2, keep_prob)     </span><br><span class="line">    <span class="comment">#third full layer  </span></span><br><span class="line">    h_fc3 = fulc(h_fc2_drop,<span class="number">1</span>) </span><br><span class="line">    out = tf.nn.sigmoid(h_fc3,name=<span class="string">&#x27;out&#x27;</span>)  </span><br><span class="line">    <span class="comment"># 二分类（输出为1个数字）可以用sigmoid；多分类用softmax      </span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;模型建立好了！&#x27;</span>)   </span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+<h1 id="tensorflow特色占位"><a href="#tensorflow特色占位" class="headerlink" title="tensorflow特色占位"></a>tensorflow特色占位</h1><p>在tensorflow1.x版本内，训练前需要先在内存中“占位”。</p>
+<p>既然如此，我们把模型创建、损失函数的定义、准确率的定义也放到这一块。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 占位</span></span><br><span class="line">x_images = tf.placeholder(tf.float32,[<span class="literal">None</span>,<span class="number">32</span>,<span class="number">32</span>,<span class="number">3</span>],name=<span class="string">&#x27;x_images&#x27;</span>)</span><br><span class="line">y = tf.placeholder(tf.float32,[<span class="literal">None</span>,<span class="number">1</span>],name=<span class="string">&#x27;y&#x27;</span>)</span><br><span class="line">keep_prob = tf.placeholder(tf.float32,name=<span class="string">&#x27;keep_prob&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型创建</span></span><br><span class="line">y_conv = create(x_images,keep_prob)</span><br><span class="line"><span class="comment"># 定义损失函数、预测函数和训练过程</span></span><br><span class="line">pred = tf.<span class="built_in">round</span>(y_conv,name=<span class="string">&#x27;predict&#x27;</span>)</span><br><span class="line">cross_entropy = tf.reduce_mean(tf.reduce_mean(tf.square(y_conv-y)),name=<span class="string">&#x27;cross_entropy&#x27;</span>)</span><br><span class="line">train_step = tf.compat.v1.train.AdamOptimizer(<span class="number">1e-4</span>).minimize(cross_entropy)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多分类定义准确率</span></span><br><span class="line"><span class="comment"># correct_prediction = tf.equal(tf.argmax(pred,1),tf.argmax(y,1))</span></span><br><span class="line"><span class="comment"># correct_prediction = tf.cast(correct_prediction, tf.float32)</span></span><br><span class="line"><span class="comment"># accuracy = tf.reduce_mean(correct_prediction,name=&#x27;accuracy&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二分类定义准确率</span></span><br><span class="line">correct_prediction = tf.equal(pred,y)</span><br><span class="line">correct_prediction = tf.cast(correct_prediction, tf.float32)</span><br><span class="line">accuracy = tf.reduce_mean(correct_prediction,name=<span class="string">&#x27;accuracy&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h1><p>训练目标：训练集{batch_x,batch_y}100%正确</p>
+<p>训练集：从{train_x，train_y}中抽取20对</p>
+<p>每10次迭代打印并记录一次loss&amp;acc值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">saver = tf.compat.v1.train.Saver()</span><br><span class="line"><span class="comment"># 为保存模型做准备</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:    </span><br><span class="line">    sess.run(tf.compat.v1.global_variables_initializer())  </span><br><span class="line">    step = <span class="number">1</span>   </span><br><span class="line">    acc=<span class="number">0</span>    </span><br><span class="line">    <span class="keyword">while</span> acc!=<span class="number">1</span>:<span class="comment"># 正确率达到100%才结束训练    </span></span><br><span class="line">        batch_x,batch_y = next_batch(train_x,train_y,<span class="number">20</span>)       </span><br><span class="line">        <span class="comment"># print(batch_y)   </span></span><br><span class="line">        _ = sess.run(train_step,feed_dict=&#123;x_images: batch_x, y: batch_y, keep_prob: <span class="number">0.75</span>&#125;)     </span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">            predt,acc,loss=sess.run([pred,accuracy,cross_entropy],feed_dict=&#123;x_images: batch_x, y: batch_y, keep_prob: <span class="number">1.</span>&#125;)</span><br><span class="line">            <span class="built_in">print</span> (<span class="string">&#x27;step:%d,train loss:%f&#x27;</span> % (step,loss))             </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;train accuracy:%f&#x27;</span> % acc)                </span><br><span class="line">            <span class="comment"># 把训练损失的变化记录到本地，以便于以后的查阅     </span></span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;trainloss.txt&quot;</span>,<span class="string">&quot;a+&quot;</span>) <span class="keyword">as</span> f:               </span><br><span class="line">                f.write(<span class="string">&#x27;step:%d,train loss:%f\n&#x27;</span> % (step,loss))                     </span><br><span class="line">			<span class="comment"># ---下面这个部分是为了接下来的误差、准确率的可视化---    </span></span><br><span class="line">            <span class="keyword">if</span> step==<span class="number">10</span>:         </span><br><span class="line">                l = np.array(loss)     </span><br><span class="line">                a = np.array(acc)       </span><br><span class="line">                s = np.array(step)    </span><br><span class="line">			<span class="keyword">else</span>:      </span><br><span class="line">                l = np.append(l,np.array(loss))        </span><br><span class="line">                a = np.append(a,np.array(acc))         </span><br><span class="line">                s = np.append(s,np.array(step))     </span><br><span class="line">                <span class="comment"># ---结束可视化数据的收集---   </span></span><br><span class="line">		step += <span class="number">1</span>   </span><br><span class="line">        saver.save(sess,<span class="string">&quot;./model/net.ckpt&quot;</span>)<span class="comment"># 当训练完成，把参数保存下来</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="训练过程的可视化"><a href="#训练过程的可视化" class="headerlink" title="训练过程的可视化"></a>训练过程的可视化</h1><p>使用以下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(s,l)plt.title(<span class="string">&#x27;step-loss&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;step&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;loss&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"><span class="comment"># -------loss&amp;&amp;acc---------</span></span><br><span class="line">plt.plot(s,a)</span><br><span class="line">plt.title(<span class="string">&#x27;step-acc&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;step&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;acc&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>效果如图：</p>
+<p><img src="https://s2.ax1x.com/2019/10/26/KDUrJH.png">KDUrJH.png</p>
+<h1 id="最后："><a href="#最后：" class="headerlink" title="最后："></a>最后：</h1><p>本次实验中训练次数较少，且没有设置测试集或验证集，因此仅能作为参考，具体项目切不可如此。</p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/10/30/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-10-30-GANs%E7%AE%80%E8%BF%B0/" class="pre-post btn btn-default" title='GANs简述'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            GANs简述</span>
+    </a>
+    
+    
+    <a href="/2019/10/24/%E9%AA%9A%E6%93%8D%E4%BD%9C/2019-10-24-python3%E4%B8%8B%E5%AE%89%E8%A3%85pip%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95/" class="next-post btn btn-default" title='python3下安装pip最简单的方法'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            python3下安装pip最简单的方法</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6"><span class="toc-text">新建程序文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80ide"><span class="toc-text">打开ide</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%BD%E5%85%A5%E5%BF%85%E8%A6%81%E7%9A%84%E5%BA%93"><span class="toc-text">载入必要的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%BD%E5%85%A5%E5%B0%81%E8%A3%85%E5%A5%BD%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-text">载入封装好的函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-text">封装神经网络结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tensorflow%E7%89%B9%E8%89%B2%E5%8D%A0%E4%BD%8D"><span class="toc-text">tensorflow特色占位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="toc-text">开始训练</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-text">训练过程的可视化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%EF%BC%9A"><span class="toc-text">最后：</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="Super SloMo是一个视频插帧模型，提出于2018年CVPR论文《Super SloMo: High Quality Estimation of Multiple Intermediate..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：视频插帧算法Super-SloMo |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：视频插帧算法Super-SloMo">
+            
+            论文阅读：视频插帧算法Super-SloMo
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/11/11</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Super SloMo是一个视频插帧模型，提出于2018年CVPR论文《Super SloMo: High Quality Estimation of Multiple Intermediate Frames for Video Interpolation 》，提出机构是NVIDIA。</p>
+<p>该模型是VFI领域一个重要的模型，在当时存在方法均为单帧插值时应用了多帧插值，并效果领先。</p>
+<span id="more"></span>
+
+<h1 id="阅读目标"><a href="#阅读目标" class="headerlink" title="阅读目标"></a>阅读目标</h1><p>本文是阅读目标的第二篇，Super SloMo模型，阅读进度2&#x2F;7。</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>模型名</th>
+<th>发表期刊</th>
+<th>提出方</th>
+<th>年份</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><a href="/files/20221108-FILM/2018-AAAI-FILM.pdf">FILM</a></td>
+<td>ECCV 2022</td>
+<td>Google</td>
+<td>2022</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="/files/20221111-Super-SloMo/2018-CVPR-Super-SloMo.pdf">Super SloMo</a></td>
+<td>CVPR 2018</td>
+<td>Nvidia</td>
+<td>2018</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Quadratic Video Interpolation (QVI)</td>
+<td>NeurIPS 2019</td>
+<td>商汤科技</td>
+<td>2019</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Depth-Aware Video Frame Interpolation (DAIN)</td>
+<td>CVPR 2019</td>
+<td>上海交大</td>
+<td>2019</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Softmax Splatting (SS)</td>
+<td>CVPR 2020</td>
+<td>波兰州立大学</td>
+<td>2020</td>
+</tr>
+<tr>
+<td>6</td>
+<td>MEMC-Net</td>
+<td>IEEE Transactions on Pattern Analysis and Machine Intelligence</td>
+<td>上海交大</td>
+<td>2021</td>
+</tr>
+<tr>
+<td>7</td>
+<td>RIFE</td>
+<td>ECCV 2022</td>
+<td>旷视&amp;北大</td>
+<td>2022</td>
+</tr>
+</tbody></table>
+<h1 id="写作逻辑"><a href="#写作逻辑" class="headerlink" title="写作逻辑"></a>写作逻辑</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>摘要是文章内容的汇总，主要包括行业背景、本文工作、本文结果。实际上这篇论文摘要就是这么写的，我从这三个角度来提炼摘要内容。</p>
+<ol>
+<li><p>行业背景：视频插值是从两个给定的空间、时间连续的视频帧中生成一个或多个中间帧（定义）</p>
+<p>目前大多数方法关注单帧插值，即在两帧中插入一个中间帧</p>
+</li>
+<li><p>本文工作：我们提出了一种端到端的神经网络用于可变长度多帧插值，包括了运动插值和遮挡推理<br> 细节：使用了U-Net进行双向光流计算，然后使用另一个U-Net来完善光流并且预测软视图（soft-visibility maps），最后将两个输入帧扭曲（warp）并线性融合得到中间帧</p>
+</li>
+<li><p>本文结果：消除伪影，在现存方法中中获得最好结果</p>
+</li>
+</ol>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h2><p>P1 应用场景：美好回忆发生时，你只用了标准帧率来录制视频…</p>
+<p>P2 应用场景+别人工作：视频插帧很有研究价值，既可以生成平滑的视图转换，也可以应用在自监督学习中（引用别人工作：从未标记视频中获取光流信号）</p>
+<p>P3 现有问题：由于时空都要连贯，所以多帧插值困难。</p>
+<p>P4 别人工作：现有方法都是单帧插值，不能直接多帧插值。可以递归插值，但是至少有两个弊端：</p>
+<ol>
+<li>递归插值无法并行化，并且插值错误也会传递</li>
+<li>只能进行（2的指数次-1）插值</li>
+</ol>
+<p>P5 本文工作：提出了变长度多帧插值方法（variable-length multi-frame interpolation method，这里的变长度应该指的是可以插任意多帧，对应递归插值弊端2）。结合现有问题和别人工作弊端谈自己网络结构和创新点。</p>
+<p>P6 本文工作：训练设置</p>
+<h2 id="3-Proposed-Approach"><a href="#3-Proposed-Approach" class="headerlink" title="3. Proposed Approach"></a>3. Proposed Approach</h2><p><strong>3.1 视频帧融合 Intermediate Frame Synthesis</strong> </p>
+<p>前文说到提出的方法是warp输入帧然后线性组合的，融合公式表述如下，g(·)代表反向补偿函数backward warping function，α0也是张量，由时序运动和遮挡推理决定，⊙代表元素尺度相乘：</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111112737034.png" alt="image-20221111112737034"></p>
+<p>考虑到遮挡问题（occlusion problem），引入了视图visibility maps变量V，把上面的α0用V和t来表达，此处的Z为归一化因子，融合公式进一步可以如下表述：</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111113642310.png" alt="image-20221111113642310"></p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111141301883.png" alt="image-20221111141301883"></p>
+<p><strong>3.2 任意时间流插值 Arbitrary-time Flow Interpolation</strong></p>
+<p>以下面像素点为例：</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111145808737.png" alt="image-20221111145808737"></p>
+<p><strong>橙色点p</strong>从t到1的大致光流可以使用0到1的光流来按比例截取，大致光流计算如下：</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111144237290.png" alt="image-20221111144237290"></p>
+<p>和RGB图像融合的时序连续相近，我们能使用双向光流预估t时刻到0&#x2F;1的光流：</p>
+<blockquote>
+<p>这里不明白，为啥是二阶的呢？</p>
+</blockquote>
+<p><img src="/files/20221111-Super-SloMo/image-20221111145343570.png" alt="image-20221111145343570"></p>
+<p>按照这种方法计算出来的光流可视化如下，第2行的是大致光流，第3行的是refined光流。</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111231506488.png" alt="image-20221111231506488"></p>
+<p>为了处理遮挡关系，作者使用了流插值网络ﬂow interpolation CNN预测了从t到0和从1到t的两种视图掩膜V。两种掩膜满足以下约束关系，否则网络训练会发散。</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111232030312.png" alt="image-20221111232030312"></p>
+<p>整个网络的架构如下：</p>
+<p><img src="/files/20221111-Super-SloMo/image-20221111232541158.png" alt="image-20221111232541158"></p>
+<h2 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4. Experiments"></a>4. Experiments</h2><p><img src="/files/20221111-Super-SloMo/image-20221112115003844.png" alt="image-20221112115003844"></p>
+<h1 id="视频解析"><a href="#视频解析" class="headerlink" title="视频解析"></a>视频解析</h1><p>这是论文第一作者在CVPR 2018 spotlights上的分享，时长4分钟。国内有人搬运到B站了，这里直接分享。</p>
+<iframe src="//player.bilibili.com/player.html?aid=25490945&bvid=BV15s411L7ib&cid=43387578&page=1" scrolling="no" border="0" frameborder="no" width="720" height="405" autoplay="false" framespacing="0" allowfullscreen="true"> </iframe>
+
+<h1 id="词句积累"><a href="#词句积累" class="headerlink" title="词句积累"></a>词句积累</h1><table>
+<thead>
+<tr>
+<th>Given two <strong>consecutive frames</strong></th>
+<th>给定两个连续帧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>intermediate frame(s)</td>
+<td>中间帧</td>
+</tr>
+<tr>
+<td>form both spatially and temporally coherent video sequences</td>
+<td>形成空间和时间连续的视频序列</td>
+</tr>
+<tr>
+<td>motion interpretation and <strong>occlusion reasoning</strong></td>
+<td>运动插值和遮挡推理</td>
+</tr>
+<tr>
+<td><strong>bi-directional</strong> optical ﬂow</td>
+<td>双向光流</td>
+</tr>
+<tr>
+<td>reﬁne the approximated ﬂow</td>
+<td>完善大致光流</td>
+</tr>
+<tr>
+<td>we <strong>exclude the contribution of occluded pixels</strong> to the interpolated intermediate frame to <strong>avoid artifacts</strong></td>
+<td>我们将被遮挡像素对插值的作用排除以避免伪影</td>
+</tr>
+<tr>
+<td>we use 1,132 240-fps video clips</td>
+<td>我们使用了1132个240fps的视频段</td>
+</tr>
+<tr>
+<td>demonstrate that our approach <strong>performs consistently better than</strong> existing methods</td>
+<td>证明了我们的方法总是比现有方法表现好</td>
+</tr>
+<tr>
+<td>professional high-speed cameras are still required for higher frame rates</td>
+<td>专业的高速相机仍然因更高帧率而被需要</td>
+</tr>
+<tr>
+<td>it is of great interest to generate high-quality slow-motion video from existing videos</td>
+<td>从现有视频产生高质量慢动作视频是有研究价值的</td>
+</tr>
+<tr>
+<td>generate smooth view transitions</td>
+<td>生成平滑的视图转换</td>
+</tr>
+<tr>
+<td>It is challenging to generate <strong>multiple intermediate video frames</strong> because the frames have to be <strong>coherent</strong>, both spatially and temporally.</td>
+<td>多帧插值有挑战性，因为时空都要连续。</td>
+</tr>
+<tr>
+<td>Existing methods mainly focus on <strong>single-frame video interpolation</strong> and have <strong>achieved impressive performance</strong> for <strong>this problem setup</strong>.</td>
+<td>现有方法主要关注单帧插值，并在此问题设置下取得了令人印象深刻的结果</td>
+</tr>
+<tr>
+<td>it is an <strong>appealing</strong> idea to</td>
+<td>xx是一个很有吸引力的想法</td>
+</tr>
+<tr>
+<td><strong>recursive</strong> single-frame interpolation</td>
+<td>递归单帧插值</td>
+</tr>
+<tr>
+<td>interpolate a frame <strong>at any arbitrary time step</strong> between two frames</td>
+<td>在两帧见任意时间插值一帧</td>
+</tr>
+</tbody></table>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li>代码仓库：<a target="_blank" rel="noopener" href="https://github.com/avinashpaliwal/Super-SloMo">https://github.com/avinashpaliwal/Super-SloMo</a></li>
+<li>知乎：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69538032?utm_id=0">视频插帧论文：Super SloMo - 知乎 (zhihu.com)</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/12/05/Go%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="pre-post btn btn-default" title='Go语言环境配置'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            Go语言环境配置</span>
+    </a>
+    
+    
+    <a href="/2022/11/08/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9A%E8%A7%86%E9%A2%91%E6%8F%92%E5%B8%A7%E7%AE%97%E6%B3%95FILM/" class="next-post btn btn-default" title='论文阅读：视频插帧算法-FILM'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            论文阅读：视频插帧算法-FILM</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%9B%AE%E6%A0%87"><span class="toc-text">阅读目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E4%BD%9C%E9%80%BB%E8%BE%91"><span class="toc-text">写作逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1. Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Proposed-Approach"><span class="toc-text">3. Proposed Approach</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Experiments"><span class="toc-text">4. Experiments</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90"><span class="toc-text">视频解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%8D%E5%8F%A5%E7%A7%AF%E7%B4%AF"><span class="toc-text">词句积累</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

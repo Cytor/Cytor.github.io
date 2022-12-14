@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="Keras 是一个用 Python 编写的高级神经网络 API，它能够以 TensorFlow, CNTK, 或者 Theano 作为后端运行。Keras 的开发重点是支持快速的实验。能够以最小..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    TensorFlow 1.x：keras训练卷积神经网络 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="TensorFlow 1.x：keras训练卷积神经网络">
+            
+            TensorFlow 1.x：keras训练卷积神经网络
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/06</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1134</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Keras 是一个用 Python 编写的高级神经网络 API，它能够以 <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensorflow">TensorFlow</a>, <a target="_blank" rel="noopener" href="https://github.com/Microsoft/cntk">CNTK</a>, 或者 <a target="_blank" rel="noopener" href="https://github.com/Theano/Theano">Theano</a> 作为后端运行。Keras 的开发重点是支持快速的实验。能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。</p>
+<span id="more"></span>
+
+<p>如果你在以下情况下需要深度学习库，请使用 Keras：</p>
+<ul>
+<li>允许简单而快速的原型设计（由于用户友好，高度模块化，可扩展性）。</li>
+<li>同时支持卷积神经网络和循环神经网络，以及两者的组合。</li>
+<li>在 CPU 和 GPU 上无缝运行。</li>
+</ul>
+<p>Keras的后台支持tensorflow和theno，看起来就像是一个非常正式的高级封装，非常有助于快速的开发。最近我也正从tensorflow的低级封装转到高级封装，没有别的原因，生命苦短。</p>
+<p>本文将进行一个猫狗分类。</p>
+<h1 id="首先载入库"><a href="#首先载入库" class="headerlink" title="首先载入库"></a>首先载入库</h1><p>当然如果没有安装keras的要先安装一下哦，安装keras之前要保证自己的设备上已经有了tensorflow或者theno。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> npimport keras</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense, Dropout, Flatten</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Conv2D, MaxPooling2D</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> SGD</span><br></pre></td></tr></table></figure>
+
+<h1 id="接着构建模型"><a href="#接着构建模型" class="headerlink" title="接着构建模型"></a>接着构建模型</h1><p>这里构建模型超级简单，使用Sequential()新建之后再add就可以了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">model = Sequential()</span><br><span class="line"># 输入: 3 通道 32x32 像素图像 -&gt; (32, 32, 3) 张量。</span><br><span class="line"># 使用 32 个大小为 3x3 的卷积滤波器。</span><br><span class="line">model.add(Conv2D(32, (3, 3), activation=&#x27;relu&#x27;, input_shape=(32, 32, 3)))</span><br><span class="line">model.add(Conv2D(32, (3, 3),activation=&#x27;relu&#x27;))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(2, 2)))</span><br><span class="line">model.add(Dropout(0.25))</span><br><span class="line"></span><br><span class="line">model.add(Conv2D(64, (3, 3), activation=&#x27;relu&#x27;))</span><br><span class="line">model.add(Conv2D(64, (3, 3), activation=&#x27;relu&#x27;))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(2, 2)))</span><br><span class="line">model.add(Dropout(0.25))</span><br><span class="line"></span><br><span class="line">model.add(Flatten())</span><br><span class="line">model.add(Dense(256, activation=&#x27;relu&#x27;))</span><br><span class="line">model.add(Dropout(0.5))</span><br><span class="line">model.add(Dense(2, activation=&#x27;softmax&#x27;))</span><br></pre></td></tr></table></figure>
+
+<h1 id="接下来读取训练数据"><a href="#接下来读取训练数据" class="headerlink" title="接下来读取训练数据"></a>接下来读取训练数据</h1><p>数据的预读取已经完成，详见<a target="_blank" rel="noopener" href="https://cytor.github.io/2019/11/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/keras%E8%AE%AD%E7%BB%83%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/[https://cytor.gitee.io/2019/11/04/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83-%E6%95%B0%E6%8D%AE%E9%A2%84%E8%AF%BB%E5%8F%96%E5%92%8C%E5%AD%98%E5%82%A8/](https://cytor.gitee.io/2019/11/04/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83-%E6%95%B0%E6%8D%AE%E9%A2%84%E8%AF%BB%E5%8F%96%E5%92%8C%E5%AD%98%E5%82%A8/)">神经网络训练–数据预读取和存储</a>。</p>
+<p>训练数据一共是20对图片和标签，其中标签最好使用keras的to_categorical转化一下。我这里train_y原来就是0&#x2F;1，shape是(20,1)，经过转化之后，值变成了[1,0]&#x2F;[0,1]，shape变成了(20,2)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接读取之前存储的二进制文件</span></span><br><span class="line">train_x = np.load(<span class="string">&quot;train_x.npy&quot;</span>)</span><br><span class="line">train_y = np.load(<span class="string">&quot;train_y.npy&quot;</span>)</span><br><span class="line"><span class="comment"># 必须要把label搞一个to_categorical</span></span><br><span class="line">train_y = keras.utils.to_categorical(train_y)</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译、训练"><a href="#编译、训练" class="headerlink" title="编译、训练"></a>编译、训练</h1><p>选用梯度下降法SGD，编译之后训练100个epoch。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sgd = SGD(lr=<span class="number">0.01</span>, decay=<span class="number">1e-6</span>, momentum=<span class="number">0.9</span>, nesterov=<span class="literal">True</span>)</span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, optimizer=sgd, metrics=[<span class="string">&quot;accuracy&quot;</span>])</span><br><span class="line"></span><br><span class="line">his = model.fit(train_x, train_y, batch_size=<span class="number">10</span>, epochs=<span class="number">100</span>)</span><br><span class="line">score = model.evaluate(train_x, train_y, batch_size=<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="过程可视化"><a href="#过程可视化" class="headerlink" title="过程可视化"></a>过程可视化</h1><p>将mode.fit的结果通过图像展示出来看看。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">l = np.array(his.history[<span class="string">&#x27;loss&#x27;</span>])</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">step = np.linspace(<span class="number">1</span>,<span class="number">100</span>,<span class="number">100</span>)</span><br><span class="line">plt.plot(step,l,label=<span class="string">&quot;Train Loss&quot;</span>)</span><br><span class="line">plt.legend(loc=<span class="string">&#x27;upper right&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;epoch-loss&#x27;</span>)</span><br><span class="line">plt.xlim((<span class="number">0</span>, <span class="number">100</span>))</span><br><span class="line">plt.gca().set_ylim(bottom=<span class="number">0</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;epoch&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;loss&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">a = np.array(his.history[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">plt.plot(step,a,label=<span class="string">&quot;Train Accuracy&quot;</span>)</span><br><span class="line">plt.legend(loc=<span class="string">&#x27;lower right&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;epoch-acc&#x27;</span>)</span><br><span class="line">plt.xlim((<span class="number">0</span>, <span class="number">100</span>))</span><br><span class="line">plt.ylim((<span class="number">0</span>, <span class="number">1.005</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;epoch&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;acc&#x27;</span>)plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>[<img src="https://s2.ax1x.com/2019/11/06/MC79Fx.png" alt="训练过程"></p>
+<p><strong>参考资料：</strong></p>
+<p>1、<a target="_blank" rel="noopener" href="https://keras.io/zh/getting-started/sequential-model-guide/">Keras中文文档–开始使用 Keras Sequential 顺序模型</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/11/07/%E5%B0%8F%E6%8A%80%E5%B7%A7/2019-11-07-Linux%E8%A7%A3%E5%86%B3ssh%E5%85%B3%E9%97%AD%E4%B9%8B%E5%90%8E%E7%A8%8B%E5%BA%8F%E7%BB%88%E6%AD%A2%E9%97%AE%E9%A2%98/" class="pre-post btn btn-default" title='Linux解决ssh关闭之后程序终止问题'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            Linux解决ssh关闭之后程序终止问题</span>
+    </a>
+    
+    
+    <a href="/2019/11/04/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-04-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83--%E6%95%B0%E6%8D%AE%E9%A2%84%E8%AF%BB%E5%8F%96%E5%92%8C%E5%AD%98%E5%82%A8/" class="next-post btn btn-default" title='神经网络训练--数据预读取和存储'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            神经网络训练--数据预读取和存储</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E8%BD%BD%E5%85%A5%E5%BA%93"><span class="toc-text">首先载入库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A5%E7%9D%80%E6%9E%84%E5%BB%BA%E6%A8%A1%E5%9E%8B"><span class="toc-text">接着构建模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E8%AF%BB%E5%8F%96%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE"><span class="toc-text">接下来读取训练数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E3%80%81%E8%AE%AD%E7%BB%83"><span class="toc-text">编译、训练</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-text">过程可视化</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

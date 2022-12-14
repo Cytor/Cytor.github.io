@@ -1,0 +1,482 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="学科笔记" />
+
+
+<meta name="description" content="近期即将迎来自动控制原理的考试，考前要做六个实验，遂写下两篇文章为记。
+本篇记录前三个实验，包括“时域分析法”，“Simulink仿真”，“用Matlab实现几种典型信号时间响应”。
+
+
+$1...." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    自控原理实验（上） |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="自控原理实验（上）">
+            
+            自控原理实验（上）
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/%E5%AD%A6%E7%A7%91%E7%AC%94%E8%AE%B0/" rel="tag">学科笔记</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/09</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1131</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>近期即将迎来自动控制原理的考试，考前要做六个实验，遂写下两篇文章为记。</p>
+<p>本篇记录前三个实验，包括“时域分析法”，“Simulink仿真”，“用Matlab实现几种典型信号时间响应”。</p>
+<span id="more"></span>
+
+<h1 id="1-时域分析实验"><a href="#1-时域分析实验" class="headerlink" title="$1. 时域分析实验"></a>$1. 时域分析实验</h1><h2 id="1、实验目的："><a href="#1、实验目的：" class="headerlink" title="1、实验目的："></a>1、实验目的：</h2><p>1、观察单位阶跃信号输入时二阶系统的时间响应，分析ξ、Wn对响应曲线及瞬态响应指标tn tp ts Mp%的影响。</p>
+<p>2、了解二阶系统瞬态响应指标的意义其计算。</p>
+<hr>
+<h2 id="2、实验内容"><a href="#2、实验内容" class="headerlink" title="2、实验内容"></a>2、实验内容</h2><h3 id="2-1-将系统的零极点增益模型转换成传递函数模型"><a href="#2-1-将系统的零极点增益模型转换成传递函数模型" class="headerlink" title="2.1 将系统的零极点增益模型转换成传递函数模型"></a>2.1 将系统的零极点增益模型转换成传递函数模型</h3><p>G(s)&#x3D;6(s+3)(s+1)(s+2)(s+5)G(s)&#x3D;6(s+3)(s+1)(s+2)(s+5)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k=6z=[-3]p=[-1,-2,-5][num,den]=zp2tf(z,p,k);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-对典型二阶系统G-s-x3D-ω2s2-2ξωns-ω2nG-s-x3D-ω2s2-2ξωns-ωn2输入单位阶跃信号1（t）-且wn-x3D-1，ξ分别等于-0-1；-0-2；0；0-1；0-5；1；1-5。及ξ-x3D-0-5，wn分别等于1-10-30-50的响应曲线。"><a href="#2-2-对典型二阶系统G-s-x3D-ω2s2-2ξωns-ω2nG-s-x3D-ω2s2-2ξωns-ωn2输入单位阶跃信号1（t）-且wn-x3D-1，ξ分别等于-0-1；-0-2；0；0-1；0-5；1；1-5。及ξ-x3D-0-5，wn分别等于1-10-30-50的响应曲线。" class="headerlink" title="2.2 对典型二阶系统G(s)&#x3D;ω2s2+2ξωns+ω2nG(s)&#x3D;ω2s2+2ξωns+ωn2输入单位阶跃信号1（t）,且wn&#x3D;1，ξ分别等于-0.1；-0.2；0；0.1；0.5；1；1.5。及ξ&#x3D;0.5，wn分别等于1; 10; 30; 50的响应曲线。"></a>2.2 对典型二阶系统G(s)&#x3D;ω2s2+2ξωns+ω2nG(s)&#x3D;ω2s2+2ξωns+ωn2输入单位阶跃信号1（t）,且wn&#x3D;1，ξ分别等于-0.1；-0.2；0；0.1；0.5；1；1.5。及ξ&#x3D;0.5，wn分别等于1; 10; 30; 50的响应曲线。</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wn=1kosi=[0 , 0.1 , 0.5 , 1 , 1.5]figure(1)hold onfor kos=kosinum=[ wn ^ 2];den=[1 , 2*kos* wn , wn^ 2];step(num,den)endtitle(&#x27;Step Response&#x27;)hold offgridzoom on</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3、遇到问题："><a href="#3、遇到问题：" class="headerlink" title="3、遇到问题："></a>3、遇到问题：</h2><h3 id="3-1matlab中，zp2tf-函数"><a href="#3-1matlab中，zp2tf-函数" class="headerlink" title="3.1matlab中，zp2tf()函数"></a>3.1matlab中，zp2tf()函数</h3><p><strong>作用：</strong>将<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">系统函数</a>的零极点形式 (zp) 转化为<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">系统函数</a>一般形式 (tf) 的系数。</p>
+<p>在这里2应该代表转换；zp，zero point &amp; pole -&gt; 零极点；tf, transfer function -&gt; 传递函数。</p>
+<p>在matlab中，有一个函数tf(?)，是传递函数的意思，一般学<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E8%87%AA%E5%8A%A8%E6%8E%A7%E5%88%B6%E5%8E%9F%E7%90%86&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">自动控制原理</a>的时候经常用，在s域中，比如要输入G（s）&#x3D;1&#x2F;（s^2+2s+1），就可以在matlab中输入G&#x3D;tf（[1],[1 2 1]）。</p>
+<p><strong>零极点形式：</strong>分子式系数为k，零点从分子产生（z1, z2, …），极点从分母中产生（p1, p2, …）。</p>
+<p><strong>举栗：</strong>得到了<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">系统函数</a>H(s)的零极点的值，z为零点的值，p为极点的值，k为系数，如图所示，n1为a的值，d1为b的值，这里的n1,d1,z,p均为向量形式。</p>
+<p><img src="https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=f52ed4b1d40735fa91a546bfae61238b/8cb1cb1349540923836215d49258d109b3de4914.jpg" alt="transfer"></p>
+<h3 id="3-2-matlab中，step-函数"><a href="#3-2-matlab中，step-函数" class="headerlink" title="3.2 matlab中，step()函数"></a>3.2 matlab中，step()函数</h3><p><strong>官方注释</strong><br>Step response plot of dynamic system; step response data</p>
+<p><strong>官方Description</strong></p>
+<p><code>step</code> calculates the step response of a dynamic system. For the state-space case, zero initial state is assumed. When it is invoked with no output arguments, this function plots the step response on the screen.</p>
+<p><strong>作用：</strong>将一个动态系统的阶跃响应绘图</p>
+<h3 id="3-3-matlab中，tf-函数"><a href="#3-3-matlab中，tf-函数" class="headerlink" title="3.3 matlab中，tf()函数"></a>3.3 matlab中，tf()函数</h3><p><strong>官方注释</strong></p>
+<p>Transfer function model</p>
+<p><strong>官方Description</strong></p>
+<p>Use <code>tf</code> to create real-valued or complex-valued transfer function models, or to convert <a target="_blank" rel="noopener" href="https://www.mathworks.com/help/control/ug/dynamic-system-models.html">dynamic system models</a> to transfer function form.</p>
+<p>Transfer functions are a frequency-domain representation of linear time-invariant systems. For instance, consider a continuous-time SISO dynamic system represented by the transfer function <code>sys(s) = N(s)/D(s)</code>, where <code>s = jw</code> and <code>N(s)</code> and <code>D(s)</code> are called the numerator and denominator polynomials, respectively. The <code>tf</code> model object can represent SISO or MIMO transfer functions in continuous time or discrete time.</p>
+<hr>
+<h2 id="4、知识整理"><a href="#4、知识整理" class="headerlink" title="4、知识整理"></a>4、知识整理</h2><h3 id="4-1-Z变换"><a href="#4-1-Z变换" class="headerlink" title="4.1 Z变换"></a>4.1 Z变换</h3><p>Z变换（英文：z-transformation）可将时域信号（即：离散时间序列）变换为在复频域的表达式。它在离散时间信号处理中的地位，如同<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E5%8F%98%E6%8D%A2/2382033">拉普拉斯变换</a>在连续时间信号处理中的地位。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E4%BF%A1%E5%8F%B7/3526432">离散时间信号</a>的Z变换是分析线性时不变<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E7%B3%BB%E7%BB%9F/7479910">离散时间系统</a>问题的重要工具，在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/5009">数字信号处理</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/5708">计算机控制系统</a>等领域有着广泛的应用。</p>
+<p>Z变换在离散系统中的地位与作用，类似于连续系统中的拉氏变换 。同时具有许多重要的特性：如线性、时移性、微分性、序列卷积特性和复卷积定理等等。</p>
+<p>已有现成的与拉氏变换表类似的Z表。对于一般的信号序列，均可以由表上直接查出其Z变换。相应地，当然也可由信号序列的Z变换查出原信号序列，从而使求取信号序列的Z变换较为简便易行。</p>
+<h3 id="4-2-系统函数"><a href="#4-2-系统函数" class="headerlink" title="4.2 系统函数"></a>4.2 系统函数</h3><p>用单位脉冲响应h(n)可以表示线性时不变离散系统，这时 <strong>y（n）&#x3D;x（n）*h（n）</strong> 两边取z变换：**Y(z)&#x3D;X(z)H(z)**则定义为系统函数。</p>
+<p><strong>定义：</strong></p>
+<p>系统函数是个具有实系数的复变量S的有理函数，即实有理函数，所以它的极点和零点或者是实数而位于实轴上，或者是成共轭对的复数而位于与实轴对称的位量上。就是说，系统函数的极点和零点的分布必定对实轴成镜像对称。</p>
+<p><strong>常用系统：</strong>因果系统、稳定系统、因果稳定系统</p>
+<p><strong>极点和零点：</strong></p>
+<ul>
+<li><p>系统函数的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9E%81%E7%82%B9/4557217">极点</a>和<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%9B%B6%E7%82%B9/19736260">零点</a>的分布必定对实轴成镜像对称。</p>
+</li>
+<li><p>系统函数一般有n个有限的极点和m个有限的零点。</p>
+<p>如果n&gt;m，则当s为无穷大时。函数值<br>limx→∞H(s)&#x3D;limx→∞bmsmansnlimx→∞H(s)&#x3D;limx→∞bmsmansn<br>为零，所以H(s)在无穷大处有一个（n-m）阶的零点，零极点个数都是n个；如果n&lt;m，则当s为无穷大时，函数值<br>limx→∞H(s)&#x3D;limx→∞bmsmansnlimx→∞H(s)&#x3D;limx→∞bmsmansn<br>亦为无穷大，所以H(s)在无穷大处有一个（m-n）阶的极点，零极点个数都是m个。</p>
+<p><del>根据函数分子和分母幂次的高低，可以有若干零点在无穷大处，或者若干极点在无穷大处，即从广义上来说，系统函数极点和零点的数目应该相等。</del>(看不懂)</p>
+<p><img src="https://gss2.bdstatic.com/-fo3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=ac02faeb14178a82da3177f2976a18e8/902397dda144ad3477a687a0daa20cf431ad85ff.jpg" alt="零极点分布"></p>
+</li>
+</ul>
+<h3 id="4-3-线性时不变系统"><a href="#4-3-线性时不变系统" class="headerlink" title="4.3 线性时不变系统"></a>4.3 线性时不变系统</h3><p>两方面，一方面是线性，满足<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8F%A0%E5%8A%A0%E5%8E%9F%E7%90%86/3537744">叠加原理</a>；另一方面是时不变特性。</p>
+<p><strong>时不变系统的定义：</strong></p>
+<p>就是系统的参数不随时间而变化，即不管输入信号作用的时间先后，输出信号响应的形状均相同，仅是从出现的时间不同。</p>
+<p>用数学表示为T[x(n)]&#x3D;y[n]则 T[x(n-n0)]&#x3D;y[n-n0]，这说明序列x(n)先移位后进行变换与它先进行变换后再移位是等效的。</p>
+<h3 id="4-4-单位脉冲响应"><a href="#4-4-单位脉冲响应" class="headerlink" title="4.4 单位脉冲响应"></a>4.4 单位脉冲响应</h3><p><strong>介绍：</strong>单位脉冲响应(Unit impulse response)系统对单位脉冲输入的响应。也称作记忆函数。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94/7972672">脉冲响应</a>确定一个线性系统的特性，包含有与<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%A2%91%E7%8E%87%E5%9F%9F/682476">频率域</a>中的传输函数相同的信息，而传输函数是脉冲响应的拉普拉斯变换。线性系统的输出由系统的输入与它的脉冲响应的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%B7%E7%A7%AF/9411006">卷积</a>给出。</p>
+<p><strong>含义：</strong> 单位脉冲响应是指一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%97%A0%E7%A9%B7%E5%A4%A7">无穷大</a>的瞬时冲激，并且由于其在时间轴上的积分为1，而t又趋向于零，所以单位脉冲响应的大小应该是无穷大，但是要知道的是，无穷大量也有大小比较，所以单位脉冲响应可以用一个系数对之进行量度。</p>
+<p><strong>场景：</strong> 在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86">数字信号处理</a>中，单位脉冲响应代表系统的性质，是描述系统的数学公式，也是系统的数学模型。例如：当系统的初始状态为零时，这时给系统输入一个单位脉冲序列x(n)&#x3D;δ(n)，则系统的输出称为单位脉冲响应，简称脉冲响应，用符号h(n)表示。<br>δ(n)&#x3D;{1(当n&#x3D;0时)0(当n≠0时)δ(n)&#x3D;{1(当n&#x3D;0时)0(当n≠0时)</p>
+<p>参考资料：</p>
+<p>1、[<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/434194348.html">n1,d1]&#x3D;zp2tf(z,p,k)在matlab中什么意思</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/397900450.html">matlab里面的tf函数是什么怎么用</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_25360769/article/details/79708835">MATLAB中的step()函数</a></p>
+<p>4、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Z%E5%8F%98%E6%8D%A2/1915180?fr=aladdin">百度百科：Z变换</a></p>
+<p>5、<a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/d4e56d740b1c59eef8c7b4e5.html">百度文库：第六章 系统函数3-4</a></p>
+<p>6、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/2474061?fr=aladdin">百度百科： 线性时不变系统</a></p>
+<p>7、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94/9441714#1">百度百科：单位脉冲响应</a></p>
+<h1 id="2-Simulink仿真"><a href="#2-Simulink仿真" class="headerlink" title="$2. Simulink仿真"></a>$2. Simulink仿真</h1><h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><p>用Matlab仿真（simulink）图示系统输入单位阶跃信号1(t)的响应，分析响应曲线的稳态响应Xoss(t),振荡频率wd(rad&#x2F;s)最大超调量Mp,峰值时间tp,进入稳态值+5%误差带的调整时间ts。</p>
+<p><img src="https://s2.ax1x.com/2019/11/12/M1Xrn0.png" alt="传动图"></p>
+<hr>
+<h2 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h2><h3 id="1、进入matlab的simulink进行控件的排布和拖放"><a href="#1、进入matlab的simulink进行控件的排布和拖放" class="headerlink" title="1、进入matlab的simulink进行控件的排布和拖放"></a>1、进入matlab的simulink进行控件的排布和拖放</h3><p><img src="https://s2.ax1x.com/2019/11/15/Ma3Acq.png" alt="控件拖放"></p>
+<h3 id="2、调整时间"><a href="#2、调整时间" class="headerlink" title="2、调整时间"></a>2、调整时间</h3><h3 id="3、得出结果图"><a href="#3、得出结果图" class="headerlink" title="3、得出结果图"></a>3、得出结果图<img src="https://s2.ax1x.com/2019/11/15/Ma3rvt.png" alt="结果图"></h3><p>参考资料：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/d5a880ebc679d613f147ccda.html">MATLAB使用Simulink 进行建模与仿真方法</a></p>
+<h1 id="3-用Matlab实现几种典型信号时间响应"><a href="#3-用Matlab实现几种典型信号时间响应" class="headerlink" title="$3. 用Matlab实现几种典型信号时间响应"></a>$3. 用Matlab实现几种典型信号时间响应</h1><h2 id="1、实验内容"><a href="#1、实验内容" class="headerlink" title="1、实验内容"></a>1、实验内容</h2><p>掌握在matlab环境下建立控制系统模型的方法，并学会调用相应的函数实现单位脉冲信号，单位阶跃信号和单位斜坡信号的响应；</p>
+<h2 id="2、典型信号时间响应"><a href="#2、典型信号时间响应" class="headerlink" title="2、典型信号时间响应"></a>2、典型信号时间响应</h2><h3 id="2-1-单位阶跃响应"><a href="#2-1-单位阶跃响应" class="headerlink" title="2.1 单位阶跃响应"></a>2.1 单位阶跃响应</h3><ul>
+<li><strong>单位阶跃函数</strong></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E5%87%BD%E6%95%B0">单位阶跃函数</a>（Unit Step Function）属于典型输入信号，是一种狄利克雷函数，其形式如下：<br>u(x)&#x3D;{0,t&lt;01,t&gt;0u(x)&#x3D;{0,t&lt;01,t&gt;0<br>很明显的一点是，单位阶跃函数在t&#x3D;0这一点是不连续的。</p>
+<ul>
+<li><strong>零状态响应</strong></li>
+</ul>
+<p>所谓零状态响应是指系统在接收到指定输入之前处于初始状态，即保证系统是完全因为指定输入（在此为单位阶跃输入）而产生的响应变化。</p>
+<ul>
+<li><p><strong>单位阶跃响应</strong></p>
+<p>单位阶跃响应，就是指系统在接收到单位阶跃函数输入后产生的零状态响应。</p>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/11/15/Mad8v4.png" alt="单位阶跃响应图"></p>
+<ul>
+<li><strong>作用和意义</strong></li>
+</ul>
+<p>a) 系统动态性能分析</p>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E6%80%A7%E8%83%BD">动态性能</a>是系统性能的一个十分重要的指标，通常用阶跃信号作用来测定系统的动态性能。</p>
+<p>一般认为，阶跃信号对于系统来说是十分严峻的工作状态，因为阶跃信号中存在跃断点（不连续点）。</p>
+<p>针对零初始状态系统在单位阶跃输入下的响应情况，定义了一系列动态性能指标，用以评判系统的动态性能，如超调量、衰减比、上升时间、调节时间、峰值时间等等。</p>
+<p>b) 建立系统响应模型</p>
+<p>对于典型的输入信号，如冲激信号、阶跃信号、斜坡信号等，都建立有响应模型（在此即单位阶跃响应模型）。根据模型，可以快速判断出实际系统的动态性能指标参数，只需要代入实际系统的相关测量参数，就可以<strong>定量</strong>分析其性能指标。</p>
+<h3 id="2-2-单位脉冲响应"><a href="#2-2-单位脉冲响应" class="headerlink" title="2.2 单位脉冲响应"></a>2.2 单位脉冲响应</h3><ul>
+<li><strong>单位脉冲函数</strong></li>
+</ul>
+<p>单位脉冲序列δ(n)的数学定义是<br>δ&#x3D;{0t≠0∞t&#x3D;0δ&#x3D;{0t≠0∞t&#x3D;0<br>而脉冲的面积，即冲量为单位1<br>S&#x3D;∫+∞−∞δ(t)dt&#x3D;1S&#x3D;∫−∞+∞δ(t)dt&#x3D;1</p>
+<ul>
+<li><strong>脉冲响应函数</strong></li>
+</ul>
+<p>在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F">信号与系统</a>或电路理论等学科中，<strong>冲激响应</strong>(或叫脉冲响应)一般是指系统在输入为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E5%86%B2%E6%BF%80%E5%87%BD%E6%95%B0/3701754">单位冲激函数</a>时的输出（响应）。对于连续<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E7%B3%BB%E7%BB%9F/3579915">时间系统</a>来说，冲激响应一般用函数h(t)来表示。对于无随机噪声的确定性<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F/6814705">线性系统</a>，当输入信号为一<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%84%89%E5%86%B2%E5%87%BD%E6%95%B0/7666022">脉冲函数</a> δ（t） 时，系统的输出响应 h（t）称为<strong>脉冲响应函数</strong>。</p>
+<p>脉冲响应函数可作为系统特性的时域描述。 至此，系统特性在时域可以用<em>h</em>(<em>t</em>)来描述，在频域可以用<em>H</em>(<em>ω</em>)来描述，在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A4%8D%E6%95%B0">复数</a>域可以用<em>H</em>(<em>s</em>) 来描述。三者的关系也是一一对应的。</p>
+<p>对于任意的输入 u（t）， <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F">线性系统</a>的输出 y（t）表示为脉冲响应函数与输入的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%B7%E7%A7%AF">卷积</a>， 即如果系统是物理可实现的,那么输入开始之前，输出为0，即当 τ&lt;0时 h(τ)&#x3D;0，这里τ 是积分变量。</p>
+<ul>
+<li><strong>卷积</strong></li>
+</ul>
+<p>简单定义：卷积是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6">分析数学</a>中一种重要的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%BF%90%E7%AE%97">运算</a>。</p>
+<p>设:<em>f</em>(<em>x</em>),<em>g</em>(<em>x</em>)是R1上的两个可积函数，作积分：<br>∫+∞−∞f(τ)g(x−τ)dt∫−∞+∞f(τ)g(x−τ)dt<br>可以证明，关于几乎所有的实数<em>x</em>，上述积分是存在的。这样，随着<em>x</em>的不同取值，这个积分就定义了一个新函数<em>h(x)<em>，称为函数</em>f</em>与<em>g</em>的卷积，记为*h(x)&#x3D;(f*g)(x)*。</p>
+<ul>
+<li><p><strong>单位脉冲响应</strong></p>
+<p>单位脉冲响应，就是指系统在接收到单位脉冲函数输入后产生的零状态响应。</p>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/11/15/MadcqA.png" alt="单位脉冲响应"></p>
+<h3 id="2-3-单位斜坡响应"><a href="#2-3-单位斜坡响应" class="headerlink" title="2.3 单位斜坡响应"></a>2.3 单位斜坡响应</h3><ul>
+<li><p>斜坡函数</p>
+<p>斜坡函数是一元实函数，因其图像像斜坡而得名。斜坡函数在负半轴函数值为零，正半轴为形如y&#x3D;At的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AD%A3%E6%AF%94%E4%BE%8B%E5%87%BD%E6%95%B0">正比例函数</a>。A&#x3D;1时，称为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E6%96%9C%E5%9D%A1%E5%87%BD%E6%95%B0/5136068">单位斜坡函数</a>。斜坡函数是系统动力学中经常用来研究系统模型及其反馈系统的有关信息的测试函数。 其函数表达式为：<br>r(t)&#x3D;max(0,t)r(t)&#x3D;max(0,t)</p>
+</li>
+<li><p>单位斜坡响应</p>
+<p>单位斜坡响应，就是指系统在接收到单位斜坡函数输入后产生的零状态响应。</p>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/11/15/MawXmd.png" alt="单位斜坡响应"></p>
+<h2 id="3、问题"><a href="#3、问题" class="headerlink" title="3、问题"></a>3、问题</h2><p><strong>Q：</strong>Matlab中没有斜坡响应信号对应的函数，为什么能用阶跃信号来求解？</p>
+<p><strong>A：</strong>因为斜坡响应信号的一阶导数就是阶跃信号，四种典型信号的关系如下：</p>
+<p><img src="https://s2.ax1x.com/2019/11/15/MaGw6I.png" alt="四种典型输入信号的关系"></p>
+<p>参考资料：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E5%93%8D%E5%BA%94/5642164?fr=aladdin">百度百科：单位阶跃响应</a></p>
+<p>2、自动控制原理（第四版，高国燊等人著）</p>
+<p>3、<a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/53f813bdba4cf7ec4afe04a1b0717fd5370cb214.html">单位阶跃响应单位斜坡响应</a></p>
+<p>4、[<a target="_blank" rel="noopener" href="http://ju.outofmemory.cn/entry/289870">小技巧]让Hexo在使用Mathjax时支持多行公式</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/11/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-15-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8B%EF%BC%89/" class="pre-post btn btn-default" title='自控原理实验（下）'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            自控原理实验（下）</span>
+    </a>
+    
+    
+    <a href="/2019/11/07/%E5%B0%8F%E6%8A%80%E5%B7%A7/2019-11-07-Linux%E8%A7%A3%E5%86%B3ssh%E5%85%B3%E9%97%AD%E4%B9%8B%E5%90%8E%E7%A8%8B%E5%BA%8F%E7%BB%88%E6%AD%A2%E9%97%AE%E9%A2%98/" class="next-post btn btn-default" title='Linux解决ssh关闭之后程序终止问题'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Linux解决ssh关闭之后程序终止问题</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%97%B6%E5%9F%9F%E5%88%86%E6%9E%90%E5%AE%9E%E9%AA%8C"><span class="toc-text">$1. 时域分析实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84%EF%BC%9A"><span class="toc-text">1、实验目的：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="toc-text">2、实验内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%B0%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%9B%B6%E6%9E%81%E7%82%B9%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%88%90%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0%E6%A8%A1%E5%9E%8B"><span class="toc-text">2.1 将系统的零极点增益模型转换成传递函数模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%AF%B9%E5%85%B8%E5%9E%8B%E4%BA%8C%E9%98%B6%E7%B3%BB%E7%BB%9FG-s-x3D-%CF%892s2-2%CE%BE%CF%89ns-%CF%892nG-s-x3D-%CF%892s2-2%CE%BE%CF%89ns-%CF%89n2%E8%BE%93%E5%85%A5%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E4%BF%A1%E5%8F%B71%EF%BC%88t%EF%BC%89-%E4%B8%94wn-x3D-1%EF%BC%8C%CE%BE%E5%88%86%E5%88%AB%E7%AD%89%E4%BA%8E-0-1%EF%BC%9B-0-2%EF%BC%9B0%EF%BC%9B0-1%EF%BC%9B0-5%EF%BC%9B1%EF%BC%9B1-5%E3%80%82%E5%8F%8A%CE%BE-x3D-0-5%EF%BC%8Cwn%E5%88%86%E5%88%AB%E7%AD%89%E4%BA%8E1-10-30-50%E7%9A%84%E5%93%8D%E5%BA%94%E6%9B%B2%E7%BA%BF%E3%80%82"><span class="toc-text">2.2 对典型二阶系统G(s)&#x3D;ω2s2+2ξωns+ω2nG(s)&#x3D;ω2s2+2ξωns+ωn2输入单位阶跃信号1（t）,且wn&#x3D;1，ξ分别等于-0.1；-0.2；0；0.1；0.5；1；1.5。及ξ&#x3D;0.5，wn分别等于1; 10; 30; 50的响应曲线。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-text">3、遇到问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1matlab%E4%B8%AD%EF%BC%8Czp2tf-%E5%87%BD%E6%95%B0"><span class="toc-text">3.1matlab中，zp2tf()函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-matlab%E4%B8%AD%EF%BC%8Cstep-%E5%87%BD%E6%95%B0"><span class="toc-text">3.2 matlab中，step()函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-matlab%E4%B8%AD%EF%BC%8Ctf-%E5%87%BD%E6%95%B0"><span class="toc-text">3.3 matlab中，tf()函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86"><span class="toc-text">4、知识整理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Z%E5%8F%98%E6%8D%A2"><span class="toc-text">4.1 Z变换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0"><span class="toc-text">4.2 系统函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F"><span class="toc-text">4.3 线性时不变系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%8D%95%E4%BD%8D%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94"><span class="toc-text">4.4 单位脉冲响应</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Simulink%E4%BB%BF%E7%9C%9F"><span class="toc-text">$2. Simulink仿真</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-text">实验内容：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E8%BF%87%E7%A8%8B"><span class="toc-text">实践过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E8%BF%9B%E5%85%A5matlab%E7%9A%84simulink%E8%BF%9B%E8%A1%8C%E6%8E%A7%E4%BB%B6%E7%9A%84%E6%8E%92%E5%B8%83%E5%92%8C%E6%8B%96%E6%94%BE"><span class="toc-text">1、进入matlab的simulink进行控件的排布和拖放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E8%B0%83%E6%95%B4%E6%97%B6%E9%97%B4"><span class="toc-text">2、调整时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%BE%97%E5%87%BA%E7%BB%93%E6%9E%9C%E5%9B%BE"><span class="toc-text">3、得出结果图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%94%A8Matlab%E5%AE%9E%E7%8E%B0%E5%87%A0%E7%A7%8D%E5%85%B8%E5%9E%8B%E4%BF%A1%E5%8F%B7%E6%97%B6%E9%97%B4%E5%93%8D%E5%BA%94"><span class="toc-text">$3. 用Matlab实现几种典型信号时间响应</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="toc-text">1、实验内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%85%B8%E5%9E%8B%E4%BF%A1%E5%8F%B7%E6%97%B6%E9%97%B4%E5%93%8D%E5%BA%94"><span class="toc-text">2、典型信号时间响应</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E5%93%8D%E5%BA%94"><span class="toc-text">2.1 单位阶跃响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%8D%95%E4%BD%8D%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94"><span class="toc-text">2.2 单位脉冲响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%8D%95%E4%BD%8D%E6%96%9C%E5%9D%A1%E5%93%8D%E5%BA%94"><span class="toc-text">2.3 单位斜坡响应</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E9%97%AE%E9%A2%98"><span class="toc-text">3、问题</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

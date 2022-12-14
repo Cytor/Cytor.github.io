@@ -1,0 +1,601 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="视频插帧算法（video frame interpolation, VFI）是一种用于提高视频帧率的算法。一些较早的方法通过计算光流进行运动补偿进行视频插帧（VFI），但光流计算实现复杂，后续计..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：视频插帧算法-FILM |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：视频插帧算法-FILM">
+            
+            论文阅读：视频插帧算法-FILM
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/11/08</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>视频插帧算法（video frame interpolation, VFI）是一种用于提高视频帧率的算法。一些较早的方法通过计算光流进行运动补偿进行视频插帧（VFI），但光流计算实现复杂，后续计算全部依赖光流对其精度要求也高。随着神经网络的兴起，很多CNN-based视频插帧算法被提出来解决VFI任务。</p>
+<span id="more"></span>
+
+<h1 id="阅读目标"><a href="#阅读目标" class="headerlink" title="阅读目标"></a>阅读目标</h1><p>本系列文章依然属于论文阅读部分，本文作为视频插帧VFI算法经典论文阅读的第一篇，阅读对象是FILM。</p>
+<p>暂定阅读的模型和论文如下表，希望整体读完后对自己在论文写作和网络设计方面有一定启发。</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>模型名</th>
+<th>发表期刊</th>
+<th>提出方</th>
+<th>年份</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><a href="/files/20221108-FILM/2018-AAAI-FILM.pdf">FILM</a></td>
+<td>ECCV 2022</td>
+<td>Google</td>
+<td>2022</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="/files/20221111-Super-SloMo/2018-CVPR-Super-SloMo.pdf">Super SloMo</a></td>
+<td>CVPR 2018</td>
+<td>Nvidia</td>
+<td>2018</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Quadratic Video Interpolation (QVI)</td>
+<td>NeurIPS 2019</td>
+<td>商汤科技</td>
+<td>2019</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Depth-Aware Video Frame Interpolation (DAIN)</td>
+<td>CVPR 2019</td>
+<td>上海交大</td>
+<td>2019</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Softmax Splatting (SS)</td>
+<td>CVPR 2020</td>
+<td>波兰州立大学</td>
+<td>2020</td>
+</tr>
+<tr>
+<td>6</td>
+<td>MEMC-Net</td>
+<td>IEEE Transactions on Pattern Analysis and Machine Intelligence</td>
+<td>上海交大</td>
+<td>2021</td>
+</tr>
+<tr>
+<td>7</td>
+<td>RIFE</td>
+<td>ECCV 2022</td>
+<td>旷视&amp;北大</td>
+<td>2022</td>
+</tr>
+</tbody></table>
+<h1 id="写作逻辑"><a href="#写作逻辑" class="headerlink" title="写作逻辑"></a>写作逻辑</h1><p>2022 ECCV会议上，Google提出了FILM网络，该网络在视频插帧任务上完成度较高。</p>
+<iframe src="https://film-net.github.io/static/images/moment.mp4" scrolling="no" border="0" frameborder="no" width="720" height="405" autoplay="false" allowfullscreen="true"> </iframe>
+
+<blockquote>
+<p>整篇文章创新点在于首创地解决了near-duplicate photos interpolation任务</p>
+<ol>
+<li>提出了multi-scale shared feature extractor，解决了大尺度运动问题</li>
+<li>采用了Gram matrix loss来度量感知损失，最后产出了高质量帧</li>
+<li>引入了single unified network，解决了传统算法训练复杂的问题</li>
+</ol>
+</blockquote>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ol>
+<li><strong>已完成工作（总）</strong>：我们提出了一种FI算法，能合成图片间的慢动作</li>
+<li><strong>行业背景</strong>：近乎相同图片的插值是个有趣的应用，但是大尺度运动对现有方法造成挑战</li>
+<li><strong>已完成工作（细节）</strong>：基于大小尺度的小大运动一致性假设，提出了共享参数的特征提取器；为了解决大尺度畸变，提出了GRAM Loss；为了简化训练，提出了联合单一网络（也就是e2e）代替光流计算</li>
+<li><strong>已获得结果</strong>：在数据集上与SOTA对比取得最优表现</li>
+</ol>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h2><p>P1 <strong>重要概念界定</strong>：给出FI定义<br>P2 <strong>行业背景&#x2F;应用场景</strong>：可以为电子照相插值获得视频，并揭示一些场景运动，最后获得更愉悦的场景<br>P3 <strong>同行工作</strong>：在小运动方面做得很好，但是较少关注大运动<br>P4，P5，P6 自己工作和同行工作对比，同行工作哪里做的不好，自己如何解决<br>P7 <strong>总结summary</strong></p>
+<h2 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2. Related Work"></a>2. Related Work</h2><p>总：总结其他工作的共同点，提出自己工作的独创性。</p>
+<p>分：从大尺度运动、图像质量、单步网络三个角度总结了其他插帧工作的不足和自己工作的创新点。</p>
+<h2 id="3-Method"><a href="#3-Method" class="headerlink" title="3. Method"></a>3. Method</h2><p>FILM有3个主要步骤：共享参数特征提取（Feature Extraction）、尺度不可知的运动预测（Flow Estimation）、融合（Fusion）。</p>
+<p><img src="/files/20221108-FILM/image-20221108152230286.png" alt="image-20221108152230286"></p>
+<p><strong>Feature Extraction</strong></p>
+<ol>
+<li>输入图像金字塔一共有7层（pyramid level），实际上就是上图中<code>Input pyramids</code>，表示如下</li>
+</ol>
+<p>$$<br>{I_0^l,I_1^l},l∈[1,7]<br>$$</p>
+<ol start="2">
+<li>对不同level输入图片提取多尺度特征，如上图Feature Extraction竖向的部分，表示如下</li>
+</ol>
+<p>$$<br>f^{l,d}&#x3D;H^d(I_0^l),d∈[1,4]<br>$$</p>
+<p>Hd是a stack of convolutions, f是输入l level、d层的特征</p>
+<ol start="3">
+<li>拼接concat</li>
+</ol>
+<p><strong>Flow Estimation</strong></p>
+<blockquote>
+<p>we use them (前面提取器得出的F0和F1) to calculate a bi-directional motion at each pyramid level.</p>
+<p>这里说的bi-directional motion指的是t→0和t→1运动，t是中间帧索引</p>
+</blockquote>
+<p>这里和其他论文一样都是从coarsest level到细粒度，即<code>l=7-&gt; l=1</code>。</p>
+<ol>
+<li>Warp张量递推式</li>
+</ol>
+<p>当前W计算方式：下一level的W + (当前level帧0特征图、当前level帧1到t特征图)的非线性组合，也就是：粗粒度 + 细粒度。</p>
+<p><strong>此处是不是写的有问题，括号内应该是F1才对？</strong></p>
+<p><img src="/files/20221108-FILM/image-20221108232728651.png" alt="image-20221108232728651"></p>
+<ol start="2">
+<li>当前level帧t相对1特征图（估测）</li>
+</ol>
+<p>计算方式：下一level的Warp张量2X上采样 + 当前level帧1特征图的bilinear resample</p>
+<p>就是对当前level的F进行粗粒度的warp而已，所以是估测值，带入到上式得到准确warp矩阵。</p>
+<p><img src="/files/20221108-FILM/image-20221108232750814.png" alt="image-20221108232750814"></p>
+<ol start="3">
+<li>当前level帧t相对1特征图（输出）</li>
+</ol>
+<p><img src="/files/20221108-FILM/image-20221108232808588.png" alt="image-20221108232808588"></p>
+<p><strong>Fusion</strong></p>
+<p>UNet-like decoder，一笔带过</p>
+<p><strong>数据集</strong></p>
+<p><strong>这个里面的motion magnitude如何计算的？？</strong></p>
+<p><img src="/files/20221108-FILM/image-20221109001527786.png" alt="image-20221109001527786"></p>
+<h2 id="其他部分：略"><a href="#其他部分：略" class="headerlink" title="其他部分：略"></a>其他部分：略</h2><h1 id="视频解析"><a href="#视频解析" class="headerlink" title="视频解析"></a>视频解析</h1><p>搬运自youtube</p>
+<iframe src="//player.bilibili.com/player.html?aid=562472141&bvid=BV1Hv4y1S7fZ&cid=885801626&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" width="720" height="405" autoplay="false" allowfullscreen="true"> </iframe>
+
+<h1 id="词句积累"><a href="#词句积累" class="headerlink" title="词句积累"></a>词句积累</h1><table>
+<thead>
+<tr>
+<th><strong>英文</strong></th>
+<th><strong>中文</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>synthesizes an engaging slow-motion video</td>
+<td>合成一个连续的慢动作视频</td>
+</tr>
+<tr>
+<td>near-duplicate photos which often exhibit large scene motion</td>
+<td>展示了大尺度运动的几乎相同的照片</td>
+</tr>
+<tr>
+<td>pose challenges to</td>
+<td>给..带来挑战</td>
+</tr>
+<tr>
+<td>a feature extractor</td>
+<td>一个特征提取器</td>
+</tr>
+<tr>
+<td>relies on the intuition that</td>
+<td>基于…的假设</td>
+</tr>
+<tr>
+<td>large motion at fine scale</td>
+<td>小尺度的大运动</td>
+</tr>
+<tr>
+<td>small motion at coarser scales</td>
+<td>粗尺度的小运动</td>
+</tr>
+<tr>
+<td>boosts the number of available pixels</td>
+<td>增加了可用像素数</td>
+</tr>
+<tr>
+<td>inpaint wide <strong>disocclusions</strong></td>
+<td>粉饰大尺度畸变</td>
+</tr>
+<tr>
+<td>synthesize <strong>crisp frames</strong></td>
+<td>合成清晰帧</td>
+</tr>
+<tr>
+<td>measures the correlation differenc ebetwee nfeature</td>
+<td>度量相关性区别</td>
+</tr>
+<tr>
+<td>outperforms state-of-the-art methods</td>
+<td>比SOTAs好</td>
+</tr>
+<tr>
+<td>video synthesis</td>
+<td>视频合成</td>
+</tr>
+<tr>
+<td>synthesize intermediate images between a pair of input frames</td>
+<td>在一系列输入帧中合成中间图像</td>
+</tr>
+<tr>
+<td>with increasing reach</td>
+<td>随着影响力不断扩大的…</td>
+</tr>
+<tr>
+<td>temporal up-sampling</td>
+<td>时序上采样</td>
+</tr>
+<tr>
+<td>increase refresh rate or create slow-motion videos</td>
+<td>增强刷新率或者创造慢动作视频</td>
+</tr>
+<tr>
+<td>with the advent of</td>
+<td>随着..…的问世</td>
+</tr>
+<tr>
+<td>the temporal spacing between near duplicates can be a second or more</td>
+<td>临近重复帧时间间隔可以是一秒钟甚至更多</td>
+</tr>
+<tr>
+<td>with commensurately</td>
+<td>同时</td>
+</tr>
+<tr>
+<td>consecutive video frames</td>
+<td>连续视频帧</td>
+</tr>
+<tr>
+<td>interpolation for large scene motion</td>
+<td>大尺度运动的插值</td>
+</tr>
+<tr>
+<td>CNN-based frame interpolation methods</td>
+<td>基于CNN的帧插值方法</td>
+</tr>
+<tr>
+<td>up-scale frame rate of videos</td>
+<td>上采样视频帧率</td>
+</tr>
+<tr>
+<td>perceptual loss</td>
+<td>感知损失</td>
+</tr>
+<tr>
+<td>Hd is a stack of convolutions</td>
+<td>Hd是一堆卷积</td>
+</tr>
+<tr>
+<td>directly predict task oriented flow</td>
+<td>直接预测任务姿态流</td>
+</tr>
+</tbody></table>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://film-net.github.io/">FILM: Frame Interpolation for Large Motion (film-net.github.io)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/google-research/frame-interpolation">google-research&#x2F;frame-interpolation: FILM: Frame Interpolation for Large Motion, In ECCV 2022. (github.com)</a></li>
+</ol>
+<h1 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h1><ol>
+<li>预训练模型：源文件在作者谷歌云盘</li>
+<li>论文视频：源文件在youtube</li>
+</ol>
+<p><img src="/files/20221108-FILM/image-20221110104830193.png" alt="image-20221110104830193"></p>
+<p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1TvH_7IZT12xSpOr6ARKwGg?pwd=m3zx">https://pan.baidu.com/s/1TvH_7IZT12xSpOr6ARKwGg?pwd=m3zx</a> </p>
+<p>提取码: m3zx </p>
+<p>复制这段内容后打开百度网盘手机App，操作更方便哦</p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/11/11/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9A%E8%A7%86%E9%A2%91%E6%8F%92%E5%B8%A7%E7%AE%97%E6%B3%95Super-SloMo/" class="pre-post btn btn-default" title='论文阅读：视频插帧算法Super-SloMo'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            论文阅读：视频插帧算法Super-SloMo</span>
+    </a>
+    
+    
+    <a href="/2022/08/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/" class="next-post btn btn-default" title='论文阅读：PP-YOLOv2'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            论文阅读：PP-YOLOv2</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%9B%AE%E6%A0%87"><span class="toc-text">阅读目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E4%BD%9C%E9%80%BB%E8%BE%91"><span class="toc-text">写作逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-text">1. Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Related-Work"><span class="toc-text">2. Related Work</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Method"><span class="toc-text">3. Method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%83%A8%E5%88%86%EF%BC%9A%E7%95%A5"><span class="toc-text">其他部分：略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90"><span class="toc-text">视频解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%8D%E5%8F%A5%E7%A7%AF%E7%B4%AF"><span class="toc-text">词句积累</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E4%BB%B6"><span class="toc-text">附件</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

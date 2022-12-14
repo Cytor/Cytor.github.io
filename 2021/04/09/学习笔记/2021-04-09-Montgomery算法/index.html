@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="用途：一种高速的取模算法，当$a$，$b$，$N$很大时，加速计算$a*b(modN)$。
+
+
+一、原理1. 将$a$，$b$映射到Montgomery域内：$$a’&#x3D;aR(modN)..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Montgomery算法 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Montgomery算法">
+            
+            Montgomery算法
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2021/04/09</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                614</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>用途：一种高速的取模算法，当$a$，$b$，$N$很大时，加速计算$a*b(modN)$。</p>
+<span id="more"></span>
+
+<h1 id="一、原理"><a href="#一、原理" class="headerlink" title="一、原理"></a>一、原理</h1><h2 id="1-将-a-，-b-映射到Montgomery域内："><a href="#1-将-a-，-b-映射到Montgomery域内：" class="headerlink" title="1. 将$a$，$b$映射到Montgomery域内："></a>1. 将$a$，$b$映射到Montgomery域内：</h2><p>$$<br>a’&#x3D;aR(modN),b’&#x3D;bR(modN)<br>$$</p>
+<p>​	此处的$R&#x3D;2^k&gt;N$，令$X&#x3D;a’b’&#x3D;abR^2(modN)$</p>
+<h2 id="2-Montgomery-约简："><a href="#2-Montgomery-约简：" class="headerlink" title="2. $Montgomery$约简："></a>2. $Montgomery$约简：</h2><p>$$<br>\begin{align}<br>&amp;Input:X \<br>&amp;Output:X&#x2F;R<br>\end{align}<br>$$</p>
+<p>​	约简1次：$X&#x3D;abR^2(modN)$ -&gt; $X&#x2F;R&#x3D;abR(modN)$</p>
+<p>​	约简2次：$X&#x3D;abR(modN)$ -&gt; $X&#x2F;R&#x3D;ab(modN)$</p>
+<p>​	$X&#x2F;R$是不可以直接除的，因为$X$的低$k$位很可能不都为0。因此希望有一个数$m$使得<br>$$<br>X+mN&#x3D;0(modR)<br>$$<br>​	这样，约简函数的输入输出就变为：<br>$$<br>\begin{align}<br>&amp;Input:X \<br>&amp;Output:(X+mN)&#x2F;R<br>\end{align}<br>$$</p>
+<p>​	由<strong>拓展的欧几里得算法</strong>可以解出以下方程的一组特解：<br>$$<br>RR’-NN’&#x3D;gcd(R,N)<br>$$<br>​	对上述两个公式进行推导，就可以得到$m$的计算方法：<br>$$<br>\begin{align}<br>&amp;XN’+mNN’&#x3D;0(modR)\<br>&amp;XN’+m(RR’-gcd(R,N))&#x3D;0(modR)\<br>&amp;XN’&#x3D;m*gcd(R,N)(modR)\<br>&amp;m&#x3D;XN’&#x2F;gcd(R,N)(modR)<br>\end{align}<br>$$</p>
+<p>​	通过阅读蒙哥马利算法原文可知，该算法限制$gcd(R,N)&#x3D;1$，<br>​	所以接着推演可以得到<br>$$<br>\begin{align}<br>&amp;X+mN&#x3D;X+XNN’(modR)&#x3D;X+(XN’(modR))N\<br>&amp;(X+mN)&#x2F;R&#x3D;(X+(XN’(modR))N)&#x2F;R<br>\end{align}<br>$$</p>
+<h1 id="二、优化加速"><a href="#二、优化加速" class="headerlink" title="二、优化加速"></a>二、优化加速</h1><h2 id="1-分析"><a href="#1-分析" class="headerlink" title="1. 分析"></a>1. 分析</h2><p>1次蒙哥马利算法中，进行了2次对$N$取模（$a-&gt;a’，b-&gt;b’$），2次对$R$取模（$reduction$），这就是我们需要优化的地方。对于Montgomery算法本身，它是把除法转化为移位算法，以下运算得到了简化：<br>$$<br>\begin{align}<br>&amp;aR&#x3D;a&lt;&lt;k\<br>&amp;bR&#x3D;b&lt;&lt;k\<br>&amp;(X+mN)&#x2F;R&#x3D;(X+mN)&gt;&gt;k<br>\end{align}<br>$$</p>
+<h2 id="2-对-N-取模"><a href="#2-对-N-取模" class="headerlink" title="2. 对$N$取模"></a>2. 对$N$取模</h2><p>第1步计算$a’&#x3D;aR(modN),b’&#x3D;bR(modN)$时，若按照原来计算方法，一条转换的运算量可能就超过了$a*b(modN)$，所以通过模运算法则简化为：<br>$$<br>\begin{align}<br>&amp;a’&#x3D;(a(modN)*R(modN))(modN)\<br>&amp;b’&#x3D;(b(modN)*R(modN))(modN)<br>\end{align}<br>$$</p>
+<h2 id="3-对-R-取模"><a href="#3-对-R-取模" class="headerlink" title="3. 对$R$取模"></a>3. 对$R$取模</h2><p>在<code>reduction</code>函数里面，进行了对R取模的运算，具体为$XN’(modR)$。因为$R&#x3D;2^k$，所以$XN’(modR)$相当于取$XN’$的后$k-1$位。<br>$$<br>XN’MODR &#x3D; XN’[0:k-1]<br>$$<br>此处，$[0:k-1]$为XN’的第$0~(k-1)$位。</p>
+<h1 id="三、Python实现"><a href="#三、Python实现" class="headerlink" title="三、Python实现"></a>三、Python实现</h1><p>声明：下面的代码来自GitHub，原作者是<a target="_blank" rel="noopener" href="https://github.com/LivingLeopold">LivingLeopold</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_gcd</span>(<span class="params">a,b</span>):</span></span><br><span class="line">    <span class="keyword">if</span> a%b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">return</span> get_gcd(b,a%b)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_</span>(<span class="params">a, b</span>):</span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        k = a // b</span><br><span class="line">        remainder = a % b</span><br><span class="line">        x1, y1 = get_(b, remainder)</span><br><span class="line">        x, y = y1, x1 - k * y1</span><br><span class="line">    <span class="keyword">return</span> x, y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Multiplicative_inverse_modulo</span>(<span class="params"> a , b </span>):</span></span><br><span class="line">    <span class="keyword">if</span> b &lt; <span class="number">0</span>:</span><br><span class="line">        m = <span class="built_in">abs</span>(b)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = b</span><br><span class="line">    flag = get_gcd(a, b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> flag == <span class="number">1</span>:</span><br><span class="line">        x, y = get_(a, b)</span><br><span class="line">        x0 = x % m</span><br><span class="line">        <span class="keyword">return</span> x0</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Error!&quot;</span>)</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;To calculate a * b ( mod N ),&#x27;</span>)</span><br><span class="line">a , b , N = <span class="built_in">eval</span>(<span class="built_in">input</span>(<span class="string">&#x27;Please input a , b , N (Like 68,57,109)：&#x27;</span>))</span><br><span class="line"></span><br><span class="line">R = <span class="number">2</span>**(<span class="built_in">int</span>(math.log2(N)+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">N1 = Multiplicative_inverse_modulo( N , R )</span><br><span class="line">N2 = R-N1</span><br><span class="line"></span><br><span class="line">a_ =( a * R ) % N</span><br><span class="line">b_ =( b * R ) % N</span><br><span class="line">c_ =((( a_ * b_ ) + ((( a_ * b_ ) * N2 ) % R ) * N )/ R ) % N</span><br><span class="line"></span><br><span class="line">c = <span class="built_in">int</span>(((c_ + ( c_* N2 ) % R * N ))/R)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>( <span class="built_in">str</span>(a) + <span class="string">&#x27; * &#x27;</span> + <span class="built_in">str</span>(b) + <span class="string">&#x27; ( mod &#x27;</span> + <span class="built_in">str</span>(N) +<span class="string">&#x27; ) = &#x27;</span> + <span class="built_in">str</span>(c))</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/others-articles/162484.html">高效幂模算法探究：Montgomery算法解析</a><br>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/zgzczzw/article/details/52712980">蒙哥马利算法详解</a><br>[3] <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46395886/article/details/112988136?utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control&dist_request_id=1328740.49492.16170871843977651&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control">蒙哥马利算法约简、模乘、幂模</a><br>[4] <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95/1647675?fromtitle=%E8%BE%97%E8%BD%AC%E7%9B%B8%E9%99%A4%E6%B3%95&fromid=4625352">欧几里得算法&amp;辗转相除法，百度百科</a><br>[5] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/100567253">拓展的欧几里得算法</a><br>[6] <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37734256/article/details/86986291">RSA大数运算实现（1024位n）（5）蒙哥马利模幂</a><br>[7] <a target="_blank" rel="noopener" href="https://github.com/LivingLeopold/Montgomery-Algorithm">Python代码实现蒙哥马利算法</a><br>[8] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/95674430">Markdown中输入多行并列的公式</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2021/07/10/%E5%B0%8F%E6%8A%80%E5%B7%A7/2021-07-10-%E5%9B%BE%E5%BA%8A%E7%9A%84%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/" class="pre-post btn btn-default" title='图床的使用心得'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            图床的使用心得</span>
+    </a>
+    
+    
+    <a href="/2020/10/18/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2020-10-18-%E8%80%83%E7%A0%94%EF%BC%9A%E7%BA%A2%E5%AE%9D%E4%B9%A6%E5%BF%85%E8%80%83%E8%AF%8D/" class="next-post btn btn-default" title='考研：红宝书必考词'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            考研：红宝书必考词</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8E%9F%E7%90%86"><span class="toc-text">一、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B0%86-a-%EF%BC%8C-b-%E6%98%A0%E5%B0%84%E5%88%B0Montgomery%E5%9F%9F%E5%86%85%EF%BC%9A"><span class="toc-text">1. 将$a$，$b$映射到Montgomery域内：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Montgomery-%E7%BA%A6%E7%AE%80%EF%BC%9A"><span class="toc-text">2. $Montgomery$约简：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BC%98%E5%8C%96%E5%8A%A0%E9%80%9F"><span class="toc-text">二、优化加速</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%86%E6%9E%90"><span class="toc-text">1. 分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AF%B9-N-%E5%8F%96%E6%A8%A1"><span class="toc-text">2. 对$N$取模</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AF%B9-R-%E5%8F%96%E6%A8%A1"><span class="toc-text">3. 对$R$取模</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Python%E5%AE%9E%E7%8E%B0"><span class="toc-text">三、Python实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

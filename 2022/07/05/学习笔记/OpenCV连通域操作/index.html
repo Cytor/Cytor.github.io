@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenCV" />
+
+
+<meta name="description" content="图像中连通域是很有用的一个属性，自己实现会很麻烦，OpenCV已经实现。本文最终目的是调用OpenCV寻找图片中前2大连通域。
+附件：contour.py
+
+
+1. OpenCV读取、展示图片因..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    OpenCV连通域操作 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="OpenCV连通域操作">
+            
+            OpenCV连通域操作
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/OpenCV/" rel="tag">OpenCV</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/07/05</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>图像中连通域是很有用的一个属性，自己实现会很麻烦，OpenCV已经实现。本文最终目的是调用OpenCV寻找图片中前2大连通域。</p>
+<p>附件：<a href="/files/2022-07-05-OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/contour.py">contour.py</a></p>
+<span id="more"></span>
+
+<h1 id="1-OpenCV读取、展示图片"><a href="#1-OpenCV读取、展示图片" class="headerlink" title="1. OpenCV读取、展示图片"></a>1. OpenCV读取、展示图片</h1><p>因为后面连通域函数接受的是二值化矩阵，因此要将图片读取并二值化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;1.png&quot;</span>,cv2.IMREAD_GRAYSCALE)</span><br><span class="line">img[img&gt;<span class="number">0</span>] = <span class="number">255</span></span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>,img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/files/2022-07-05-OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/1.png" alt="img"></p>
+<h1 id="2-OpenCV寻找连通域"><a href="#2-OpenCV寻找连通域" class="headerlink" title="2. OpenCV寻找连通域"></a>2. OpenCV寻找连通域</h1><p>OpenCV寻找连通域的函数是<code>cv2.findContours()</code>，输入为图片矩阵image，模式mode，方法method，…，输出为外形元组contours，轮廓对应的属性hierarchy。</p>
+<p>使用<code>cv2.drawContours()</code>函数即可将轮廓画在原图上，结果和原图是一样的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">contours, hierarchy = cv2.findContours(img,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(contours)) <span class="comment"># &lt;class &#x27;tuple&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(contours)) <span class="comment"># 9</span></span><br><span class="line"><span class="built_in">print</span>(contours[<span class="number">0</span>].shape) <span class="comment"># (6, 1, 2)</span></span><br><span class="line">cv2.drawContours(img,contours,-<span class="number">1</span>,<span class="number">255</span>,-<span class="number">1</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>,img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/files/2022-07-05-OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/2.png" alt="find_contours"></p>
+<h2 id="cv2-findContours-注释"><a href="#cv2-findContours-注释" class="headerlink" title="cv2.findContours()注释"></a>cv2.findContours()注释</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(image: Mat, mode: <span class="type">Any</span>, method: <span class="built_in">int</span>, contours: ... = ..., hierarchy: ... = ..., offset: ... = ...) -&gt; <span class="type">Any</span></span><br><span class="line">image Source, an <span class="number">8</span>-bit single-channel image. Non-zero pixels are treated <span class="keyword">as</span> <span class="number">1</span><span class="string">&#x27;s. Zero</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">findContours(image, mode, method[, contours[, hierarchy[, offset]]]) -&gt; contours, hierarchy</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@brief Finds contours in a binary image.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The function retrieves contours from the binary image using the algorithm @cite Suzuki85 . The contours are a useful tool for shape analysis and object detection and recognition. See squares.cpp in the OpenCV sample directory.</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="cv2-drawContours-注释"><a href="#cv2-drawContours-注释" class="headerlink" title="cv2.drawContours()注释"></a>cv2.drawContours()注释</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(image: Mat, contours: <span class="type">Any</span>, contourIdx: <span class="type">Any</span>, color: <span class="type">Any</span>, thickness: ... = ..., lineType: ... = ..., hierarchy: ... = ..., maxLevel: ... = ..., offset: ... = ...) -&gt; <span class="type">Any</span></span><br><span class="line">image Destination image.</span><br><span class="line"></span><br><span class="line">drawContours(image, contours, contourIdx, color[, thickness[, lineType[, hierarchy[, maxLevel[, offset]]]]]) -&gt; image</span><br><span class="line"></span><br><span class="line"><span class="meta">@brief Draws contours outlines or filled contours.</span></span><br><span class="line"></span><br><span class="line">The function draws contour outlines <span class="keyword">in</span> the image <span class="keyword">if</span> \f$\texttt&#123;thickness&#125; \ge <span class="number">0</span>\f$ <span class="keyword">or</span> fills the area bounded by the contours <span class="keyword">if</span> \f$\texttt&#123;thickness&#125;&lt;<span class="number">0</span>\f$ . The example below shows how to retrieve connected components <span class="keyword">from</span> the binary image <span class="keyword">and</span> label them: :</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-保留前2大连通域"><a href="#3-保留前2大连通域" class="headerlink" title="3. 保留前2大连通域"></a>3. 保留前2大连通域</h1><p>相当于把除了前两大连通域之外的其他连通域赋值为0，使用<code>contourArea()</code>函数计算每一个连通域面积。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">area = []</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(contours)):</span><br><span class="line">    area.append(cv2.contourArea(contours[j]))</span><br><span class="line">max_idx = np.argmax(area)</span><br><span class="line">area[max_idx] = <span class="number">0</span></span><br><span class="line">sub_max_idx = np.argmax(area)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(contours)):</span><br><span class="line">    <span class="keyword">if</span> k != max_idx <span class="keyword">and</span> k != sub_max_idx:</span><br><span class="line">        cv2.fillPoly(img, [contours[k]], <span class="number">0</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>,img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/files/2022-07-05-OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/3.png" alt="result"></p>
+<h1 id="4-函数封装"><a href="#4-函数封装" class="headerlink" title="4. 函数封装"></a>4. 函数封装</h1><p> FCN网络返回one-hot编码的分割结果，第一层是背景，第二、三层是识别的目标。使用OpenCV实现最大拾取如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_max_contour</span>(<span class="params">img</span>):</span> </span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    input shape: (300, 300, 3)</span></span><br><span class="line"><span class="string">    first channel: background</span></span><br><span class="line"><span class="string">    second channel: class 1</span></span><br><span class="line"><span class="string">    third channel: class 2</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    h,w,d = img.shape</span><br><span class="line">    label = np.zeros((h,w))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(d):</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            img_channel = img[:,:,i]</span><br><span class="line">            contours, _ = cv2.findContours(img_channel, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)</span><br><span class="line">            area = []</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(contours)):</span><br><span class="line">                area.append(cv2.contourArea(contours[j]))</span><br><span class="line">            max_idx = np.argmax(area)</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(contours)):</span><br><span class="line">                <span class="keyword">if</span> k == max_idx:</span><br><span class="line">                    cv2.fillPoly(label, [contours[k]], i)</span><br><span class="line">    <span class="keyword">return</span> label</span><br></pre></td></tr></table></figure>
+
+<p>结果如图</p>
+<p><img src="/files/2022-07-05-OpenCV%E8%BF%9E%E9%80%9A%E5%9F%9F%E6%93%8D%E4%BD%9C/4.png" alt="result"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gaoranfighting/article/details/34877549">https://blog.csdn.net/gaoranfighting/article/details/34877549</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33854260/article/details/106297999">https://blog.csdn.net/qq_33854260/article/details/106297999</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/fujian87232/article/details/115712763">https://blog.csdn.net/fujian87232/article/details/115712763</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/07/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT-Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85/" class="pre-post btn btn-default" title='TensorRT--Ubuntu下安装'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            TensorRT--Ubuntu下安装</span>
+    </a>
+    
+    
+    <a href="/2022/05/31/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorRT--Windows%E4%B8%8B%E4%BD%BF%E7%94%A8/" class="next-post btn btn-default" title='TensorRT--Windows下使用'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            TensorRT--Windows下使用</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-OpenCV%E8%AF%BB%E5%8F%96%E3%80%81%E5%B1%95%E7%A4%BA%E5%9B%BE%E7%89%87"><span class="toc-text">1. OpenCV读取、展示图片</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-OpenCV%E5%AF%BB%E6%89%BE%E8%BF%9E%E9%80%9A%E5%9F%9F"><span class="toc-text">2. OpenCV寻找连通域</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cv2-findContours-%E6%B3%A8%E9%87%8A"><span class="toc-text">cv2.findContours()注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cv2-drawContours-%E6%B3%A8%E9%87%8A"><span class="toc-text">cv2.drawContours()注释</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E4%BF%9D%E7%95%99%E5%89%8D2%E5%A4%A7%E8%BF%9E%E9%80%9A%E5%9F%9F"><span class="toc-text">3. 保留前2大连通域</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%87%BD%E6%95%B0%E5%B0%81%E8%A3%85"><span class="toc-text">4. 函数封装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

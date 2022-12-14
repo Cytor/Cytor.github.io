@@ -1,0 +1,382 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="Socket是一种基础的网络协议，在这种协议的基础上可以做很多事比如聊天室、文件传递等。
+
+
+Socket通信原理
+服务端new一个实例和socket绑定，然后监听
+accept客户端的conn..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Socket网络通讯 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Socket网络通讯">
+            
+            Socket网络通讯
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2021/08/15</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                486</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Socket是一种基础的网络协议，在这种协议的基础上可以做很多事比如聊天室、文件传递等。</p>
+<span id="more"></span>
+
+<h1 id="Socket通信原理"><a href="#Socket通信原理" class="headerlink" title="Socket通信原理"></a>Socket通信原理</h1><ol>
+<li>服务端new一个实例和socket绑定，然后监听</li>
+<li>accept客户端的connect请求之后，read其内容</li>
+<li>根据客户端的内容做出处理，反写（write）给客户端</li>
+<li>客户端读取server的数据</li>
+<li>…</li>
+<li>close</li>
+</ol>
+<p><img src="https://z3.ax1x.com/2021/08/15/fcF4JA.jpg" alt="socket通讯协议"></p>
+<h1 id="Python代码"><a href="#Python代码" class="headerlink" title="Python代码"></a>Python代码</h1><p>Python代码分为<code>server</code>端和<code>client</code>端，实测通讯成功。C++因为VS的版本会报错（采用了新的接口之类），因此暂缓实现。</p>
+<ol>
+<li>server.py</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="comment"># 文件名：server.py</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> socket               <span class="comment"># 导入 socket 模块</span></span><br><span class="line"> </span><br><span class="line">s = socket.socket()         <span class="comment"># 创建 socket 对象</span></span><br><span class="line"><span class="comment"># host = socket.gethostname() # 获取本地主机名</span></span><br><span class="line">host = <span class="string">&#x27;0.0.0.0&#x27;</span>            <span class="comment"># 设置外网通讯</span></span><br><span class="line">port = <span class="number">12123</span>                <span class="comment"># 设置端口</span></span><br><span class="line">s.bind((host, port))        <span class="comment"># 绑定端口</span></span><br><span class="line">s.listen(<span class="number">5</span>)                 <span class="comment"># 等待客户端连接</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;host:&quot;</span>,host,<span class="string">&quot;port:&quot;</span>,port,<span class="string">&quot;waiting...&quot;</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    c,addr = s.accept()     <span class="comment"># 建立客户端连接</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Get connection from&#x27;</span>, addr)</span><br><span class="line">    c.send(<span class="built_in">bytes</span>(<span class="string">&#x27;Success connecting from %s:%s&#x27;</span>%addr, encoding=<span class="string">&#x27;UTF-8&#x27;</span>))</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = c.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="built_in">print</span>(data)</span><br><span class="line">        c.send(data)</span><br><span class="line">    c.close()                <span class="comment"># 关闭连接</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>client.py</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="comment"># 文件名：client.py</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> socket               <span class="comment"># 导入 socket 模块</span></span><br><span class="line"> </span><br><span class="line">s = socket.socket()         <span class="comment"># 创建 socket 对象</span></span><br><span class="line"><span class="comment">#host = socket.gethostname() # 获取本地主机名</span></span><br><span class="line">host = <span class="string">&#x27;1.117.177.117&#x27;</span></span><br><span class="line">port = <span class="number">12123</span>                <span class="comment"># 设置端口号</span></span><br><span class="line"> </span><br><span class="line">s.connect((host, port))</span><br><span class="line"><span class="built_in">print</span>(s.recv(<span class="number">1024</span>))</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    inp = <span class="built_in">input</span>(<span class="string">&quot;&gt;&gt;&gt;&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> inp:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    s.send(<span class="built_in">bytes</span>(inp,encoding=<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(s.recv(<span class="number">1024</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># s.close()</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1569435">https://cloud.tencent.com/developer/article/1569435</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/android-tutorial-socket1.html">https://www.runoob.com/w3cnote/android-tutorial-socket1.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/python/python-socket.html">https://www.runoob.com/python/python-socket.html</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2021/08/18/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2021-08-18-LSTM/" class="pre-post btn btn-default" title='LSTM网络笔记'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            LSTM网络笔记</span>
+    </a>
+    
+    
+    <a href="/2021/08/14/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2021-08-14-Hexo%E6%B7%BB%E5%8A%A0Mathjax%E6%94%AF%E6%8C%81/" class="next-post btn btn-default" title='hexo添加Mathjax支持'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            hexo添加Mathjax支持</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Socket%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86"><span class="toc-text">Socket通信原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

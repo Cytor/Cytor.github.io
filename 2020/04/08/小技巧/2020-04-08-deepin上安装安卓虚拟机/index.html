@@ -1,0 +1,387 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="腾讯对于linux的适配是很差的，我想要在deepin上面使用腾讯会议，可是目前没有发现wine版和linux版，但我还想要……所以还是装个安卓虚拟机吧。
+[补充] 事实证明我想多了，虽然同为a..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    deepin上安装安卓虚拟机 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="deepin上安装安卓虚拟机">
+            
+            deepin上安装安卓虚拟机
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%B0%8F%E6%8A%80%E5%B7%A7/">小技巧</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/04/08</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                980</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>腾讯对于linux的适配是很差的，我想要在deepin上面使用腾讯会议，可是目前没有发现wine版和linux版，但我还想要……所以还是装个安卓虚拟机吧。</p>
+<p><strong>[补充]</strong> 事实证明我想多了，虽然同为android，但大部分软件都是在arm平台上运行的，换成x86平台就不一定跑的了了，例如腾讯会议。&#x2F;(ㄒoㄒ)&#x2F;~~</p>
+<p>讲真，在这之前我从来不知道安卓还有x86的版本（尽管它一直处于更新状态）。</p>
+<span id="more"></span>
+
+<p>1、安装Vmware</p>
+<p>主要步骤如下，具体操作略</p>
+<ul>
+<li>应用市场下载Vmware-Install</li>
+<li>安装</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/04/08/GhlsTU.png" alt="安装Vmware"></p>
+<p>2、下载最新的android x86</p>
+<ul>
+<li>从fosshub下载（首选）</li>
+</ul>
+<p>fosshub的Android X86地址：<a target="_blank" rel="noopener" href="https://www.fosshub.com/Android-x86.html">https://www.fosshub.com/Android-x86.html</a></p>
+<p>其中，9.0-r2版本64位的ISO文件下载地址如下：<a target="_blank" rel="noopener" href="https://www.fosshub.com/Android-x86.html?dwl=android-x86_64-9.0-r2.iso">https://www.fosshub.com/Android-x86.html?dwl=android-x86_64-9.0-r2.iso</a></p>
+<ul>
+<li>从android x86中文站下载</li>
+</ul>
+<p>android x86中文站的网址：<a target="_blank" rel="noopener" href="http://www.x86android.com/">http://www.x86android.com/</a></p>
+<p>其中，9.0-r2版本64位的ISO文件下载地址如下：<a target="_blank" rel="noopener" href="http://down.kejianjidi.com/x86_9.0_r2/android-x86_64-9.0-r2.iso">http://down.kejianjidi.com/x86_9.0_r2/android-x86_64-9.0-r2.iso</a></p>
+<p>但是，据站长的说法，服务器的带宽很小，属于1Mbps的小水管。大家一起下载的话，速度非常慢（实测）。</p>
+<p>3、安装android x86虚拟机</p>
+<p>主要步骤有：</p>
+<ul>
+<li>命名、选择类型</li>
+<li>分配内存</li>
+<li>创建虚拟硬盘、分配空间</li>
+<li>选择虚拟光盘文件</li>
+<li>启动、修改grub</li>
+<li>启动、正常配置</li>
+</ul>
+<p>详细图文教程参考资料1：<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/36d6ed1f894c551bcf48830a.html">VMware 14 安装 Android x86 7.1 rc1</a></p>
+<p>参考资料：</p>
+<p>1、<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/36d6ed1f894c551bcf48830a.html">VMware 14 安装 Android x86 7.1 rc1</a></p>
+<p>2、<a target="_blank" rel="noopener" href="http://www.x86android.com/">安卓X86中文站</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://www.fosshub.com/Android-x86.html">fosshub下载站</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/04/09/%E9%AA%9A%E6%93%8D%E4%BD%9C/2020-04-09-nginx%E6%8C%82%E8%BD%BD%E9%9D%99%E6%80%81%E7%BD%91%E9%A1%B5/" class="pre-post btn btn-default" title='nginx挂载静态网页'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            nginx挂载静态网页</span>
+    </a>
+    
+    
+    <a href="/2020/04/07/%E5%B0%8F%E6%8A%80%E5%B7%A7/2020-04-07-%E8%A7%A3%E5%86%B3deepin-qq_tim%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E5%A4%B4%E5%83%8F%E5%92%8C%E5%9B%BE%E7%89%87%E7%9A%84%E9%97%AE%E9%A2%98/" class="next-post btn btn-default" title='解决deepin-qq/tim无法显示头像和图片的问题'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            解决deepin-qq/tim无法显示头像和图片的问题</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <p>暂无目录</p>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

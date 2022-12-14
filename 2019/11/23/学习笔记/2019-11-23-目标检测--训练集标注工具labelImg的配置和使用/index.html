@@ -1,0 +1,431 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="我想要自己训练一个目标检测网络，首先需要的就是训练集。可是图片中物体的定位怎么写呢，难道要自己记录目标图像的中心点和锚框大小吗？哭了。。所幸，发现了这个labelImg工具。
+
+
+作者演示教程：..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    目标检测--训练集标注工具labelImg的配置和使用 |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="目标检测--训练集标注工具labelImg的配置和使用">
+            
+            目标检测--训练集标注工具labelImg的配置和使用
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/11/23</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1117</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>我想要自己训练一个目标检测网络，首先需要的就是训练集。可是图片中物体的定位怎么写呢，难道要自己记录目标图像的中心点和锚框大小吗？哭了。。所幸，发现了这个labelImg工具。</p>
+<span id="more"></span>
+
+<p>作者演示教程：</p>
+<iframe src="//player.bilibili.com/player.html?aid=58221619&cid=101571570&page=1" scrolling="no" border="0" frameborder="no" width="640" height="430" allowfullscreen="true"> </iframe>
+labelImg是一个开源的工具，有可视化界面，如下所示。
+
+<p><img src="https://s2.ax1x.com/2019/11/23/MbGDzt.jpg" alt="demo"></p>
+<h2 id="安装-Installation"><a href="#安装-Installation" class="headerlink" title="安装 Installation"></a>安装 Installation</h2><p>windows下有现成的应用程序可用，百度网盘链接： <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1d27UMi">https://pan.baidu.com/s/1d27UMi</a></p>
+<p>但是在使用这个应用的时候我发现，如果把压缩包解压之后运行这个程序，则小黑框一闪而没，根本用不了。只有在压缩包里面直接打开是可以用的。</p>
+<h2 id="使用-Usage"><a href="#使用-Usage" class="headerlink" title="使用 Usage"></a>使用 Usage</h2><ol>
+<li><p>在labelImg文件中，有个data文件夹，里面有predefined_classes.txt记录着分类名称，可以手动更改类别</p>
+</li>
+<li><p>选择File-&gt;Change Saved Dir（不同版本稍微有些差异，也可能叫做changedefault annatation saved dir）,然后选择一个空文件夹作为你生成的标记xml存放的位置</p>
+</li>
+<li><p>点击Open Dir选择你的影像图片文件夹</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MbaRoT.jpg" alt="open dir"></p>
+</li>
+<li><p>之后，图片便加载进来了，点击左侧Create RectBox，就可以在图像上绘制矩形框了。因为版本差异，绘制矩形框有的需要一直按住鼠标左键，有的则只用初始和结束位置点击一下，视具体版本情况而定。</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/Mbd076.jpg" alt="labelling"></p>
+</li>
+<li><p>绘制结束后，会弹出一个框，选择你要标记的类别，比如dog，如果列表里面没有这个类别，可以在方框中输入，最后点击OK。此时，按住Ctrl+S才算保存，之后，可以使用鼠标点击next image进入下一张或者使用快捷键D进入下一张，最终每张图片标注的结果将保存在xml文件中，xml文件和图片名称一致。</p>
+</li>
+</ol>
+<p>快捷键：</p>
+<table>
+<thead>
+<tr>
+<th>Ctrl + u</th>
+<th>Load all of the images from a directory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ctrl + r</td>
+<td>Change the default annotation target dir</td>
+</tr>
+<tr>
+<td>Ctrl + s</td>
+<td>Save</td>
+</tr>
+<tr>
+<td>Ctrl + d</td>
+<td>Copy the current label and rect box</td>
+</tr>
+<tr>
+<td>Space</td>
+<td>Flag the current image as verified</td>
+</tr>
+<tr>
+<td>w</td>
+<td>Create a rect box</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Next image</td>
+</tr>
+<tr>
+<td>a</td>
+<td>Previous image</td>
+</tr>
+<tr>
+<td>del</td>
+<td>Delete the selected rect box</td>
+</tr>
+<tr>
+<td>Ctrl++</td>
+<td>Zoom in</td>
+</tr>
+<tr>
+<td>Ctrl–</td>
+<td>Zoom out</td>
+</tr>
+<tr>
+<td>↑→↓←</td>
+<td>Keyboard arrows to move selected rect box</td>
+</tr>
+</tbody></table>
+<p><strong>参考资料：</strong></p>
+<p>1、<a target="_blank" rel="noopener" href="https://github.com/tzutalin/labelImg">源码地址</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://www.bilibili.com/">Bilibili视频</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/325876">Windows下深度学习标注工具LabelImg安装和使用指南</a></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/11/26/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-26-TensorFlow_2.x%E5%8F%AF%E8%A7%86%E5%8C%96--%E7%B1%BB%E6%BF%80%E6%B4%BB%E5%9B%BE/" class="pre-post btn btn-default" title='TensorFlow 2.x可视化--类激活图'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            TensorFlow 2.x可视化--类激活图</span>
+    </a>
+    
+    
+    <a href="/2019/11/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2019-11-22-Hexo%E7%9A%84icarus%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/" class="next-post btn btn-default" title='Hexo的icarus主题配置记录'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Hexo的icarus主题配置记录</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Installation"><span class="toc-text">安装 Installation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Usage"><span class="toc-text">使用 Usage</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

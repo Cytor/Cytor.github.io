@@ -1,0 +1,383 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="Wenet是业内比较有名的语音识别网络，可以统一识别流式和非流式语音，并且是一个end2end网络。相比其他理论研究注重实用性，可以真实部署（咋感觉这么奇怪樂）
+
+
+本文主要是wenet第一个版..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：wenet |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：wenet">
+            
+            论文阅读：wenet
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2022/08/09</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Wenet是业内比较有名的语音识别网络，可以统一识别流式和非流式语音，并且是一个end2end网络。相比其他理论研究注重实用性，可以真实部署（咋感觉这么奇怪樂）</p>
+<span id="more"></span>
+
+<p>本文主要是wenet第一个版本的阅读笔记，对应<a href="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/wenet_edited.pdf">论文地址</a></p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ol>
+<li>主要工作：提出了WeNet，在单个模型中使用了双通道的U2来统一了<strong>流式&amp;非流式</strong>的端到端语音识别。</li>
+</ol>
+<blockquote>
+<p>a new two-pass approach named U2 is implemented to unify streaming and non-streaming end-to-end (E2E) speech recognition in a single model.</p>
+</blockquote>
+<ol start="2">
+<li><p>动机：跨越了研究与应用的鸿沟，提供了一种高效的方式在真实世界部署自动语音识别的方法（ASR, automatic speech recognition），这也是和其他开源e2e工具的区别。</p>
+</li>
+<li><p>方法：</p>
+<ul>
+<li>网络架构：开发了一种混合连接时序分类（CTC）&#x2F;注意力架构，transformer&#x2F;conformer作为编码器，注意力解码器对编码器的假设重新评分</li>
+</ul>
+<blockquote>
+<p>We develop a hybird connectionist temporal classification (CTC)&#x2F;attention architecture with transformer or conformer as encoder and an attention decoder to rescore th CTC hypotheses.</p>
+</blockquote>
+<ul>
+<li>流式&#x2F;非流式统一：使用动态的基于块的注意力机制，这会允许自注意力关注任意长度的正确内容</li>
+</ul>
+</li>
+<li><p>结果：相对错误率降低了5.03%（AISHELL-1数据集，非流式，比标准的transformer）</p>
+</li>
+</ol>
+<h1 id="WeNet"><a href="#WeNet" class="headerlink" title="WeNet"></a>WeNet</h1><h2 id="2-1-模型架构"><a href="#2-1-模型架构" class="headerlink" title="2.1 模型架构"></a>2.1 模型架构</h2><p>Shared Encoder：由多个Transformer或Conformer组成，在适宜的延迟下考虑有限的上下文</p>
+<p>CTC Decoder：由一系列线性层组成；根据shared encoder输出得到初步结果</p>
+<p>Attention Decoder：由多个Transformer解析层组成；结合shared encoder的输出重新评估CTC输出，得到更精确结果</p>
+<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.1_0.png" alt="2.1"></p>
+<h3 id="2-2-1-训练"><a href="#2-2-1-训练" class="headerlink" title="2.2.1 训练"></a>2.2.1 训练</h3><p>定义了一个组合损失函数，将CTC和AED（attention based encoder-decoder）模块的损失加权相加<br>$$<br>L_{combined}(x,y)&#x3D;\lambda L_{CTC}(x,y)+(1-\lambda)L_{AED}(x,y)<br>$$<br>对于流式&#x2F;非流式统一，在流式识别中采用固定的chunk size&#x3D;C将声音信号分割，这样就把流式识别问题转化成了chunk size为C的非流式问题。</p>
+<h3 id="2-2-2-解析（音频）"><a href="#2-2-2-解析（音频）" class="headerlink" title="2.2.2 解析（音频）"></a>2.2.2 解析（音频）</h3><p>Wenet提供了4种基于python的音频解析模式，分别是以下四种：</p>
+<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.1_1.png" alt="2.1_1"></p>
+<h2 id="2-2-System-Design"><a href="#2-2-System-Design" class="headerlink" title="2.2 System Design"></a>2.2 System Design</h2><p>这就是wenet整个流程，主要流程是数据准备、训练、解码、导出、runtime，底层使用pytorch写的。</p>
+<p>注意：这里的Decoding不是前面网络里面的解析器，而是Python based音频解析</p>
+<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.2_0.png" alt="2.2_0"></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/08/22/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/" class="pre-post btn btn-default" title='论文阅读：PP-YOLOv2'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            论文阅读：PP-YOLOv2</span>
+    </a>
+    
+    
+    <a href="/2022/07/31/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/TensorFlow2%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AE%97%E5%AD%90/" class="next-post btn btn-default" title='TensorFlow2自定义算子'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            TensorFlow2自定义算子</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WeNet"><span class="toc-text">WeNet</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-text">2.1 模型架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-%E8%AE%AD%E7%BB%83"><span class="toc-text">2.2.1 训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-%E8%A7%A3%E6%9E%90%EF%BC%88%E9%9F%B3%E9%A2%91%EF%BC%89"><span class="toc-text">2.2.2 解析（音频）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-System-Design"><span class="toc-text">2.2 System Design</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

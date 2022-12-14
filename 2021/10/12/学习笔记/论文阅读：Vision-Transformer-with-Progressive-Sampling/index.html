@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="PS-ViT是一个分类网络，发表于ICCV 2021上，特点是在ViT的基础上加入Progressive Sampling，获得更准确的结果。
+
+
+Abstract &amp; Introduc..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：Vision Transformer with Progressive Sampling |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：Vision Transformer with Progressive Sampling">
+            
+            论文阅读：Vision Transformer with Progressive Sampling
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2021/10/12</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                428</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>PS-ViT是一个分类网络，发表于ICCV 2021上，特点是在ViT的基础上加入Progressive Sampling，获得更准确的结果。</p>
+<span id="more"></span>
+
+<h1 id="Abstract-amp-Introduction"><a href="#Abstract-amp-Introduction" class="headerlink" title="Abstract &amp; Introduction"></a>Abstract &amp; Introduction</h1><p><strong>Transformer的复杂度和输入序列的长度的平方成正比</strong>，因此ViT会将图片分为几个patch展开为1维向量输入Transformer进行计算，但是这种朴素的token化方法割裂了patch之间的自然结构，并且将网格分配在不感兴趣的地方例如背景，此外还引入了干扰信号。（However, such naive tokenization could destruct object structures, assign grids to uninterested regions such as background, and introduce interference signals.）</p>
+<p>为了解决上述问题，我们提出了一种迭代渐进的采样策略来定位判别区域。To mitigate the above issues,  in this paper,  we  propose  an  iterative  and  progressive  sampling strategy  to  locate  <strong>discriminative  regions</strong>.</p>
+<p>每一次迭代，当前采样步的嵌入会被送到Transformer中的编码器中，然后一组采样偏移将会被预测得出，以此来更新下一步采样的位置。At  each  iteration, embeddings of the current sampling step are fed into a transformer encoder layer, and a group of sampling offsets is predicted to update the sampling locations for the next step.   </p>
+<p><img src="https://z3.ax1x.com/2021/10/12/5eqbc9.png"></p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>这部分将介绍PS策略的具体实现，PS-ViT网络的总体架构，最后将阐述（elaborate）网络的细节。</p>
+<h2 id="Progressive-Sampling"><a href="#Progressive-Sampling" class="headerlink" title="Progressive Sampling"></a>Progressive Sampling</h2><p>渐进式采样的架构如下图所示，输入为$F\in R^{C,H,W}$，输出为Token的序列$T_N\in R^{C*(n*n)}$，</p>
+<ol>
+<li><p>根据采样矩阵$p_t$在F上轴向采样得到$T’_i,i\in[0,n^2]$，</p>
+</li>
+<li><p>$T’<em>i$和位置编码$P_t$，$T</em>{t-1}$相加，</p>
+</li>
+<li><p>输入到Transformer Encoder得到编码后的$T_t$，</p>
+</li>
+<li><p>$T_t$一方面输出，一方面经过FC Layer得到新的采样矩阵$p_{t+1}$。</p>
+</li>
+</ol>
+<p><img src="https://z3.ax1x.com/2021/10/12/5eveqs.png"></p>
+<p>此处的(n<em>n)表示采样的数量，N表示迭代的次数。下一次的采样位置等于当前采样位置与偏置相加：<br>$$<br>p_{t+1}&#x3D;p_t+o_t,t\in [1,2,…,N-1]<br>$$<br>$p_t$和$o_t$都在空间$R_{2</em>(n*n)}$上，在第一次迭代的时候$p_1$初始化为规则间隔的样子。</p>
+<p>用公式来表示，一目了然：<br>$$<br>T’_t&#x3D;F(p_t)\\<br>P_t&#x3D;W_tp_t\\<br>X_t&#x3D;T’<em>t㊉P_t㊉T</em>{t-1}\\<br>T_t&#x3D;Transformer(X_t),t\in[1,…,N]\\<br>o_t&#x3D;M_tT_t,t\in[1,…,N-1]<br>$$<br>上面的$M_t$是一种可学习的线性变换（应该是数层全连接层）。</p>
+<h2 id="Overall-architecture"><a href="#Overall-architecture" class="headerlink" title="Overall architecture"></a>Overall architecture</h2><p>PS-ViT的总体架构如下，总共有4个部分组成：(1) Feature Extraction; (2) Progressive Sampling; (3) Vision Transformer; (4) Classification Module</p>
+<p><img src="https://z3.ax1x.com/2021/10/12/5exVfK.png" alt="Overall architecture"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2108.01684.pdf">https://arxiv.org/pdf/2108.01684.pdf</a></li>
+<li>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/yuexy/PS-ViT">https://github.com/yuexy/PS-ViT</a></li>
+<li>百家号：<a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1709038078774214330">https://baijiahao.baidu.com/s?id=1709038078774214330</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2022/04/26/%E5%B0%8F%E6%8A%80%E5%B7%A7/2022-04-26-%E9%83%A8%E7%BD%B2Frps%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" class="pre-post btn btn-default" title='部署Frp内网穿透'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            部署Frp内网穿透</span>
+    </a>
+    
+    
+    <a href="/2021/09/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2021-09-19-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution/" class="next-post btn btn-default" title='论文阅读：Learning Texture Transformer Network for Image Super-Resolution'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            论文阅读：Learning Texture Transformer Network for Image Super-Resolution</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Abstract-amp-Introduction"><span class="toc-text">Abstract &amp; Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Methodology"><span class="toc-text">Methodology</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Progressive-Sampling"><span class="toc-text">Progressive Sampling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Overall-architecture"><span class="toc-text">Overall architecture</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
