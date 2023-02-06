@@ -188,7 +188,7 @@
         <p>Wenet是业内比较有名的语音识别网络，可以统一识别流式和非流式语音，并且是一个end2end网络。相比其他理论研究注重实用性，可以真实部署（咋感觉这么奇怪樂）</p>
 <span id="more"></span>
 
-<p>本文主要是wenet第一个版本的阅读笔记，对应<a href="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/wenet_edited.pdf">论文地址</a></p>
+<p>本文主要是wenet第一个版本的阅读笔记，对应<a target="_blank" rel="noopener" href="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/wenet_edited.pdf?sign=nXX-gptEChfHenffbkSl0yUMoUg8nlh32eVYKueMiS8=:0">论文地址</a></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ol>
 <li>主要工作：提出了WeNet，在单个模型中使用了双通道的U2来统一了<strong>流式&amp;非流式</strong>的端到端语音识别。</li>
 </ol>
@@ -215,13 +215,13 @@
 <h1 id="WeNet"><a href="#WeNet" class="headerlink" title="WeNet"></a>WeNet</h1><h2 id="2-1-模型架构"><a href="#2-1-模型架构" class="headerlink" title="2.1 模型架构"></a>2.1 模型架构</h2><p>Shared Encoder：由多个Transformer或Conformer组成，在适宜的延迟下考虑有限的上下文</p>
 <p>CTC Decoder：由一系列线性层组成；根据shared encoder输出得到初步结果</p>
 <p>Attention Decoder：由多个Transformer解析层组成；结合shared encoder的输出重新评估CTC输出，得到更精确结果</p>
-<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.1_0.png" alt="2.1"></p>
+<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/2.1_0.png?sign=sXjDLNq1ajYqvtqz_-ia5c3vc__XjZ3OvqUsM5jPl2U=:0" alt="2.1"></p>
 <h3 id="2-2-1-训练"><a href="#2-2-1-训练" class="headerlink" title="2.2.1 训练"></a>2.2.1 训练</h3><p>定义了一个组合损失函数，将CTC和AED（attention based encoder-decoder）模块的损失加权相加<br>$$<br>L_{combined}(x,y)&#x3D;\lambda L_{CTC}(x,y)+(1-\lambda)L_{AED}(x,y)<br>$$<br>对于流式&#x2F;非流式统一，在流式识别中采用固定的chunk size&#x3D;C将声音信号分割，这样就把流式识别问题转化成了chunk size为C的非流式问题。</p>
 <h3 id="2-2-2-解析（音频）"><a href="#2-2-2-解析（音频）" class="headerlink" title="2.2.2 解析（音频）"></a>2.2.2 解析（音频）</h3><p>Wenet提供了4种基于python的音频解析模式，分别是以下四种：</p>
-<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.1_1.png" alt="2.1_1"></p>
+<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/2.1_1.png?sign=dB60eQYLIm_XPqEuZiMYPOAVOJZciiHr0xrMUW8Dp7o=:0" alt="2.1_1"></p>
 <h2 id="2-2-System-Design"><a href="#2-2-System-Design" class="headerlink" title="2.2 System Design"></a>2.2 System Design</h2><p>这就是wenet整个流程，主要流程是数据准备、训练、解码、导出、runtime，底层使用pytorch写的。</p>
 <p>注意：这里的Decoding不是前面网络里面的解析器，而是Python based音频解析</p>
-<p><img src="/files/20220809-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9Awenet/2.2_0.png" alt="2.2_0"></p>
+<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/2.2_0.png?sign=ydoVOOIihHKyel88CEnKFlRbqf8KUJM7dWk1qsUBqNQ=:0" alt="2.2_0"></p>
 
     </div>
     
