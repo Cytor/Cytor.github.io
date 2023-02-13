@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ONNX" />
+
+
+<meta name="description" content="Resize算子在各个DL framework中定义都比较混乱，而ONNX是一种通用模型格式，值得探索一下onnx中的resize算子定义。
+
+
+1. ONNX Resize参数1.1 Attr..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    ONNX算子分析-Resize |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="ONNX算子分析-Resize">
+            
+            ONNX算子分析-Resize
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ONNX/" rel="tag">ONNX</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2023/02/13</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Resize算子在各个DL framework中定义都比较混乱，而ONNX是一种通用模型格式，值得探索一下onnx中的resize算子定义。</p>
+<span id="more"></span>
+
+<h1 id="1-ONNX-Resize参数"><a href="#1-ONNX-Resize参数" class="headerlink" title="1. ONNX Resize参数"></a>1. ONNX Resize参数</h1><h2 id="1-1-Attributes"><a href="#1-1-Attributes" class="headerlink" title="1.1 Attributes"></a>1.1 Attributes</h2><ul>
+<li><p>antialias（抗锯齿）：默认为0，当为1时linear和cubic下采样会使用抗锯齿滤波器</p>
+</li>
+<li><p>axes（axis的复数）：表示维度的数量</p>
+</li>
+<li><p>coordinate_transformation_mode（坐标转换模式）：</p>
+</li>
+<li><ul>
+<li>half_pixel（默认）：</li>
+<li>pytorch_half_pixel</li>
+<li>align_corners</li>
+<li>asymmetric</li>
+<li>tf_crop_and_resize</li>
+</ul>
+</li>
+<li><p>cubic_coeff_a（cubic插值中的a参数）：</p>
+</li>
+<li><p>exclude_outside（排除外面）：默认是0，如果是1那么张量外采样权重就被归一化（和为1）</p>
+</li>
+<li><p>extrapolation_value（外推值）：默认是0，当coordinate_transformation_mode为tf_crop_and_resize时生效</p>
+</li>
+<li><p>keep_aspect_ratio_policy（保持长宽比的策略）：</p>
+</li>
+</ul>
+<blockquote>
+<p>和input中的size配合使用，当scales有设置时无效</p>
+</blockquote>
+<ul>
+<li><ul>
+<li>stretch：该模式下不理会原图像的比例，直接放缩到指定的size</li>
+<li>not_larger：比例不变，结果不超过size</li>
+<li>not_smaller：比例不变，结果不小于size</li>
+</ul>
+</li>
+<li><p>mode（插值方法）：</p>
+</li>
+<li><ul>
+<li>nearest</li>
+<li>linear</li>
+<li>cubic</li>
+</ul>
+</li>
+<li><p>nearest_mode（最近邻的模式）</p>
+</li>
+<li><ul>
+<li>round_prefer_floor：圆整，一半的时候向下取整，eg. 1.5 -&gt; 1.0</li>
+<li>round_prefer_ceil：圆整，一半的时候向上取整，eg. 1.5 -&gt; 2.0</li>
+<li>floor：向下取整，eg. 1.5 -&gt; 1.0, 1.9 -&gt; 1.0</li>
+<li>ceil：向上取整，eg. 1.5 -&gt; 2.0, 1.1 -&gt; 2.0</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-2-Inputs"><a href="#1-2-Inputs" class="headerlink" title="1.2 Inputs"></a>1.2 Inputs</h2><ul>
+<li>X：N维待插值张量</li>
+<li>roi：1维张量，仅当coordinate_transformation_mode为tf_crop_and_resize时生效</li>
+<li>scales：放缩的倍率，如果sizes被指定，那么scales可以为空字符串</li>
+<li>sizes：输出的目标尺寸</li>
+</ul>
+<h2 id="1-3-Ouputs"><a href="#1-3-Ouputs" class="headerlink" title="1.3 Ouputs"></a>1.3 Ouputs</h2><ul>
+<li>Y：N维张量</li>
+</ul>
+<h1 id="2-常用插值算法"><a href="#2-常用插值算法" class="headerlink" title="2. 常用插值算法"></a>2. 常用插值算法</h1><p>要想了解这些插值方法，最好先在一维尺度搞明白其原理，然后拓展到高维度就顺理成章了。</p>
+<h1 id="2-1-nearest"><a href="#2-1-nearest" class="headerlink" title="2.1 nearest"></a>2.1 nearest</h1><p>主要思想是待插值像素点直接获取离其最近的像素点值。</p>
+<p>ONNX中分为4个模式：</p>
+<ul>
+<li>round_prefer_floor：向下取整</li>
+<li>round_prefer_ceil：向上取整</li>
+<li>floor</li>
+<li>ceil</li>
+</ul>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/KTIM4AYAFE.png?sign=FA_wlpmBJorcUeM7t1ow_FgdQ8h01iNdKZOH-ijbv4c=:0" alt="img"></p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/6DIM4AYABM.png?sign=QGmK_M88ZjMtLp7-e5Wn_ahj1nl7-A2EGZl50pWpE88=:0" alt="img"></p>
+<h1 id="2-2-linear"><a href="#2-2-linear" class="headerlink" title="2.2 linear"></a>2.2 linear</h1><p>首先了解一维的线性插值，线性公示可以表示为y&#x3D;a0+a1x，那么对任意点插值仅需要2个点的坐标和对应值。</p>
+<p>因此，二维线性插值（双线性插值bilinear）需要计算3次一维线性插值，需要4个点的坐标和对应值，如下图所示。</p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/2KXM6AYA6U.png?sign=CUctdLS47YvnmHtKLzJ6op7lXI2VNNgKqPWlUUp-sVw=:0" alt="img"></p>
+<p>在计算线性插值下采样的时候，可以使用卷积加速计算。下图的2x双线性缩小，可以设置2x2卷积核，权重均为0.25，步长为2，计算量从3降到1；从这个角度看，双线性的下采样对应的就是平均池化。</p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/XTWM6AYAHE.png?sign=0miXLinXGMtlRB-5R9KbJh84EMzJL9E9gDS0bEViMoM=:0" alt="img"></p>
+<p>列举1-3维度一维线性插值次数和需要点数，以此类推，n维线性插值需要2n-1次一维线性插值计算，需要2n个最近点的坐标和对应值。</p>
+<h1 id="2-3-cubic"><a href="#2-3-cubic" class="headerlink" title="2.3 cubic"></a>2.3 cubic</h1><p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=1163711">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=1163711</a></p>
+<p>三次插值是多项式插值，下面的思路拓展到多次插值。一维的三次插值公式可以写为y&#x3D;a0+a1x+a2x2+a3x3，需要4个点坐标及对应值。因此二维的三次插值（双三次插值bicubic）需要16个点坐标和对应值，含有一维插值次数为5次。</p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/N72M6AYBYE.png?sign=AwiJjIo_HMrZTtZe-AfpJTrtMAEWVaWXR6Ot5gzTUXY=:0" alt="img"></p>
+<p>linear插值的一维插值次数可以一眼看出，但是cubic插值一维插值次数难以一眼看出，计算后得知n维cubic插值中的一维插值次数<img src="data:image/svg+xml;base64,PHN2ZyB3cHNUeXBlPSJsYXRleCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iODciIGhlaWdodD0iNDEiIG92ZXJmbG93PSJoaWRkZW4iIHZpZXdCb3g9IjAgMCA4NyA0MSI+PGRlZnM+PHBhdGggaWQ9Il9nbHlweV8weDMxIiBkPSJNODE2IDBINjMxVi0xMTkxTDMzNSAtMTE4OFYtMTMzMEw4MTYgLTEzODFaIj48L3BhdGg+PHBhdGggaWQ9Il9nbHlweV8weDMzIiBkPSJNNTU5IC03NzZRNjgyIC03NzYgNzMzLjAgLTgzNy4wUTc4NCAtODk4IDc4NCAtMTAwOFE3ODQgLTExMTEgNzI4LjUgLTExNzQuMFE2NzMgLTEyMzcgNTY0IC0xMjM3UTQ1NyAtMTIzNyAzODcuNSAtMTE3MS4wUTMxOCAtMTEwNSAzMTggLTEwMDZIMTQzTDE0MCAtMTAxMlExMzYgLTExNjUgMjU2LjAgLTEyNzMuMFEzNzYgLTEzODEgNTY0IC0xMzgxUTc1MyAtMTM4MSA4NjAuNSAtMTI4NS41UTk2OCAtMTE5MCA5NjggLTEwMDRROTY4IC05MDkgOTE4LjAgLTgzMC41UTg2OCAtNzUyIDc3OCAtNzA5UTg4MSAtNjY4IDkzNC41IC01ODQuNVE5ODggLTUwMSA5ODggLTM4MlE5ODggLTE5NiA4NzAuMCAtOTAuMFE3NTIgMTYgNTY0IDE2UTM5MCAxNiAyNTguMCAtODYuMFExMjYgLTE4OCAxMzEgLTM1NkwxMzMgLTM2MkgzMDhRMzA4IC0yNjMgMzc5LjUgLTE5NS41UTQ1MSAtMTI4IDU2NCAtMTI4UTY3NiAtMTI4IDc0MC4wIC0xOTcuNVE4MDQgLTI2NyA4MDQgLTM3OVE4MDQgLTUwNiA3NDUuMCAtNTY5LjVRNjg2IC02MzMgNTU5IC02MzNINDA4Vi03NzZaIj48L3BhdGg+PHBhdGggaWQ9Il9nbHlweV8weDM0IiBkPSJNODU5IC00NjJIMTA0OFYtMzE3SDg1OVYwSDY3NFYtMzE3SDg1Vi00MjFMNjYzIC0xMzcySDg1OVpNMjg0IC00NjJINjc0Vi0xMTA1TDY2OCAtMTEwNkw2NTAgLTEwNTlaIj48L3BhdGg+PHBhdGggaWQ9Il9nbHlweV8weDNkIiBkPSJNMTMwNiAtODU5SDIyNEwyMjIgLTg1OFExOTIgLTg1NyAxNzIuMCAtODM2LjVRMTUyIC04MTYgMTUyIC03ODdRMTUyIC03NTcgMTczLjAgLTczNi4wUTE5NCAtNzE1IDIyNCAtNzE1SDEzMDdRMTMzNyAtNzE2IDEzNTcuNSAtNzM2LjVRMTM3OCAtNzU3IDEzNzggLTc4N1ExMzc4IC04MTYgMTM1Ny4wIC04MzcuNVExMzM2IC04NTkgMTMwNiAtODU5Wk0xMzA2IC00NTVIMjIyUTE5MiAtNDU0IDE3Mi4wIC00MzMuMFExNTIgLTQxMiAxNTIgLTM4M1ExNTIgLTM1MyAxNzMuMCAtMzMyLjBRMTk0IC0zMTEgMjI0IC0zMTFIMTMwN1ExMzM3IC0zMTIgMTM1Ny41IC0zMzMuMFExMzc4IC0zNTQgMTM3OCAtMzgzUTEzNzggLTQxMyAxMzU3LjAgLTQzNC4wUTEzMzYgLTQ1NSAxMzA2IC00NTVaIj48L3BhdGg+PHBhdGggaWQ9Il9nbHlweV8weDIyMTIiIGQ9Ik0xMzgxIC01MDhIMTQ5Vi02NjNIMTM4MVoiPjwvcGF0aD48cGF0aCBpZD0iX2dseXB5XzB4MWQ0NTAiIGQ9Ik00NzQgLTExOVE1NTEgLTExOSA2MjAuMCAtMTczLjBRNjg5IC0yMjcgNzAyIC0zMDNIODU5TDg2MCAtMjk4UTg0NSAtMTY5IDcyMi41IC03Ni4wUTYwMCAxNyA0NTQgMTdRMjYxIDE3IDE2OC4wIC0xMjEuMFE3NSAtMjU5IDEwNSAtNDYwTDExMCAtNDk3UTE0MiAtNzA1IDI3MS4wIC04MzguNVE0MDAgLTk3MiA2MDIgLTk3MlE3NTYgLTk3MiA4NDYuMCAtODcyLjVROTM2IC03NzMgOTExIC02MzBMOTA5IC02MjVINzUwUTc2MyAtNzE2IDcxNi41IC03NzUuNVE2NzAgLTgzNSA1ODIgLTgzNVE0NTkgLTgzNSAzODIuMCAtNzM0LjBRMzA1IC02MzMgMjg1IC00OTdMMjgwIC00NjBRMjU3IC0zMTIgMzAwLjAgLTIxNS41UTM0MyAtMTE5IDQ3NCAtMTE5WiI+PC9wYXRoPjxwYXRoIGlkPSJfZ2x5cHlfMHgxZDQ1YiIgZD0iTTQyNyAtODE1UTQ4NyAtODkxIDU2Ni41IC05MzIuMFE2NDYgLTk3MyA3NDAgLTk3M1E4OTIgLTk3MyA5NjcuNSAtODc5LjVRMTA0MyAtNzg2IDEwMTQgLTU5NUw5MjIgMTZINzQ1TDgzNyAtNTkyUTg1NiAtNzI1IDgxNC4wIC03NzcuMFE3NzIgLTgyOSA2NjUgLTgyOVE1ODYgLTgyOSA1MjMuMCAtNzk0LjBRNDYwIC03NTkgNDE3IC02OThMMzA5IDE2SDEzMUwyNzcgLTk1NUg0MzZaIj48L3BhdGg+PC9kZWZzPjxnPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEsIDEpIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAxNy40NzI2NTYyNSkiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDguNTUxNzU3ODEyNSkiPjx1c2UgeD0iMCIgeT0iMCIgeGxpbms6aHJlZj0iI19nbHlweV8weDFkNDUwIiB0cmFuc2Zvcm09InNjYWxlKDAuMDA4Nzg5MDYyNSwgMC4wMDg3ODkwNjI1KSIgc3R5bGU9ImZpbGw6IzAwMDAwMCI+PC91c2U+PC9nPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4LjI3OTI5Njg3NSwgMTcuNDcyNjU2MjUpIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCA1LjUyMjQ2MDkzNzUpIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCA1LjY5NTMxMjUpIj48dXNlIHg9IjAiIHk9IjAiIHhsaW5rOmhyZWY9IiNfZ2x5cHlfMHgxZDQ1YiIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwNTg1OTM3NSwgMC4wMDU4NTkzNzUpIiBzdHlsZT0iZmlsbDojMDAwMDAwIj48L3VzZT48L2c+PC9nPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOC41MjU4Nzg5MDYyNSwgMjYuMDI0NDE0MDYyNSkiPjx1c2UgeD0iMCIgeT0iMCIgeGxpbms6aHJlZj0iI19nbHlweV8weDNkIiB0cmFuc2Zvcm09InNjYWxlKDAuMDA4Nzg5MDYyNSwgMC4wMDg3ODkwNjI1KSIgc3R5bGU9ImZpbGw6IzAwMDAwMCI+PC91c2U+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDM1LjMzNDk2MDkzNzUsIDApIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjUsIDApIj48Zz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwLjM4NjcxODc1KSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgMTIuMDU4NTkzNzUpIj48dXNlIHg9IjAiIHk9IjAiIHhsaW5rOmhyZWY9IiNfZ2x5cHlfMHgzNCIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwODc4OTA2MjUsIDAuMDA4Nzg5MDYyNSkiIHN0eWxlPSJmaWxsOiMwMDAwMDAiPjwvdXNlPjwvZz48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOS45NjY3OTY4NzUsIDApIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCA1LjY5NTMxMjUpIj48dXNlIHg9IjAiIHk9IjAiIHhsaW5rOmhyZWY9IiNfZ2x5cHlfMHgxZDQ1YiIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwNTg1OTM3NSwgMC4wMDU4NTkzNzUpIiBzdHlsZT0iZmlsbDojMDAwMDAwIj48L3VzZT48L2c+PC9nPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMC4yMTMzNzg5MDYyNSwgMTIuNDQ1MzEyNSkiPjx1c2UgeD0iMCIgeT0iMCIgeGxpbms6aHJlZj0iI19nbHlweV8weDIyMTIiIHRyYW5zZm9ybT0ic2NhbGUoMC4wMDg3ODkwNjI1LCAwLjAwODc4OTA2MjUpIiBzdHlsZT0iZmlsbDojMDAwMDAwIj48L3VzZT48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzcuMDIyNDYwOTM3NSwgMTIuNDQ1MzEyNSkiPjx1c2UgeD0iMCIgeT0iMCIgeGxpbms6aHJlZj0iI19nbHlweV8weDMxIiB0cmFuc2Zvcm09InNjYWxlKDAuMDA4Nzg5MDYyNSwgMC4wMDg3ODkwNjI1KSIgc3R5bGU9ImZpbGw6IzAwMDAwMCI+PC91c2U+PC9nPjwvZz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMC4wMTEyMzA0Njg3NSwgMjYuMTM4NjcxODc1KSI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgMTIuMTM3Njk1MzEyNSkiPjx1c2UgeD0iMCIgeT0iMCIgeGxpbms6aHJlZj0iI19nbHlweV8weDMzIiB0cmFuc2Zvcm09InNjYWxlKDAuMDA4Nzg5MDYyNSwgMC4wMDg3ODkwNjI1KSIgc3R5bGU9ImZpbGw6IzAwMDAwMCI+PC91c2U+PC9nPjwvZz48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIGQ9IiBNIDEuNSAyMC44ODI4MTI1IEwgNDguNDg5MjU3ODEyNSAyMC44ODI4MTI1IiBzdHJva2UtZGFzaGFycmF5PSIiPjwvcGF0aD48L2c+PC9nPjwvZz48L3N2Zz4=" alt="img">，需要点个数为4n</p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/6RONEAYAOM.png?sign=0R7pJOyds2QQ59VdTNkaXn5nkH8dasc7jMWIy0EBYdw=:0" alt="img"></p>
+<h1 id="2-4-lanczos"><a href="#2-4-lanczos" class="headerlink" title="2.4 lanczos"></a>2.4 lanczos</h1><p><a target="_blank" rel="noopener" href="https://www.detailedpedia.com/wiki-Lanczos_resampling">https://www.detailedpedia.com/wiki-Lanczos_resampling</a></p>
+<p>一维兰索斯插值的核函数L(x)如下，a一般取2或者3：</p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/131538.png?sign=6FDFlGpPBnx5QmFS-EnYOzRTN_uPkPnvEaTmUu2z738=:0" alt="img"></p>
+<p><img src="https://pan.wenyuanhome.top/d/%E8%85%BE%E8%AE%AF%E4%BA%91/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2302/131539.png?sign=9aBJTVyCoBkM-4OvKh_HwXK9F8nnn4Y8WeZc8i-p_Cw=:0" alt="img"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://onnx.ai/onnx/operators/onnx__Resize.html#l-onnx-doc-resize">Resize — ONNX 1.14.0 documentation</a></li>
+</ol>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2022/12/05/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Go%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="next-post btn btn-default" title='Go语言环境配置'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Go语言环境配置</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-ONNX-Resize%E5%8F%82%E6%95%B0"><span class="toc-text">1. ONNX Resize参数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Attributes"><span class="toc-text">1.1 Attributes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Inputs"><span class="toc-text">1.2 Inputs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-Ouputs"><span class="toc-text">1.3 Ouputs</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%B8%B8%E7%94%A8%E6%8F%92%E5%80%BC%E7%AE%97%E6%B3%95"><span class="toc-text">2. 常用插值算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-1-nearest"><span class="toc-text">2.1 nearest</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-linear"><span class="toc-text">2.2 linear</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-3-cubic"><span class="toc-text">2.3 cubic</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-4-lanczos"><span class="toc-text">2.4 lanczos</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
