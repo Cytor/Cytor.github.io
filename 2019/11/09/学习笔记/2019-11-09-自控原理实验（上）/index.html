@@ -185,7 +185,7 @@ $1...." />
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1191</strong>
+                1193</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -210,7 +210,7 @@ $1...." />
 <p>在matlab中，有一个函数tf(?)，是传递函数的意思，一般学<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E8%87%AA%E5%8A%A8%E6%8E%A7%E5%88%B6%E5%8E%9F%E7%90%86&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">自动控制原理</a>的时候经常用，在s域中，比如要输入G（s）&#x3D;1&#x2F;（s^2+2s+1），就可以在matlab中输入G&#x3D;tf（[1],[1 2 1]）。</p>
 <p><strong>零极点形式：</strong>分子式系数为k，零点从分子产生（z1, z2, …），极点从分母中产生（p1, p2, …）。</p>
 <p><strong>举栗：</strong>得到了<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">系统函数</a>H(s)的零极点的值，z为零点的值，p为极点的值，k为系数，如图所示，n1为a的值，d1为b的值，这里的n1,d1,z,p均为向量形式。</p>
-<p><img src="https://gss0.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=f52ed4b1d40735fa91a546bfae61238b/8cb1cb1349540923836215d49258d109b3de4914.jpg" alt="transfer"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/8cb1cb1349540923836215d49258d109b3de4914.jpg" alt="transfer"></p>
 <h3 id="3-2-matlab中，step-函数"><a href="#3-2-matlab中，step-函数" class="headerlink" title="3.2 matlab中，step()函数"></a>3.2 matlab中，step()函数</h3><p><strong>官方注释</strong><br>Step response plot of dynamic system; step response data</p>
 <p><strong>官方Description</strong></p>
 <p><code>step</code> calculates the step response of a dynamic system. For the state-space case, zero initial state is assumed. When it is invoked with no output arguments, this function plots the step response on the screen.</p>
@@ -254,10 +254,11 @@ $1...." />
 <p>6、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/2474061?fr=aladdin">百度百科： 线性时不变系统</a></p>
 <p>7、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94/9441714#1">百度百科：单位脉冲响应</a></p>
 <h1 id="2-Simulink仿真"><a href="#2-Simulink仿真" class="headerlink" title="$2. Simulink仿真"></a>$2. Simulink仿真</h1><h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><p>用Matlab仿真（simulink）图示系统输入单位阶跃信号1(t)的响应，分析响应曲线的稳态响应Xoss(t),振荡频率wd(rad&#x2F;s)最大超调量Mp,峰值时间tp,进入稳态值+5%误差带的调整时间ts。</p>
-<p><img src="https://s2.ax1x.com/2019/11/12/M1Xrn0.png" alt="传动图"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/M1Xrn0.png" alt="传动图"></p>
 <hr>
-<h2 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h2><h3 id="1、进入matlab的simulink进行控件的排布和拖放"><a href="#1、进入matlab的simulink进行控件的排布和拖放" class="headerlink" title="1、进入matlab的simulink进行控件的排布和拖放"></a>1、进入matlab的simulink进行控件的排布和拖放</h3><p><img src="https://s2.ax1x.com/2019/11/15/Ma3Acq.png" alt="控件拖放"></p>
-<h3 id="2、调整时间"><a href="#2、调整时间" class="headerlink" title="2、调整时间"></a>2、调整时间</h3><h3 id="3、得出结果图"><a href="#3、得出结果图" class="headerlink" title="3、得出结果图"></a>3、得出结果图<img src="https://s2.ax1x.com/2019/11/15/Ma3rvt.png" alt="结果图"></h3><p>参考资料：</p>
+<h2 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h2><h3 id="1、进入matlab的simulink进行控件的排布和拖放"><a href="#1、进入matlab的simulink进行控件的排布和拖放" class="headerlink" title="1、进入matlab的simulink进行控件的排布和拖放"></a>1、进入matlab的simulink进行控件的排布和拖放</h3><p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/Ma3Acq.png" alt="控件拖放"></p>
+<h3 id="2、调整时间"><a href="#2、调整时间" class="headerlink" title="2、调整时间"></a>2、调整时间</h3><h3 id="3、得出结果图"><a href="#3、得出结果图" class="headerlink" title="3、得出结果图"></a>3、得出结果图</h3><p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/Ma3rvt.png" alt="结果图"></p>
+<p>参考资料：</p>
 <p>1、<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/d5a880ebc679d613f147ccda.html">MATLAB使用Simulink 进行建模与仿真方法</a></p>
 <h1 id="3-用Matlab实现几种典型信号时间响应"><a href="#3-用Matlab实现几种典型信号时间响应" class="headerlink" title="$3. 用Matlab实现几种典型信号时间响应"></a>$3. 用Matlab实现几种典型信号时间响应</h1><h2 id="1、实验内容"><a href="#1、实验内容" class="headerlink" title="1、实验内容"></a>1、实验内容</h2><p>掌握在matlab环境下建立控制系统模型的方法，并学会调用相应的函数实现单位脉冲信号，单位阶跃信号和单位斜坡信号的响应；</p>
 <h2 id="2、典型信号时间响应"><a href="#2、典型信号时间响应" class="headerlink" title="2、典型信号时间响应"></a>2、典型信号时间响应</h2><h3 id="2-1-单位阶跃响应"><a href="#2-1-单位阶跃响应" class="headerlink" title="2.1 单位阶跃响应"></a>2.1 单位阶跃响应</h3><ul>
@@ -273,7 +274,7 @@ $1...." />
 <p>单位阶跃响应，就是指系统在接收到单位阶跃函数输入后产生的零状态响应。</p>
 </li>
 </ul>
-<p><img src="https://s2.ax1x.com/2019/11/15/Mad8v4.png" alt="单位阶跃响应图"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/Mad8v4.png" alt="单位阶跃响应图"></p>
 <ul>
 <li><strong>作用和意义</strong></li>
 </ul>
@@ -303,7 +304,7 @@ $1...." />
 <p>单位脉冲响应，就是指系统在接收到单位脉冲函数输入后产生的零状态响应。</p>
 </li>
 </ul>
-<p><img src="https://s2.ax1x.com/2019/11/15/MadcqA.png" alt="单位脉冲响应"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/MadcqA.png" alt="单位脉冲响应"></p>
 <h3 id="2-3-单位斜坡响应"><a href="#2-3-单位斜坡响应" class="headerlink" title="2.3 单位斜坡响应"></a>2.3 单位斜坡响应</h3><ul>
 <li><p>斜坡函数</p>
 <p>斜坡函数是一元实函数，因其图像像斜坡而得名。斜坡函数在负半轴函数值为零，正半轴为形如y&#x3D;At的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AD%A3%E6%AF%94%E4%BE%8B%E5%87%BD%E6%95%B0">正比例函数</a>。A&#x3D;1时，称为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E6%96%9C%E5%9D%A1%E5%87%BD%E6%95%B0/5136068">单位斜坡函数</a>。斜坡函数是系统动力学中经常用来研究系统模型及其反馈系统的有关信息的测试函数。 其函数表达式为：<br>r(t)&#x3D;max(0,t)r(t)&#x3D;max(0,t)</p>
@@ -312,10 +313,10 @@ $1...." />
 <p>单位斜坡响应，就是指系统在接收到单位斜坡函数输入后产生的零状态响应。</p>
 </li>
 </ul>
-<p><img src="https://s2.ax1x.com/2019/11/15/MawXmd.png" alt="单位斜坡响应"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/MawXmd.png" alt="单位斜坡响应"></p>
 <h2 id="3、问题"><a href="#3、问题" class="headerlink" title="3、问题"></a>3、问题</h2><p><strong>Q：</strong>Matlab中没有斜坡响应信号对应的函数，为什么能用阶跃信号来求解？</p>
 <p><strong>A：</strong>因为斜坡响应信号的一阶导数就是阶跃信号，四种典型信号的关系如下：</p>
-<p><img src="https://s2.ax1x.com/2019/11/15/MaGw6I.png" alt="四种典型输入信号的关系"></p>
+<p><img src="/../../assets/2019-11-09-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%AE%9E%E9%AA%8C%EF%BC%88%E4%B8%8A%EF%BC%89.assets/MaGw6I.png" alt="四种典型输入信号的关系"></p>
 <p>参考资料：</p>
 <p>1、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E5%93%8D%E5%BA%94/5642164?fr=aladdin">百度百科：单位阶跃响应</a></p>
 <p>2、自动控制原理（第四版，高国燊等人著）</p>

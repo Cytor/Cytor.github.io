@@ -179,7 +179,7 @@
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1199</strong>
+                1201</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -190,7 +190,7 @@
 <span id="more"></span>
 
 <h1 id="第一步：网格化-x2F-训练网络"><a href="#第一步：网格化-x2F-训练网络" class="headerlink" title="第一步：网格化&#x2F;训练网络"></a>第一步：网格化&#x2F;训练网络</h1><p>将训练图片（这里的shape是608，608，3）划分为19x19的网格，每一个网格有两个属性——锚框（anchor box）和类别（classes）。每个网格对应有5个锚框，80个类别。</p>
-<p>![architecture](<a target="_blank" rel="noopener" href="https://s2.ax1x.com/2019/11/01/K7v22q.png">https://s2.ax1x.com/2019/11/01/K7v22q.png</a></p>
+<p><img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/K7v22q.png" alt="architecture"></p>
 <p>因此，我们将要训练一个端到端的神经网络，输入的shape是（m,608,608,3），输出的shape是（m,19,19,5,85）。这里的m是一次输入的图片数量。我们观察上图可以看到85&#x3D;80类别+5参数，这5个参数分别代表什么呢？</p>
 <table>
 <thead>
@@ -214,12 +214,13 @@
 </tbody></table>
 <p>加上这5个参数，我们就能得到边界框的准确位置了。通过下图，我们可以观察这5个参数究竟是如何运作的，能得到什么。</p>
 <p>例设这里的box1是我们取神经网络的output[0,0,0,0,:]，神经网络判断这个格子里面有要检测的目标，可能性为pc，我们把pc乘上ci就得到了全局的存在可能性{pcci}，score&#x3D;max{pcci}&#x3D;0.44，查一下数组的索引得到对应的类别是car。</p>
-<p><img src="https://s2.ax1x.com/2019/11/01/KHChs1.png" alt="probability extraction"></p>
+<p><img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHChs1.png" alt="probability extraction"></p>
 <p>本来<br>$$<br>\sum_{i&#x3D;0}^nc_i&#x3D;1<br>$$</p>
 <p>$c_i$对应的是以这个格子为系统，各个分类的概率，当我们乘上pc之后， pcci就变成了一个全局的概率，有利于以后不同格子之间的对比。</p>
 <hr>
-<p>当我们把这个神经网络训练好了之后，如果不考虑锚框的话，就可以得到下图类似的可视化效果<img src="https://s2.ax1x.com/2019/11/01/KHVRkq.png" alt="pro map"></p>
-<p>考虑锚框的话，就得到下图可视化效果 <img src="https://s2.ax1x.com/2019/11/01/KHVb7R.png" alt="anchor map"></p>
+<p>当我们把这个神经网络训练好了之后，如果不考虑锚框的话，就可以得到下图类似的可视化效果<img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHVRkq.png" alt="pro map"></p>
+<p>考虑锚框的话，就得到下图可视化效果 </p>
+<p><img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHVb7R.png" alt="anchor map"></p>
 <h1 id="第二步：过滤锚框"><a href="#第二步：过滤锚框" class="headerlink" title="第二步：过滤锚框"></a>第二步：过滤锚框</h1><ul>
 <li>阈值过滤（thresholding）</li>
 </ul>
@@ -227,18 +228,18 @@
 <ul>
 <li>非最大值抑制（Non-max suppression）</li>
 </ul>
-<p>有的时候，对于同一辆车，神经网络会给出多个锚框，在这种情况下我们使用非最大值抑制就可以选择出最合适的一个框。<img src="https://s2.ax1x.com/2019/11/01/KHZdb9.png" alt="non max suppression"></p>
+<p>有的时候，对于同一辆车，神经网络会给出多个锚框，在这种情况下我们使用非最大值抑制就可以选择出最合适的一个框。<img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHZdb9.png" alt="non max suppression"></p>
 <p>非最大值抑制使用了一个重要指标——<strong>交并比</strong>(IoU, Intersection over Union)，其定义图如下。</p>
-<p><img src="https://s2.ax1x.com/2019/11/01/KHeiMF.png" alt="iou"></p>
+<p><img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHeiMF.png" alt="iou"></p>
 <p>在本例中，给三个锚框按照score降序分别标号为A,B,C， 如果B和C与A的交并比大于一个阈值sigma，就舍弃B,C并保留A；如果B和C与A的交并比均小于阈值sigma，则保留B和C，再对B和C进行非最大值抑制。</p>
-<h1 id="第三步：边框回归（Bounding-Box-Regression）"><a href="#第三步：边框回归（Bounding-Box-Regression）" class="headerlink" title="第三步：边框回归（Bounding Box Regression）"></a>第三步：边框回归（Bounding Box Regression）</h1><p>为什么要进行边框回归呢？因为有的时候神经网络返回的锚框并不准确，如下图红框。因此我们就需要边框回归使得红框拓展为绿框使得边界框变得更加准确。<img src="https://s2.ax1x.com/2019/11/01/KHYen1.png" alt="bounding box regressing"></p>
+<h1 id="第三步：边框回归（Bounding-Box-Regression）"><a href="#第三步：边框回归（Bounding-Box-Regression）" class="headerlink" title="第三步：边框回归（Bounding Box Regression）"></a>第三步：边框回归（Bounding Box Regression）</h1><p>为什么要进行边框回归呢？因为有的时候神经网络返回的锚框并不准确，如下图红框。因此我们就需要边框回归使得红框拓展为绿框使得边界框变得更加准确。<img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/KHYen1.png" alt="bounding box regressing"></p>
 <p>边框回归的步骤：（详细见参考资料4，我也不太明白）</p>
 <ul>
 <li>先做平移变换</li>
 <li>再做尺度缩放</li>
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一图以概之：</p>
-<p><img src="https://s2.ax1x.com/2019/11/25/Mj1dgA.md.png" alt="yolo structure"></p>
+<p><img src="/../../assets/2019-11-01-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B--YOLO%E7%9A%84%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/Mj1dgA.md.png" alt="yolo structure"></p>
 <p><strong>参考资料：</strong></p>
 <p>1、<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d535a3825905?from=timeline&isappinstalled=0">简书:YOLO</a></p>
 <p>2、<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42546496/article/details/88115095">Markdown公式、特殊字符、上下标、求和&#x2F;积分、分式&#x2F;根式、字体</a></p>

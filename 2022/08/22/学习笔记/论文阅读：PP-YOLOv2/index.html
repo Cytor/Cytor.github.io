@@ -183,7 +183,8 @@
     
     <div class="post-body post-content">
         <p>PP-YOLOv2是在PP-YOLOv1基础上进一步提高效率得到的，最后结果是性能进一步提高而推理时间几乎没有变化。PP-YOLOv2（Resnet50）的mAP从45.9%提升到49.5%（COCO2017测试集上），基于Resnet101的mAP达到了50.3%,在640*640输入下帧率为68.9FPS，经过TensorRT FP16精度的加速，最后帧率提升到106.5FPS。</p>
-<h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h1><p>PP-YOLOv2和YOLOv5l和YOLOv4-CSP具有几乎相同的参数，但性能好一些。PP-YOLOv2的baseline是PP-YOLO，而PP-YOLO又是YOLO-v3的增强版本。<br>Github仓库：<a target="_blank" rel="noopener" href="https://github.com/PaddlePaddle/PaddleDetection">https://github.com/PaddlePaddle/PaddleDetection</a><br>Gitee镜像：<a target="_blank" rel="noopener" href="https://gitee.com/paddlepaddle/PaddleDetection">https://gitee.com/paddlepaddle/PaddleDetection</a><br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/1.png?sign=Y8e18Q7V-HKZPBTEEPdsA12FX9_753ICczDsuKbGMdA=:0" alt="image.png"></p>
+<h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h1><p>PP-YOLOv2和YOLOv5l和YOLOv4-CSP具有几乎相同的参数，但性能好一些。PP-YOLOv2的baseline是PP-YOLO，而PP-YOLO又是YOLO-v3的增强版本。<br>Github仓库：<a target="_blank" rel="noopener" href="https://github.com/PaddlePaddle/PaddleDetection">https://github.com/PaddlePaddle/PaddleDetection</a><br>Gitee镜像：<a target="_blank" rel="noopener" href="https://gitee.com/paddlepaddle/PaddleDetection">https://gitee.com/paddlepaddle/PaddleDetection</a><br><a href="/assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/pp-yolov2.pdf">pp yolov2.pdf</a></p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/1.png" alt="1"></p>
 <h1 id="2-回看PP-YOLO"><a href="#2-回看PP-YOLO" class="headerlink" title="2. 回看PP-YOLO"></a>2. 回看PP-YOLO</h1><h2 id="2-1-预处理"><a href="#2-1-预处理" class="headerlink" title="2.1 预处理"></a>2.1 预处理</h2><ul>
 <li>模型权重初始化使用Beta(α,β)分布</li>
 <li>图片使用随机颜色崩坏、随机扩充、随机裁剪、随机翻转等tricks</li>
@@ -191,21 +192,22 @@
 </ul>
 <h2 id="2-2-基线模型"><a href="#2-2-基线模型" class="headerlink" title="2.2 基线模型"></a>2.2 基线模型</h2><p>在YOLO-v3上使用了10个提高性能但不损失效率的tricks，包括Deformable Conv，SSLD，CoordConv，DropBlock，SPP等。</p>
 <h2 id="2-3-训练策略"><a href="#2-3-训练策略" class="headerlink" title="2.3 训练策略"></a>2.3 训练策略</h2><p>使用了SGD优化，使用了小batch（96张图片分8个GPU），学习率逐步升高….</p>
-<h1 id="3-PP-YOLOv2的改进"><a href="#3-PP-YOLOv2的改进" class="headerlink" title="3. PP-YOLOv2的改进"></a>3. PP-YOLOv2的改进</h1><h2 id="3-1-路径聚合网络（Path-Aggregation-Network）"><a href="#3-1-路径聚合网络（Path-Aggregation-Network）" class="headerlink" title="3.1 路径聚合网络（Path Aggregation Network）"></a>3.1 路径聚合网络（Path Aggregation Network）</h2><p>在目标检测领域，探测不同尺度的目标是一个重要的挑战。在PP-YOLO里面使用了FPN（Feature Pyramid Network，特征金字塔网络）来组建自底向上的路径；此处，PP-YOLOv2采用了PAN的设计使用自顶向下的信息。<br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/2.png?sign=lvQSS_XGMjE6FS8k3RH9NbmlzAOKtytU6OtFjAlOT48=:0" alt="image.png"></p>
-<h2 id="3-2-激活函数：Mish"><a href="#3-2-激活函数：Mish" class="headerlink" title="3.2 激活函数：Mish"></a>3.2 激活函数：Mish</h2><p>Mish公式如下：<br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/formula.png?sign=wCod_aw7_puVf_9vJ0uCRgEnrDwkC5Pw43h92RZhhaA=:0"><br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/3.png?sign=k5EsA3604GuOpE0_Ox-vwHr409NpbgZbJ-tL6dpODyo=:0" alt="image.png"></p>
+<h1 id="3-PP-YOLOv2的改进"><a href="#3-PP-YOLOv2的改进" class="headerlink" title="3. PP-YOLOv2的改进"></a>3. PP-YOLOv2的改进</h1><h2 id="3-1-路径聚合网络（Path-Aggregation-Network）"><a href="#3-1-路径聚合网络（Path-Aggregation-Network）" class="headerlink" title="3.1 路径聚合网络（Path Aggregation Network）"></a>3.1 路径聚合网络（Path Aggregation Network）</h2><p>在目标检测领域，探测不同尺度的目标是一个重要的挑战。在PP-YOLO里面使用了FPN（Feature Pyramid Network，特征金字塔网络）来组建自底向上的路径；此处，PP-YOLOv2采用了PAN的设计使用自顶向下的信息。<br><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/2.png" alt="2"></p>
+<h2 id="3-2-激活函数：Mish"><a href="#3-2-激活函数：Mish" class="headerlink" title="3.2 激活函数：Mish"></a>3.2 激活函数：Mish</h2><p>Mish公式如下：</p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/formula.png" alt="formula"></p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/3.png" alt="3"></p>
 <h2 id="3-3-更大的输入尺寸"><a href="#3-3-更大的输入尺寸" class="headerlink" title="3.3 更大的输入尺寸"></a>3.3 更大的输入尺寸</h2><p>增大输入尺寸会扩大目标的区域，因此小尺度目标的信息会比以前更容易保存（我不理解！）</p>
 <blockquote>
 <p>Increasing the input size enlarges the area of objects. Thus, information of the objects on a small scale will be preserved easier than before. </p>
 </blockquote>
-<h2 id="3-4-IoU感知分支"><a href="#3-4-IoU感知分支" class="headerlink" title="3.4 IoU感知分支"></a>3.4 IoU感知分支</h2><p>定义了IoU损失如下。感觉类似交叉熵，不过把输入p换成了σ(p)<br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/formula2.png?sign=_Nu71Bg_2z0e_4zY9updX8AxI_VB6nexqZYq4OaTQng=:0"></p>
-<h1 id="4-实验"><a href="#4-实验" class="headerlink" title="4. 实验"></a>4. 实验</h1><h2 id="4-2-消融实验"><a href="#4-2-消融实验" class="headerlink" title="4.2 消融实验"></a>4.2 消融实验</h2><p>他们还做了消融实验，A是基线模型，每一个创新点加上去mAP都有一些提升。<br><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2208/4.png?sign=4L9w2pF7G7KLpPm4lizkRtPdwurjV7BW6008EL78tw4=:0" alt="image.png"></p>
+<h2 id="3-4-IoU感知分支"><a href="#3-4-IoU感知分支" class="headerlink" title="3.4 IoU感知分支"></a>3.4 IoU感知分支</h2><p>定义了IoU损失如下。感觉类似交叉熵，不过把输入p换成了σ(p)<br><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/formula2.png" alt="formula2"></p>
+<h1 id="4-实验"><a href="#4-实验" class="headerlink" title="4. 实验"></a>4. 实验</h1><h2 id="4-2-消融实验"><a href="#4-2-消融实验" class="headerlink" title="4.2 消融实验"></a>4.2 消融实验</h2><p>他们还做了消融实验，A是基线模型，每一个创新点加上去mAP都有一些提升。<br><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2.assets/4.png" alt="4"></p>
 <h1 id="5-没用的尝试"><a href="#5-没用的尝试" class="headerlink" title="5. 没用的尝试"></a>5. 没用的尝试</h1><p>以下tricks尝试过，但没有带来性能提升：</p>
 <ol>
 <li>余弦学习率衰减</li>
 <li>骨干参数冻结</li>
 <li>SiLU激活函数</li>
 </ol>
-<p><a href="/files/20220822-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9APP-YOLOv2/pp-yolov2.pdf">pp yolov2.pdf</a></p>
 
     </div>
     

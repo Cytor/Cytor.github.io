@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="流岚雅舍">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://lankning.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="ML" />
+
+
+<meta name="description" content="CVPR 2020论文，提出了TTSR(Texture Transformer Network for Image Super-Resolution)网络，使用Transformer对图像超分重..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    论文阅读：Learning Texture Transformer Network for Image Super-Resolution |
+    
+    流岚雅舍
+</title>
+
+<link rel="alternate" href="/atom.xml" title="流岚雅舍" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='猪老大'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                猪老大要进步！
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://lankning.github.io">
+                        流岚雅舍</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/学习笔记"><i class="fa "></i>
+                                学习笔记</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/小技巧"><i class="fa "></i>
+                                小技巧</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/骚操作"><i class="fa "></i>
+                                骚操作</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa "></i>
+                                关于</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="论文阅读：Learning Texture Transformer Network for Image Super-Resolution">
+            
+            论文阅读：Learning Texture Transformer Network for Image Super-Resolution
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/ML/" rel="tag">ML</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2021/09/19</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                513</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>CVPR 2020论文，提出了TTSR(Texture Transformer Network for Image Super-Resolution)网络，使用Transformer对图像超分重建。</p>
+<p>论文地址：<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Yang_Learning_Texture_Transformer_Network_for_Image_Super-Resolution_CVPR_2020_paper.pdf">Learning-Texture-Transformer-Network-for-Image-Super-Resolution</a></p>
+<span id="more"></span>
+
+<p>划过重点版本：<a href="/assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution.assets/Yang_Learning_Texture_Transformer_Network_for_Image_Super-Resolution_CVPR_2020_paper.pdf">Learning-Texture-Transformer-Network-for-Image-Super-Resolution</a></p>
+<h1 id="1-Abstract-amp-Introduction"><a href="#1-Abstract-amp-Introduction" class="headerlink" title="1. Abstract &amp; Introduction"></a>1. Abstract &amp; Introduction</h1><p>近来的研究都将HR Images作为reference(Ref)，在TTSR中，将LR和Ref分别作为Transformer中的queries和keys。TTSR包含了4个紧密相关的部分：纹理提取器DNN( learnable texture extractor, LTE)，相关性嵌入模块（a relevance embedding module, RE），纹理传输的硬注意力模块（a hard-attention module for texture transfer, HA），纹理合成的软注意力模块（a soft-attention module for texture synthesis, SA）。</p>
+<p>此外，还提出了 a cross-scale feature integration module to stack the texture transformer，用于学习不同比例下的特征来得到更有力的特征表示。</p>
+<h1 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2. Related Work"></a>2. Related Work</h1><h2 id="2-1-Single-Image-Super-Resolution"><a href="#2-1-Single-Image-Super-Resolution" class="headerlink" title="2.1 Single Image Super Resolution"></a>2.1 Single Image Super Resolution</h2><p>Models: SRCNN, VDSR, DRCN, EDSR, SRGAN, …</p>
+<p>Loss Function: MSE, MAE, perceptual loss(recent years),  Gram matrix based texture matching </p>
+<p>loss, ..</p>
+<h2 id="2-2-Reference-based-Image-Super-Resolution"><a href="#2-2-Reference-based-Image-Super-Resolution" class="headerlink" title="2.2 Reference-based Image Super-Resolution"></a>2.2 Reference-based Image Super-Resolution</h2><p>RefSR可以从Ref image获得更加准确的细节，这可以通过image aligning或者patch matching（搜索合适的Reference Information）造成。</p>
+<p>Image aligning缺点：依赖于对齐质量，且对齐方法如光流法等是耗时的。</p>
+<p>Patch matching缺点：However, SRNTT ignores the relevance between original and swapped features and feeds all the swapped features equally into the main network. (?)</p>
+<h1 id="3-Approach"><a href="#3-Approach" class="headerlink" title="3. Approach"></a>3. Approach</h1><h2 id="3-1-Texture-Transformer"><a href="#3-1-Texture-Transformer" class="headerlink" title="3.1 Texture Transformer"></a>3.1 Texture Transformer</h2><p>Texture Transformer包含4个部分，LTE，RE，HA，SA，结构如图所示：</p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution.assets/4GUDpj.png" alt="Texture Transformer"></p>
+<p>输入为Backbone(LR), Ref, Ref↓↑, LR↑，这里的↓↑分别代表使用Bicubic进行下、上插值，之所以对Ref先↓后↑是因为需要保持Ref↓↑与LR↑的域一致性（which is domain-consistent with LR↑）然后通过LTE得到K和Q；输出为合成的特征图（synthesized feature map）。</p>
+<ul>
+<li><p>learnable texture extractor(LTE)</p>
+<p>$$<br>Q&#x3D;LTE(LR↑),\\<br>K&#x3D;LTE(Ref↓↑),\\<br>V&#x3D;LTE(Ref),<br>$$</p>
+</li>
+<li><p>relevance embedding module(RE)</p>
+<p>Relevance embedding aims to embed the relevance between the LR and Ref image by estimating the similarity between Q and K.</p>
+<p>将Q&#x2F;K输出的结果patch为小块，相关性r即可由qi和ki通过标准化内积计算出来：<br>$$<br>q_i,(i \in [1, H_{LR}×W_{LR}])\\<br>k_j,(j \in [1, H_{Ref}×W_{Ref}])\\<br>r_{i,j}&#x3D;&lt;\frac{q_i}{||q_i||},\frac{k_i}{||k_i||}&gt;<br>$$</p>
+</li>
+<li><p>hard-attention module for feature transfer(HA)</p>
+<p>这一部分是将Ref的feature转移到当前图片的feature map中。传统方法是对不同的qi求V的加权和，但是这一操作可能会因为缺少Ref的feature导致模糊，所以我们在HA中仅仅将每个qi对应最相关的V值迁移出来。</p>
+<p>具体来说，先由前述的ri,j计算hard-attention map H<br>$$<br>h_i&#x3D;\mathop{argmax}\limits_{j}r_{i,j}<br>$$<br><strong>上述argmax函数是当ri,j最大时，返回对应的自变量，文中应该就是j，即qi确定时，对应最相关的kj存储在hi中。</strong>（原文： The value of hi can be regarded as a hard index, which represents the most relevant position in the Ref image to the i-th position in the LR image.）</p>
+<p>为了获得tranferred HR texture features T，我们将拾取对应的V值到矩阵T中：<br>$$<br>t_i&#x3D;v_{h_i}<br>$$<br><strong>因此，图中的T代表从Ref中迁移的最相关的对应纹理特征。</strong></p>
+</li>
+<li><p>soft-attention module for feature synthesis(SA)</p>
+<p>到了这一步，我们有了Ref的特征迁移矩阵T，LR的特征图F，本模块提出了一个soft-attention来合成特征。</p>
+<p>Soft-attention map的矩阵S可由相关性ri,j计算得出：<br>$$<br>s_i&#x3D;\mathop{max}\limits_{j}r_{i,j}<br>$$<br>最后的特征图有下面计算得出：<br>$$<br>F_{out}&#x3D;F+Conv(Concat(F,T))⊙S<br>$$<br>⊙代表元素对应相乘。</p>
+</li>
+</ul>
+<h2 id="3-2-Cross-Scale-Feature-Integration"><a href="#3-2-Cross-Scale-Feature-Integration" class="headerlink" title="3.2 Cross-Scale Feature Integration"></a>3.2 Cross-Scale Feature Integration</h2><p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution.assets/4GapjI.png" alt="CSFI"></p>
+<p>使用上面提出的Texture Transformer堆叠，分别由1x&#x2F;2x&#x2F;4x混合，得到output。（套娃也可以这么6，学到了）</p>
+<h2 id="3-3-Loss-Function"><a href="#3-3-Loss-Function" class="headerlink" title="3.3 Loss Function"></a>3.3 Loss Function</h2><p>本文的loss function包括Reconstruction loss，Adversarial loss，Perceptual loss三大块，总体的损失函数为三者的线性和，表示如下：<br>$$<br>L_{overall} &#x3D; λ_{rec}L_{rec} + λ_{adv}L_{adv} + λ_{per}L_{per}<br>$$</p>
+<h1 id="好的表述"><a href="#好的表述" class="headerlink" title="好的表述"></a>好的表述</h1><p>Image super-resolution aims to recover natural and realistic textures for a high-resolution image <strong>from its degraded low-resolution counterpart</strong>.（从其退化的低分辨率图片）</p>
+<p>The research on image SR is usually conducted on two <strong>paradigms</strong>, including single image super-resolution (SISR), and reference-based image super-resolution (RefSR).（范式）</p>
+<p>Although GANs…, the resultant <strong>hallucinations</strong> and <strong>artifacts</strong> caused by GANs further pose grand challenges to image SR tasks.（幻觉；伪影）</p>
+<p><strong>SOTA（State-of-the-Art）</strong></p>
+<p>First, … | Second, … | More specifically, … | Finally, …</p>
+<p>To the best of our knowledge, … （据我们所知，…）</p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            <span class="reward-type">
+                <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+            </span>
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="/img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        赞赏是不耍流氓的鼓励
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="mailto:lankning@163.com" target="_blank">猪老大</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2021/10/12/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AVision-Transformer-with-Progressive-Sampling/" class="pre-post btn btn-default" title='论文阅读：Vision Transformer with Progressive Sampling'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            论文阅读：Vision Transformer with Progressive Sampling</span>
+    </a>
+    
+    
+    <a href="/2021/09/17/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AConvTransformer/" class="next-post btn btn-default" title='论文阅读：ConvTransformer A Convolutional Transformer Network for Video Frame Synthesis'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            论文阅读：ConvTransformer A Convolutional Transformer Network for Video Frame Synthesis</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'iLawMqSXlVorgFJfj2dE1PuS-gzGzoHsz',
+    appKey: 'oWij6qQuyzNX3j5eqcwFd37w',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-cn'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath:  [ ["$", "$"] ],
+            displayMath: [ ["$$","$$"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+            ignoreClass:"comment-content"
+        },
+        "HTML-CSS": {
+            availableFonts: ["STIX","TeX"],
+            showMathMenu: false
+        }
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Abstract-amp-Introduction"><span class="toc-text">1. Abstract &amp; Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Related-Work"><span class="toc-text">2. Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Single-Image-Super-Resolution"><span class="toc-text">2.1 Single Image Super Resolution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Reference-based-Image-Super-Resolution"><span class="toc-text">2.2 Reference-based Image Super-Resolution</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Approach"><span class="toc-text">3. Approach</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Texture-Transformer"><span class="toc-text">3.1 Texture Transformer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Cross-Scale-Feature-Integration"><span class="toc-text">3.2 Cross-Scale Feature Integration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Loss-Function"><span class="toc-text">3.3 Loss Function</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A5%BD%E7%9A%84%E8%A1%A8%E8%BF%B0"><span class="toc-text">好的表述</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

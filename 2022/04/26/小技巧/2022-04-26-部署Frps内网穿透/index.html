@@ -192,13 +192,12 @@ gofrp官网示例
 
 <h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p> <a target="_blank" rel="noopener" href="https://gofrp.org/">gofrp官网</a> </p>
 <p><a target="_blank" rel="noopener" href="https://gofrp.org/docs/examples/">gofrp官网示例</a></p>
-<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2204/example.jpg?sign=CJW13xRRVzJso1g9rOLtx2MW8wt9gKK7gbsi3NZE5_U=:0" alt="示例"></p>
+<p><img src="/../../assets/2022-04-26-%E9%83%A8%E7%BD%B2Frps%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F.assets/example.jpg" alt="example"></p>
 <h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h2><p>修改<code>.ini</code>文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = 7000</span><br><span class="line">dashboard_port = 7500</span><br><span class="line">token = password</span><br><span class="line">dashboard_user = username</span><br><span class="line">dashboard_pwd = password</span><br><span class="line">vhost_http_port = 80</span><br><span class="line">vhost_https_port = 443</span><br></pre></td></tr></table></figure>
 
 <p>这里的<code>vhost_http_port</code>和<code>vhost_https_port</code>表示默认的http和https穿透端口，我们改成默认端口80和443。</p>
 <p>如果设置<code>vhost_http_port = 8080</code>，那么客户端选择http服务时，要在子域名后面加上端口号才可以访问。</p>
-<p><img src="/files/2022-04-26-%E9%83%A8%E7%BD%B2Frps%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/vhosthttp.jpg" alt="vhost_http_port=8080"></p>
 <h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>修改<code>.ini</code>文件，如果<code>http</code>网站没有域名，可以使用tcp（如下方的ssh）；如果需要穿透到域名，则使用http&#x2F;https。</p>
 <p>如果选择https，一般直接把SSL证书交给frp客户端，使用https转http的插件（自带）即可。<strong>如果内网部署的服务不在80端口，一定要在<code>plugin_host_header_rewrite</code>里面加上端口号！</strong></p>
 <p>下面是我的配置，网站可以只开https，关掉http。</p>
@@ -208,9 +207,9 @@ gofrp官网示例
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /root/tools/frp/frpc -c /root/tools/frp/frpc.ini &gt; /tmp/frp_client.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 
 <h1 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h1><p>域名解析是困扰我最多的一个问题，最后还是在frp官网上找到了答案。</p>
-<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2204/dns.jpg?sign=EAHfgJ8ih3VwXQw-S8AhqnDhy_uQu31BJWmJ4yPMBQY=:0" alt="DNS"></p>
+<p><img src="/../../assets/2022-04-26-%E9%83%A8%E7%BD%B2Frps%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F.assets/dns.jpg" alt="dns"></p>
 <p>http下面的二级域名不需要通过隐式url转到<code>主域名:端口</code>，而是直接A解析到IP地址即可。而https的话，在申请ssl证书时候，腾讯云会自动给加上解析。</p>
-<p><img src="https://pan.wenyuanhome.top/d/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/%E5%A4%96%E9%93%BE%E5%88%86%E4%BA%AB/Hexo-%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6/2204/tencentdns.jpg?sign=MnlqGC4qd5nA_2HseFa--pFqz319DDknyCiWH-mOTu8=:0" alt="域名解析"></p>
+<p><img src="/../../assets/2022-04-26-%E9%83%A8%E7%BD%B2Frps%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F.assets/tencentdns.jpg" alt="tencentdns"></p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://sspai.com/post/52523">使用frp进行内网穿透 - 少数派 (sspai.com)</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.ioiox.com/archives/79.html">新手入门 - 详解 frp 内网穿透 frpc.ini 配置 - 思有云 - IOIOX</a></li>

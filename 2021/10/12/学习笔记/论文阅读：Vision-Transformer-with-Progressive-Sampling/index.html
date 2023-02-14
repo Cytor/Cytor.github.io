@@ -184,7 +184,7 @@ Abstract &amp; Introduc..." />
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                489</strong>
+                490</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -197,7 +197,7 @@ Abstract &amp; Introduc..." />
 <h1 id="Abstract-amp-Introduction"><a href="#Abstract-amp-Introduction" class="headerlink" title="Abstract &amp; Introduction"></a>Abstract &amp; Introduction</h1><p><strong>Transformer的复杂度和输入序列的长度的平方成正比</strong>，因此ViT会将图片分为几个patch展开为1维向量输入Transformer进行计算，但是这种朴素的token化方法割裂了patch之间的自然结构，并且将网格分配在不感兴趣的地方例如背景，此外还引入了干扰信号。（However, such naive tokenization could destruct object structures, assign grids to uninterested regions such as background, and introduce interference signals.）</p>
 <p>为了解决上述问题，我们提出了一种迭代渐进的采样策略来定位判别区域。To mitigate the above issues,  in this paper,  we  propose  an  iterative  and  progressive  sampling strategy  to  locate  <strong>discriminative  regions</strong>.</p>
 <p>每一次迭代，当前采样步的嵌入会被送到Transformer中的编码器中，然后一组采样偏移将会被预测得出，以此来更新下一步采样的位置。At  each  iteration, embeddings of the current sampling step are fed into a transformer encoder layer, and a group of sampling offsets is predicted to update the sampling locations for the next step.   </p>
-<p><img src="https://z3.ax1x.com/2021/10/12/5eqbc9.png"></p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AVision-Transformer-with-Progressive-Sampling.assets/5eqbc9.png"></p>
 <h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>这部分将介绍PS策略的具体实现，PS-ViT网络的总体架构，最后将阐述（elaborate）网络的细节。</p>
 <h2 id="Progressive-Sampling"><a href="#Progressive-Sampling" class="headerlink" title="Progressive Sampling"></a>Progressive Sampling</h2><p>渐进式采样的架构如下图所示，输入为$F\in R^{C,H,W}$，输出为Token的序列$T_N\in R^{C*(n*n)}$，</p>
 <ol>
@@ -210,11 +210,11 @@ Abstract &amp; Introduc..." />
 <li><p>$T_t$一方面输出，一方面经过FC Layer得到新的采样矩阵$p_{t+1}$。</p>
 </li>
 </ol>
-<p><img src="https://z3.ax1x.com/2021/10/12/5eveqs.png"></p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AVision-Transformer-with-Progressive-Sampling.assets/5eveqs.png"></p>
 <p>此处的(n<em>n)表示采样的数量，N表示迭代的次数。下一次的采样位置等于当前采样位置与偏置相加：<br>$$<br>p_{t+1}&#x3D;p_t+o_t,t\in [1,2,…,N-1]<br>$$<br>$p_t$和$o_t$都在空间$R_{2</em>(n*n)}$上，在第一次迭代的时候$p_1$初始化为规则间隔的样子。</p>
 <p>用公式来表示，一目了然：<br>$$<br>T’_t&#x3D;F(p_t)\\<br>P_t&#x3D;W_tp_t\\<br>X_t&#x3D;T’<em>t㊉P_t㊉T</em>{t-1}\\<br>T_t&#x3D;Transformer(X_t),t\in[1,…,N]\\<br>o_t&#x3D;M_tT_t,t\in[1,…,N-1]<br>$$<br>上面的$M_t$是一种可学习的线性变换（应该是数层全连接层）。</p>
 <h2 id="Overall-architecture"><a href="#Overall-architecture" class="headerlink" title="Overall architecture"></a>Overall architecture</h2><p>PS-ViT的总体架构如下，总共有4个部分组成：(1) Feature Extraction; (2) Progressive Sampling; (3) Vision Transformer; (4) Classification Module</p>
-<p><img src="https://z3.ax1x.com/2021/10/12/5exVfK.png" alt="Overall architecture"></p>
+<p><img src="/../../assets/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9AVision-Transformer-with-Progressive-Sampling.assets/5exVfK.png" alt="Overall architecture"></p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2108.01684.pdf">https://arxiv.org/pdf/2108.01684.pdf</a></li>
 <li>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/yuexy/PS-ViT">https://github.com/yuexy/PS-ViT</a></li>
@@ -265,7 +265,7 @@ Abstract &amp; Introduc..." />
     </a>
     
     
-    <a href="/2021/09/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2021-09-19-%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution/" class="next-post btn btn-default" title='论文阅读：Learning Texture Transformer Network for Image Super-Resolution'>
+    <a href="/2021/09/19/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-Texture-Transformer-Network-for-Image-Super-Resolution/" class="next-post btn btn-default" title='论文阅读：Learning Texture Transformer Network for Image Super-Resolution'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             论文阅读：Learning Texture Transformer Network for Image Super-Resolution</span><i class="fa fa-angle-right fa-fw"></i>

@@ -180,7 +180,7 @@
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1174</strong>
+                1176</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -193,7 +193,7 @@
 
 <p>类激活映射(CAM)是一种生成热力图的技术，用于突出图像的类的特定区域。 由于最终的表达形式看起来像是热力图，即神经网络越“重视”的地方越红，所以我把它叫做“类热力图”，但是多数时候我们都叫它“类激活图”。</p>
 <p>如果将“类热力图”在训练过程中可视化，我们将会得到以下的效果。</p>
-<p><img src="https://pic1.zhimg.com/v2-d26d535b0f05665ba453acf013dd3634_b.webp" alt="training process"></p>
+<p><img src="/../../assets/2019-11-26-TensorFlow_2.x%E5%8F%AF%E8%A7%86%E5%8C%96--%E7%B1%BB%E6%BF%80%E6%B4%BB%E5%9B%BE.assets/v2-d26d535b0f05665ba453acf013dd3634_b.webp" alt="training process"></p>
 <p>计算方法：给定一张输入图像，对于一个卷积层的输出特征，用类别相对于通道的梯度对这个特征图中的每个通道进行加权。</p>
 <p>通俗地来讲，就是计算最后一个卷积层对应预测结果的梯度，梯度越大代表该通道越重要，越重要的通道最后就越红色。</p>
 <p>程序实现包括以下几个步骤：</p>
@@ -204,7 +204,7 @@
 <li>将类激活图加诸原来的图像上面</li>
 </ul>
 <p>我在我先前训练的<a target="_blank" rel="noopener" href="https://cytor.github.io/2019/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BD%BF%E7%94%A8tensorflow2-0%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C/">tensorflow2.0图像分类</a>实例跑了一下，得到了以下结果：</p>
-<p><img src="https://s2.ax1x.com/2019/11/26/QS91kq.jpg" alt="heatmap"></p>
+<p><img src="/../../assets/2019-11-26-TensorFlow_2.x%E5%8F%AF%E8%A7%86%E5%8C%96--%E7%B1%BB%E6%BF%80%E6%B4%BB%E5%9B%BE.assets/QS91kq.jpg" alt="heatmap"></p>
 <p>代码下载：<a target="_blank" rel="noopener" href="https://github.com/Cytor/bilibili/blob/master/tensorflow2.0%E9%A1%B9%E7%9B%AE/%E5%8F%AF%E8%A7%86%E5%8C%96/%E7%B1%BB%E7%83%AD%E5%8A%9B%E5%9B%BE.ipynb">我的Github仓库</a></p>
 <p><strong>参考资料：</strong></p>
 <p>1、<a target="_blank" rel="noopener" href="https://blog.csdn.net/einstellung/article/details/82858974">可视化卷及神经网络热力图</a></p>

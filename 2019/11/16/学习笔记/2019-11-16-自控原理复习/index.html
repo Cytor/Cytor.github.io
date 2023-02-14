@@ -184,7 +184,7 @@
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1184</strong>
+                1186</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -246,13 +246,13 @@
 <p>阻尼角β公式：$β&#x3D;arccosξ$</p>
 <p>拉氏变换的终值定理：$\lim_{t \rightarrow \infty}f(t)&#x3D;lim_{s \rightarrow 0}sF(s)$</p>
 <p>当闭环传递函数的$K≠0$时，需要算出ξξ的值并查图来获得调整时间：</p>
-<p><img src="https://s2.ax1x.com/2019/11/17/MBjV39.jpg" alt="关系曲线"></p>
+<p><img src="/../../assets/2019-11-16-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0.assets/MBjV39.jpg" alt="关系曲线"></p>
 <p>[带有零点的二阶系统]</p>
 <p>影响：一般来说会是系统响应迅速且具有较大的超调量σσ%。零点与一堆共轭复数在复平面上的相对位置决定了零点对阶跃响应的影响。用α&#x3D;z&#x2F;(ξωn)α&#x3D;z&#x2F;(ξωn)来量化，αα越小，影响程度越大。</p>
 <p>规律：有了零点并不会导致时间常数T0T0，但是会增大阻尼系数ξξ，那么就会影响调节时间和最大超调量两个值。</p>
 <p>调节时间：$t_s&#x3D;(3+ln\frac{l}{z})\frac{1}{ξω_n}$</p>
 <p>最大超调量，查图3-28（P90）：</p>
-<p><img src="https://s2.ax1x.com/2019/11/17/MBzv5T.jpg" alt="alpha和最大超调量的关系"></p>
+<p><img src="/../../assets/2019-11-16-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0.assets/MBzv5T.jpg" alt="alpha和最大超调量的关系"></p>
 <p><strong>3)高阶系统主导极点的确定方法</strong></p>
 <p>闭环主导极点的概念：这一对极点离虚轴最近，并且其他的零极点要么很远要么抵消了。</p>
 <p>非主导极点的判定：当引进的实数极点与主导极点的模值之比$α&#x3D;\frac{p_3}{ω_n}$大于5时，可以认为时非主导极点，影响可以忽略。</p>
@@ -280,7 +280,7 @@
 <p>与稳态误差的关系$ess&#x3D;\frac{1}{K_a}$</p>
 <p>对0型系统，$K_a&#x3D;0,e_{ss}→∞$；对于Ⅰ型系统，$K_a&#x3D;0,e_{ss}&#x3D;→∞$；对于Ⅱ型系统，$K_a&#x3D;K_0,ess&#x3D;\frac{1}{K_0}$</p>
 <p>表3-6（P105）完美概括：</p>
-<p><img src="https://s2.ax1x.com/2019/11/17/MDC8d1.jpg" alt="表3-6"></p>
+<p><img src="/../../assets/2019-11-16-%E8%87%AA%E6%8E%A7%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0.assets/MDC8d1.jpg" alt="表3-6"></p>
 <h4 id="3-6-了解PID控制器各部分的作用，并能根据实际系统需求选取合适、经济的控制器。"><a href="#3-6-了解PID控制器各部分的作用，并能根据实际系统需求选取合适、经济的控制器。" class="headerlink" title="3.6 了解PID控制器各部分的作用，并能根据实际系统需求选取合适、经济的控制器。"></a>3.6 了解PID控制器各部分的作用，并能根据实际系统需求选取合适、经济的控制器。</h4><p><a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=PID%E8%B0%83%E8%8A%82%E5%99%A8&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">PID调节器</a>各部分的作用分别是比例(P)、积分(I)、微分(D)控制算法。</p>
 <p>比例，反应系统的基本（当前）偏差，系数大，可以加快调节，减小误差，但过大的比例使<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%B3%BB%E7%BB%9F%E7%A8%B3%E5%AE%9A%E6%80%A7&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">系统稳定性</a>下降，甚至造成系统不稳定；</p>
 <p>积分，反应系统的累计偏差 ，使系统消除稳态误差，提高无差度，因为有误差，积分调节就进行，直至无误差；</p>

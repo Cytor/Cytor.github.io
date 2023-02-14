@@ -179,7 +179,7 @@
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1194</strong>
+                1196</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -213,7 +213,7 @@
 <h1 id="过程可视化"><a href="#过程可视化" class="headerlink" title="过程可视化"></a>过程可视化</h1><p>将mode.fit的结果通过图像展示出来看看。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">l = np.array(his.history[<span class="string">&#x27;loss&#x27;</span>])</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">step = np.linspace(<span class="number">1</span>,<span class="number">100</span>,<span class="number">100</span>)</span><br><span class="line">plt.plot(step,l,label=<span class="string">&quot;Train Loss&quot;</span>)</span><br><span class="line">plt.legend(loc=<span class="string">&#x27;upper right&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;epoch-loss&#x27;</span>)</span><br><span class="line">plt.xlim((<span class="number">0</span>, <span class="number">100</span>))</span><br><span class="line">plt.gca().set_ylim(bottom=<span class="number">0</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;epoch&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;loss&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">a = np.array(his.history[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">plt.plot(step,a,label=<span class="string">&quot;Train Accuracy&quot;</span>)</span><br><span class="line">plt.legend(loc=<span class="string">&#x27;lower right&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;epoch-acc&#x27;</span>)</span><br><span class="line">plt.xlim((<span class="number">0</span>, <span class="number">100</span>))</span><br><span class="line">plt.ylim((<span class="number">0</span>, <span class="number">1.005</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;epoch&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;acc&#x27;</span>)plt.show()</span><br></pre></td></tr></table></figure>
 
-<p>[<img src="https://s2.ax1x.com/2019/11/06/MC79Fx.png" alt="训练过程"></p>
+<p>[<img src="/../../assets/2019-11-06-TensorFlow_1.x%EF%BC%9Akeras%E8%AE%AD%E7%BB%83%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.assets/MC79Fx.png" alt="训练过程"></p>
 <p><strong>参考资料：</strong></p>
 <p>1、<a target="_blank" rel="noopener" href="https://keras.io/zh/getting-started/sequential-model-guide/">Keras中文文档–开始使用 Keras Sequential 顺序模型</a></p>
 

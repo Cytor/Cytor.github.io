@@ -184,7 +184,7 @@
         
         <p class="fa fa-exclamation-triangle warning">
             本文于<strong>
-                1076</strong>
+                1077</strong>
             天之前发表，文中内容可能已经过时。
         </p>
         
@@ -204,7 +204,7 @@
 </li>
 <li><p><strong>LED代码表</strong></p>
 <p>这个表很有用，编程的时候需要对照着它来摘取段选码。需要注意的是，段选码是十六进制的，因此编程时需要写成<code>0x3F</code>类似的格式。</p>
-<p><img src="https://s2.ax1x.com/2020/03/04/3IrYz6.png"></p>
+<p><img src="/../../assets/2020-03-04-%E5%8D%95%E7%89%87%E6%9C%BA--%E7%82%B9%E4%BA%AE%E6%95%B0%E7%A0%81%E7%AE%A1.assets/3IrYz6.png"></p>
 </li>
 <li><p><strong>引脚图：</strong></p>
 <p>当我们需要从头开始开发的时候，我们需要一个引脚图，如下所示。</p>
@@ -212,7 +212,7 @@
 <p><strong>位选信号：</strong>上面COM口连接的是非常重要的位选信号，为了节约IO口，单片机会通过38译码器来转换，通过查阅74HC138译码器得知对应的IO口为P22&#x2F;P23&#x2F;P24。</p>
 </li>
 </ul>
-<p><img src="https://s2.ax1x.com/2020/03/04/3IDcb4.png"></p>
+<p><img src="/../../assets/2020-03-04-%E5%8D%95%E7%89%87%E6%9C%BA--%E7%82%B9%E4%BA%AE%E6%95%B0%E7%A0%81%E7%AE%A1.assets/3IDcb4.png"></p>
 <h2 id="2、程序实现"><a href="#2、程序实现" class="headerlink" title="2、程序实现"></a>2、程序实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> u8;</span><br><span class="line">u8 code smgduan[<span class="number">16</span>]=&#123;<span class="number">0x3f</span>,<span class="number">0x06</span>,<span class="number">0x5b</span>,<span class="number">0x4f</span>,<span class="number">0x66</span>,<span class="number">0x6d</span>,<span class="number">0x7d</span>,<span class="number">0x07</span>,</span><br><span class="line">                     <span class="number">0x7f</span>,<span class="number">0x6f</span>,<span class="number">0x77</span>,<span class="number">0x7c</span>,<span class="number">0x39</span>,<span class="number">0x5e</span>,<span class="number">0x79</span>,<span class="number">0x71</span>&#125;;<span class="comment">//共阴</span></span><br></pre></td></tr></table></figure>
 
 <p>code的作用：code的作用是告诉单片机，定义的数据要放在ROM（程序存储区）里面，写入后就不能再更改。因为C语言中没办法详细描述存入的是ROM还是RAM（寄存器），所以在软件中添加了这一个语句起到代替汇编指令的作用，对应的还有data是存入RAM的意思。</p>
